@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="Backend/API/API.csproj" Id="50418aa6-ad38-4389-8cca-9e61a3c5da97" />
+    <Project Path="Backend/Application/Application.csproj" Id="d89b63e6-36a9-404c-9d0d-1d0384c97fb6" />
+    <Project Path="Backend/Core/Core.csproj" Id="57483e99-846c-4be1-a6a3-02b105d41b22" />
+    <Project Path="Backend/DataAccess/DataAccess.csproj" Id="a3e5c54f-4590-49e7-94f9-345b0ad3dcb9" />
+  </Folder>
+  <Folder Name="/UI/">
+    <Project Path="UI/WPF/WPF.csproj" Id="e58bf622-01d8-4735-a825-d46ac27c0720" />
+  </Folder>
+</Solution>
