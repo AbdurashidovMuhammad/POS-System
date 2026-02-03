@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DataAccess.Persistence;
 
-namespace DataAccess.Persistence
+public class DatabaseContext
 {
-    internal class DatabaseContext
-    {
-    }
 }
