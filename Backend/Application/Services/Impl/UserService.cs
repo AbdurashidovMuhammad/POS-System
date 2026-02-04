@@ -1,7 +1,6 @@
 using Application.DTOs;
 using Application.DTOs.UserDTOs;
 using Application.Helpers;
-using Application.Services;
 using Core.Entities;
 using Core.Enums;
 using DataAccess.Persistence;

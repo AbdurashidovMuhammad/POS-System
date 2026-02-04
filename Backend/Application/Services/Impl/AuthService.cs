@@ -2,7 +2,6 @@ using Application.DTOs;
 using Application.DTOs.UserDTOs;
 using Application.Helpers;
 using Application.Options;
-using Application.Services;
 using DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
