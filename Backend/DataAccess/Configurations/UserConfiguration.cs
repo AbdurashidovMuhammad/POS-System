@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -33,5 +34,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.CreatedAt)
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        // SuperAdmin seed data
+        builder.HasData(new User
+        {
+            Id = 1,
+            Username = "superadmin",
+            PasswordHash = "$2a$11$TjYDrGYAX3yCCQwH2yE7XuU5tWgDTl7DhwU3uWxOZxOyW5ukOeQOK",
+            Role = Role.SuperAdmin,
+            IsActive = true,
+            CreatedAt = new DateTime(2026, 2, 4, 0, 0, 0, DateTimeKind.Utc)
+        });
     }
 }

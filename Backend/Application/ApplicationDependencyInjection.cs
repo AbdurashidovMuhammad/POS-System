@@ -1,5 +1,16 @@
-﻿namespace Application;
+using Application.Services;
+using Application.Services.Impl;
+using Microsoft.Extensions.DependencyInjection;
 
-public class ApplicationDependencyInjection
+namespace Application;
+
+public static class ApplicationDependencyInjection
 {
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
+
+        return services;
+    }
 }
