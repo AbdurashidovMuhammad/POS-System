@@ -15,4 +15,9 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\CategoryDTOs\" />
+    <Folder Include="DTOs\ProductDTOs\" />
+  </ItemGroup>
+
 </Project>
