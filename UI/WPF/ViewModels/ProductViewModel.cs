@@ -43,6 +43,18 @@ public partial class ProductViewModel : ViewModelBase
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    // Suggestions
+    [ObservableProperty]
+    private ObservableCollection<ProductSuggestDto> _suggestions = [];
+
+    [ObservableProperty]
+    private bool _isSuggestionsOpen;
+
+    partial void OnSearchTextChanged(string value)
+    {
+        _ = LoadSuggestionsAsync(value);
+    }
+
     // Pagination
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
@@ -175,10 +187,63 @@ public partial class ProductViewModel : ViewModelBase
         await LoadProductsAsync();
     }
 
+    // Load suggestions for autocomplete
+    private async Task LoadSuggestionsAsync(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query) || query.Length < 1)
+        {
+            Suggestions.Clear();
+            IsSuggestionsOpen = false;
+            return;
+        }
+
+        try
+        {
+            var url = $"api/products/search?query={Uri.EscapeDataString(query)}";
+            var result = await _apiService.GetAsync<List<ProductSuggestDto>>(url);
+
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                Suggestions = new ObservableCollection<ProductSuggestDto>(result.Result);
+                IsSuggestionsOpen = Suggestions.Count > 0;
+            }
+            else
+            {
+                Suggestions.Clear();
+                IsSuggestionsOpen = false;
+            }
+        }
+        catch
+        {
+            Suggestions.Clear();
+            IsSuggestionsOpen = false;
+        }
+    }
+
+    // Select suggestion
+    [RelayCommand]
+    private async Task SelectSuggestionAsync(ProductSuggestDto suggestion)
+    {
+        if (suggestion is null) return;
+
+        SearchText = suggestion.Name;
+        IsSuggestionsOpen = false;
+        await SearchProductsAsync();
+    }
+
+    // Close suggestions
+    [RelayCommand]
+    private void CloseSuggestions()
+    {
+        IsSuggestionsOpen = false;
+    }
+
     // Search
     [RelayCommand]
     private async Task SearchProductsAsync()
     {
+        IsSuggestionsOpen = false;
+
         if (string.IsNullOrWhiteSpace(SearchText))
         {
             CurrentPage = 1;

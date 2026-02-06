@@ -32,6 +32,18 @@ public partial class CategoryViewModel : ViewModelBase
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    // Suggestions
+    [ObservableProperty]
+    private ObservableCollection<CategoryDto> _suggestions = [];
+
+    [ObservableProperty]
+    private bool _isSuggestionsOpen;
+
+    partial void OnSearchTextChanged(string value)
+    {
+        _ = LoadSuggestionsAsync(value);
+    }
+
     // Panel visibility
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
@@ -93,10 +105,63 @@ public partial class CategoryViewModel : ViewModelBase
         }
     }
 
+    // Load suggestions for autocomplete
+    private async Task LoadSuggestionsAsync(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            Suggestions.Clear();
+            IsSuggestionsOpen = false;
+            return;
+        }
+
+        try
+        {
+            var url = $"api/category/suggest?query={Uri.EscapeDataString(query)}";
+            var result = await _apiService.GetAsync<List<CategoryDto>>(url);
+
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                Suggestions = new ObservableCollection<CategoryDto>(result.Result);
+                IsSuggestionsOpen = Suggestions.Count > 0;
+            }
+            else
+            {
+                Suggestions.Clear();
+                IsSuggestionsOpen = false;
+            }
+        }
+        catch
+        {
+            Suggestions.Clear();
+            IsSuggestionsOpen = false;
+        }
+    }
+
+    // Select suggestion
+    [RelayCommand]
+    private async Task SelectSuggestionAsync(CategoryDto suggestion)
+    {
+        if (suggestion is null) return;
+
+        SearchText = suggestion.Name;
+        IsSuggestionsOpen = false;
+        await SearchCategoriesAsync();
+    }
+
+    // Close suggestions
+    [RelayCommand]
+    private void CloseSuggestions()
+    {
+        IsSuggestionsOpen = false;
+    }
+
     // Search
     [RelayCommand]
     private async Task SearchCategoriesAsync()
     {
+        IsSuggestionsOpen = false;
+
         if (string.IsNullOrWhiteSpace(SearchText))
         {
             await LoadCategoriesAsync();
