@@ -1,11 +1,11 @@
-<UserControl x:Class="WPF.Views.ProductView"
+<UserControl x:Class="WPF.Views.CategoryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:WPF.ViewModels"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=vm:ProductViewModel}"
+             d:DataContext="{d:DesignInstance Type=vm:CategoryViewModel}"
              d:DesignHeight="700" d:DesignWidth="1200"
              Loaded="UserControl_Loaded">
 
@@ -168,15 +168,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Form ComboBox Style -->
-        <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#f8f9fa"/>
-            <Setter Property="BorderBrush" Value="#e0e0e0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -201,7 +192,6 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
@@ -228,12 +218,12 @@
                                      FontSize="14"
                                      VerticalContentAlignment="Center">
                                 <TextBox.InputBindings>
-                                    <KeyBinding Key="Enter" Command="{Binding SearchProductsCommand}"/>
+                                    <KeyBinding Key="Enter" Command="{Binding SearchCategoriesCommand}"/>
                                 </TextBox.InputBindings>
                             </TextBox>
                             <Button Grid.Column="2"
                                     Content="Qidirish"
-                                    Command="{Binding SearchProductsCommand}"
+                                    Command="{Binding SearchCategoriesCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}"
                                     Padding="20,10"
                                     Margin="5"/>
@@ -241,7 +231,7 @@
                     </Border>
 
                     <!-- Add Button -->
-                    <Button Grid.Column="2"
+                    <Button Grid.Column="1"
                             Command="{Binding ShowAddPanelCommand}"
                             Style="{StaticResource SuccessButtonStyle}"
                             Padding="20,12">
@@ -252,19 +242,19 @@
                                   Stretch="Uniform"
                                   Margin="0,0,8,0"
                                   VerticalAlignment="Center"/>
-                            <TextBlock Text="Yangi mahsulot" VerticalAlignment="Center"/>
+                            <TextBlock Text="Yangi kategoriya" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </Grid>
             </Border>
 
-            <!-- Action Buttons for Selected Product -->
+            <!-- Action Buttons for Selected Category -->
             <Border Grid.Row="1"
                     Background="White"
                     CornerRadius="12"
                     Padding="15"
                     Margin="0,0,0,15"
-                    Visibility="{Binding SelectedProduct, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding SelectedCategory, Converter={StaticResource StringToVisibilityConverter}}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
                 </Border.Effect>
@@ -276,25 +266,63 @@
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Tanlangan: " Foreground="#666" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SelectedProduct.Name}" FontWeight="SemiBold" FontSize="14" Foreground="#1a1a2e" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SelectedCategory.Name}" FontWeight="SemiBold" FontSize="14" Foreground="#1a1a2e" VerticalAlignment="Center"/>
                         <TextBlock Text=" | " Foreground="#ccc" Margin="10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Zaxira: " Foreground="#666" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=N2}" FontWeight="SemiBold" FontSize="14" Foreground="#4CAF50" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SelectedProduct.UnitType}" Foreground="#666" FontSize="14" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Holat: " Foreground="#666" FontSize="14" VerticalAlignment="Center"/>
+                        <Border CornerRadius="10" Padding="8,4" VerticalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedCategory.IsActive}" Value="False">
+                                            <Setter Property="Background" Value="#FFEBEE"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <TextBlock FontSize="12" FontWeight="SemiBold">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Faol"/>
+                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedCategory.IsActive}" Value="False">
+                                                <Setter Property="Text" Value="Nofaol"/>
+                                                <Setter Property="Foreground" Value="#f44336"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Border>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button Content="Tahrirlash"
-                                Command="{Binding EditProductCommand}"
+                                Command="{Binding EditCategoryCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Padding="16,10"
                                 Margin="0,0,10,0"/>
-                        <Button Content="Zaxira qo'shish"
-                                Command="{Binding ShowStockInPanelCommand}"
+                        <Button Command="{Binding ToggleActiveCommand}"
                                 Style="{StaticResource WarningButtonStyle}"
-                                Margin="0,0,10,0"/>
+                                Margin="0,0,10,0">
+                            <Button.Content>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Nofaollashtirish"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedCategory.IsActive}" Value="False">
+                                                    <Setter Property="Text" Value="Faollashtirish"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button.Content>
+                        </Button>
                         <Button Content="O'chirish"
-                                Command="{Binding DeleteProductCommand}"
+                                Command="{Binding DeleteCategoryCommand}"
                                 Style="{StaticResource DangerButtonStyle}"/>
                     </StackPanel>
                 </Grid>
@@ -323,7 +351,7 @@
                 </Grid>
             </Border>
 
-            <!-- Products DataGrid -->
+            <!-- Categories DataGrid -->
             <Border Grid.Row="2" Background="White" CornerRadius="12">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
@@ -335,8 +363,8 @@
                     </Grid.RowDefinitions>
 
                     <DataGrid Grid.Row="0"
-                              ItemsSource="{Binding Products}"
-                              SelectedItem="{Binding SelectedProduct}"
+                              ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               CanUserAddRows="False"
@@ -385,41 +413,9 @@
                             </Style>
                         </DataGrid.CellStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
                             <DataGridTextColumn Header="Nomi" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Kategoriya" Binding="{Binding Category.Name}" Width="130"/>
-                            <DataGridTemplateColumn Header="Narxi" Width="120">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock>
-                                            <Run Text="{Binding UnitPrice, StringFormat=N0}"/>
-                                            <Run Text=" so'm" Foreground="#888"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="O'lchov" Binding="{Binding UnitType}" Width="80"/>
-                            <DataGridTemplateColumn Header="Zaxira" Width="100">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontWeight="SemiBold">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Foreground" Value="#4CAF50"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding StockQuantity}" Value="0">
-                                                            <Setter Property="Foreground" Value="#f44336"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                            <Run Text="{Binding StockQuantity, StringFormat=N2}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Shtrix kod" Binding="{Binding Barcode}" Width="130"/>
-                            <DataGridTemplateColumn Header="Holat" Width="80">
+                            <DataGridTemplateColumn Header="Holat" Width="120">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border CornerRadius="10" Padding="8,4" HorizontalAlignment="Left">
@@ -454,42 +450,13 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!-- Pagination Controls -->
+                    <!-- Category Count -->
                     <Border Grid.Row="1" BorderBrush="#e0e0e0" BorderThickness="0,1,0,0" Padding="15,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#666" FontSize="13">
-                                <Run Text="Jami: "/>
-                                <Run Text="{Binding TotalCount, Mode=OneWay}" FontWeight="SemiBold"/>
-                                <Run Text=" ta mahsulot"/>
-                            </TextBlock>
-
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Oldingi"
-                                        Command="{Binding PreviousPageCommand}"
-                                        Style="{StaticResource SecondaryButtonStyle}"
-                                        Padding="12,8"
-                                        Margin="0,0,10,0"/>
-
-                                <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="#333" Margin="5,0">
-                                    <Run Text="Sahifa "/>
-                                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="SemiBold"/>
-                                    <Run Text=" / "/>
-                                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="SemiBold"/>
-                                </TextBlock>
-
-                                <Button Content="Keyingi"
-                                        Command="{Binding NextPageCommand}"
-                                        Style="{StaticResource SecondaryButtonStyle}"
-                                        Padding="12,8"
-                                        Margin="10,0,0,0"/>
-                            </StackPanel>
-                        </Grid>
+                        <TextBlock VerticalAlignment="Center" Foreground="#666" FontSize="13">
+                            <Run Text="Jami: "/>
+                            <Run Text="{Binding Categories.Count, Mode=OneWay}" FontWeight="SemiBold"/>
+                            <Run Text=" ta kategoriya"/>
+                        </TextBlock>
                     </Border>
 
                     <!-- Loading Indicator -->
@@ -518,7 +485,7 @@
             </Border>
         </Grid>
 
-        <!-- Side Panel for Add/Edit/StockIn -->
+        <!-- Side Panel for Add/Edit -->
         <Border Grid.Column="1"
                 Width="400"
                 Background="White"
@@ -545,13 +512,10 @@
                         <TextBlock Grid.Column="0" FontSize="18" FontWeight="SemiBold" Foreground="#1a1a2e" VerticalAlignment="Center">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Text" Value="Yangi mahsulot"/>
+                                    <Setter Property="Text" Value="Yangi kategoriya"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
-                                            <Setter Property="Text" Value="Mahsulotni tahrirlash"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsStockInPanelOpen}" Value="True">
-                                            <Setter Property="Text" Value="Zaxira qo'shish"/>
+                                            <Setter Property="Text" Value="Kategoriyani tahrirlash"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -574,77 +538,16 @@
                 <!-- Panel Content -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
                     <StackPanel>
-                        <!-- Add/Edit Form -->
-                        <StackPanel Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
-                            <!-- Product Name -->
-                            <TextBlock Text="Mahsulot nomi" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     Margin="0,0,0,20"/>
+                        <!-- Category Name -->
+                        <TextBlock Text="Kategoriya nomi" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
+                        <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource FormInputStyle}"
+                                 Margin="0,0,0,20"/>
 
-                            <!-- Category -->
-                            <TextBlock Text="Kategoriya" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <ComboBox ItemsSource="{Binding Categories}"
-                                      SelectedValue="{Binding FormCategoryId}"
-                                      SelectedValuePath="Id"
-                                      DisplayMemberPath="Name"
-                                      Style="{StaticResource FormComboBoxStyle}"
-                                      Margin="0,0,0,20"/>
-
-                            <!-- Unit Price -->
-                            <TextBlock Text="Narxi (so'm)" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding FormUnitPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     Margin="0,0,0,20"/>
-
-                            <!-- Unit Type -->
-                            <TextBlock Text="O'lchov birligi" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <ComboBox ItemsSource="{Binding UnitTypes}"
-                                      SelectedItem="{Binding FormUnitType}"
-                                      Style="{StaticResource FormComboBoxStyle}"
-                                      Margin="0,0,0,20"/>
-
-                            <!-- Initial Stock (only for new products) -->
-                            <StackPanel Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <TextBlock Text="Boshlang'ich zaxira" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                                <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
-                                         Style="{StaticResource FormInputStyle}"
-                                         Margin="0,0,0,20"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <!-- Stock In Form -->
-                        <StackPanel Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <!-- Product Info -->
-                            <Border Background="#f8f9fa" CornerRadius="8" Padding="15" Margin="0,0,0,20">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding SelectedProduct.Name}" FontSize="16" FontWeight="SemiBold" Foreground="#1a1a2e"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                        <TextBlock Text="Joriy zaxira: " Foreground="#666"/>
-                                        <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=N2}" FontWeight="SemiBold" Foreground="#4CAF50"/>
-                                        <TextBlock Text="{Binding SelectedProduct.UnitType}" Foreground="#666" Margin="5,0,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Stock Quantity -->
-                            <TextBlock Text="Qo'shiladigan miqdor" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     FontSize="18"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Foreground="#888" FontSize="12" Margin="0,0,0,20">
-                                <Run Text="Yangi zaxira: "/>
-                                <Run FontWeight="SemiBold" Foreground="#4CAF50">
-                                    <Run.Text>
-                                        <MultiBinding StringFormat="{}{0:N2}">
-                                            <Binding Path="SelectedProduct.StockQuantity"/>
-                                        </MultiBinding>
-                                    </Run.Text>
-                                </Run>
-                                <Run Text=" + "/>
-                                <Run Text="{Binding StockInQuantity, StringFormat=N2}" FontWeight="SemiBold"/>
-                            </TextBlock>
+                        <!-- IsActive (only for edit) -->
+                        <StackPanel Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Holat" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
+                            <CheckBox IsChecked="{Binding FormIsActive}" Content="Faol" FontSize="14" Margin="0,0,0,20"/>
                         </StackPanel>
 
                         <!-- Form Error -->
@@ -675,29 +578,18 @@
                         <!-- Save Button for Add -->
                         <Button Grid.Column="1"
                                 Content="Saqlash"
-                                Command="{Binding SaveProductCommand}"
+                                Command="{Binding SaveCategoryCommand}"
                                 Style="{StaticResource SuccessButtonStyle}"
                                 Margin="8,0,0,0"
-                                IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
                                 Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                         <!-- Update Button for Edit -->
                         <Button Grid.Column="1"
                                 Content="Yangilash"
-                                Command="{Binding UpdateProductCommand}"
+                                Command="{Binding UpdateCategoryCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="8,0,0,0"
-                                IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
                                 Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                        <!-- Add Stock Button -->
-                        <Button Grid.Column="1"
-                                Content="Zaxiraga qo'shish"
-                                Command="{Binding AddStockCommand}"
-                                Style="{StaticResource WarningButtonStyle}"
-                                Margin="8,0,0,0"
-                                IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
-                                Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </Grid>
                 </Border>
 

@@ -1,5 +1,3 @@
-using WPF.Models;
-
 namespace WPF.Services;
 
 public interface IAuthService
@@ -10,4 +8,6 @@ public interface IAuthService
     bool IsAuthenticated { get; }
     string? AccessToken { get; }
     string? RefreshToken { get; }
+    int? UserId { get; }
+    string? Username { get; }
 }

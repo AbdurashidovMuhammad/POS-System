@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using WPF.Enums;
 using WPF.Models;
 using WPF.Services;
 
@@ -10,34 +11,121 @@ public partial class ProductViewModel : ViewModelBase
 {
     private readonly IApiService _apiService;
     private readonly INavigationService _navigationService;
+    private readonly IAuthService _authService;
 
-    public ProductViewModel(IApiService apiService, INavigationService navigationService)
+    public ProductViewModel(IApiService apiService, INavigationService navigationService, IAuthService authService)
     {
         _apiService = apiService;
         _navigationService = navigationService;
+        _authService = authService;
+
+        UnitTypes = new ObservableCollection<UnitType>(Enum.GetValues<UnitType>());
     }
 
+    // Collections
     [ObservableProperty]
     private ObservableCollection<ProductDto> _products = [];
 
     [ObservableProperty]
+    private ObservableCollection<CategoryDto> _categories = [];
+
+    [ObservableProperty]
+    private ObservableCollection<UnitType> _unitTypes;
+
+    // Selected item
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
+    [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ShowStockInPanelCommand))]
     private ProductDto? _selectedProduct;
 
+    // Search
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    // Pagination
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _currentPage = 1;
+
+    [ObservableProperty]
+    private int _pageSize = 20;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _totalPages = 1;
+
+    [ObservableProperty]
+    private int _totalCount;
+
+    // Panel visibility
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isAddPanelOpen;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isEditPanelOpen;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isStockInPanelOpen;
+
+    public bool IsPanelOpen => IsAddPanelOpen || IsEditPanelOpen || IsStockInPanelOpen;
+
+    // Form fields
+    [ObservableProperty]
+    private string _formName = string.Empty;
+
+    [ObservableProperty]
+    private int? _formCategoryId;
+
+    [ObservableProperty]
+    private decimal _formUnitPrice;
+
+    [ObservableProperty]
+    private UnitType _formUnitType = UnitType.Dona;
+
+    [ObservableProperty]
+    private decimal _formStockQuantity;
+
+    [ObservableProperty]
+    private decimal _stockInQuantity;
+
+    [ObservableProperty]
+    private string? _formError;
+
+    [ObservableProperty]
+    private bool _isSaving;
+
+    [ObservableProperty]
+    private string? _successMessage;
+
+    // CanExecute methods
+    private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
+    private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
+    private bool HasSelectedProduct() => SelectedProduct is not null;
+
+    // Load products
     [RelayCommand]
     private async Task LoadProductsAsync()
     {
         IsLoading = true;
         ClearError();
+        SuccessMessage = null;
 
         try
         {
-            var result = await _apiService.GetAsync<List<ProductDto>>("api/products");
+            var url = $"api/products?page={CurrentPage}&pageSize={PageSize}";
+            var result = await _apiService.GetAsync<PagedResult<ProductDto>>(url);
+
             if (result?.Succeeded == true && result.Result is not null)
             {
-                Products = new ObservableCollection<ProductDto>(result.Result);
+                Products = new ObservableCollection<ProductDto>(result.Result.Items);
+                TotalPages = result.Result.TotalPages;
+                TotalCount = result.Result.TotalCount;
             }
             else
             {
@@ -54,11 +142,46 @@ public partial class ProductViewModel : ViewModelBase
         }
     }
 
+    // Load categories
+    [RelayCommand]
+    private async Task LoadCategoriesAsync()
+    {
+        try
+        {
+            var result = await _apiService.GetAsync<List<CategoryDto>>("api/category");
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                Categories = new ObservableCollection<CategoryDto>(result.Result.Where(c => c.IsActive));
+            }
+        }
+        catch
+        {
+            // Silently fail for categories
+        }
+    }
+
+    // Pagination
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private async Task PreviousPageAsync()
+    {
+        CurrentPage--;
+        await LoadProductsAsync();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private async Task NextPageAsync()
+    {
+        CurrentPage++;
+        await LoadProductsAsync();
+    }
+
+    // Search
     [RelayCommand]
     private async Task SearchProductsAsync()
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
+            CurrentPage = 1;
             await LoadProductsAsync();
             return;
         }
@@ -68,10 +191,13 @@ public partial class ProductViewModel : ViewModelBase
 
         try
         {
-            var result = await _apiService.GetAsync<List<ProductDto>>($"api/products?search={SearchText}");
+            var url = $"api/products/search/full?query={Uri.EscapeDataString(SearchText)}&page={CurrentPage}&pageSize={PageSize}";
+            var result = await _apiService.GetAsync<PagedResult<ProductDto>>(url);
             if (result?.Succeeded == true && result.Result is not null)
             {
-                Products = new ObservableCollection<ProductDto>(result.Result);
+                Products = new ObservableCollection<ProductDto>(result.Result.Items);
+                TotalPages = result.Result.TotalPages;
+                TotalCount = result.Result.TotalCount;
             }
         }
         catch (Exception ex)
@@ -84,9 +210,273 @@ public partial class ProductViewModel : ViewModelBase
         }
     }
 
+    // Show Add Panel
+    [RelayCommand]
+    private async Task ShowAddPanelAsync()
+    {
+        await LoadCategoriesAsync();
+        ClearForm();
+        CloseAllPanels();
+        IsAddPanelOpen = true;
+    }
+
+    // Edit Product
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
+    private async Task EditProductAsync()
+    {
+        if (SelectedProduct is null) return;
+
+        await LoadCategoriesAsync();
+        CloseAllPanels();
+
+        FormName = SelectedProduct.Name;
+        FormCategoryId = SelectedProduct.CategoryId;
+        FormUnitPrice = SelectedProduct.UnitPrice;
+        FormUnitType = SelectedProduct.UnitType;
+        FormError = null;
+
+        IsEditPanelOpen = true;
+    }
+
+    // Show Stock In Panel
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
+    private async Task ShowStockInPanelAsync()
+    {
+        if (SelectedProduct is null) return;
+
+        CloseAllPanels();
+        StockInQuantity = 0;
+        FormError = null;
+        IsStockInPanelOpen = true;
+        await Task.CompletedTask;
+    }
+
+    // Save Product (Create)
+    [RelayCommand]
+    private async Task SaveProductAsync()
+    {
+        if (!ValidateForm()) return;
+
+        IsSaving = true;
+        FormError = null;
+
+        try
+        {
+            var dto = new CreateProductDto
+            {
+                Name = FormName.Trim(),
+                CategoryId = FormCategoryId!.Value,
+                UnitPrice = FormUnitPrice,
+                UnitType = FormUnitType,
+                StockQuantity = FormStockQuantity
+            };
+
+            var result = await _apiService.PostAsync<int>("api/products", dto);
+
+            if (result?.Succeeded == true)
+            {
+                CloseAllPanels();
+                SuccessMessage = "Mahsulot muvaffaqiyatli qo'shildi";
+                await LoadProductsAsync();
+            }
+            else
+            {
+                FormError = result?.Errors.FirstOrDefault() ?? "Mahsulotni saqlashda xatolik";
+            }
+        }
+        catch (Exception ex)
+        {
+            FormError = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    // Update Product
+    [RelayCommand]
+    private async Task UpdateProductAsync()
+    {
+        if (SelectedProduct is null || !ValidateForm(isUpdate: true)) return;
+
+        IsSaving = true;
+        FormError = null;
+
+        try
+        {
+            var dto = new UpdateProductDto
+            {
+                Name = FormName.Trim(),
+                CategoryId = FormCategoryId!.Value,
+                UnitPrice = FormUnitPrice,
+                UnitType = FormUnitType
+            };
+
+            var result = await _apiService.PutAsync<ProductDto>($"api/products/{SelectedProduct.Id}", dto);
+
+            if (result?.Succeeded == true)
+            {
+                CloseAllPanels();
+                SuccessMessage = "Mahsulot muvaffaqiyatli yangilandi";
+                await LoadProductsAsync();
+            }
+            else
+            {
+                FormError = result?.Errors.FirstOrDefault() ?? "Mahsulotni yangilashda xatolik";
+            }
+        }
+        catch (Exception ex)
+        {
+            FormError = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    // Add Stock
+    [RelayCommand]
+    private async Task AddStockAsync()
+    {
+        if (SelectedProduct is null) return;
+
+        if (StockInQuantity <= 0)
+        {
+            FormError = "Miqdor 0 dan katta bo'lishi kerak";
+            return;
+        }
+
+        IsSaving = true;
+        FormError = null;
+
+        try
+        {
+            var dto = new AddStockDto
+            {
+                Quantity = StockInQuantity,
+                UserId = _authService.UserId ?? 1
+            };
+
+            var result = await _apiService.PostAsync<ProductDto>($"api/products/{SelectedProduct.Id}/stock", dto);
+
+            if (result?.Succeeded == true)
+            {
+                CloseAllPanels();
+                SuccessMessage = $"{StockInQuantity:N2} {SelectedProduct.UnitType} zaxiraga qo'shildi";
+                await LoadProductsAsync();
+            }
+            else
+            {
+                FormError = result?.Errors.FirstOrDefault() ?? "Zaxirani qo'shishda xatolik";
+            }
+        }
+        catch (Exception ex)
+        {
+            FormError = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    // Delete Product
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
+    private async Task DeleteProductAsync()
+    {
+        if (SelectedProduct is null) return;
+
+        IsSaving = true;
+        ClearError();
+
+        try
+        {
+            var result = await _apiService.DeleteAsync<string>($"api/products/{SelectedProduct.Id}");
+
+            if (result?.Succeeded == true)
+            {
+                SuccessMessage = "Mahsulot muvaffaqiyatli o'chirildi";
+                SelectedProduct = null;
+                await LoadProductsAsync();
+            }
+            else
+            {
+                ErrorMessage = result?.Errors.FirstOrDefault() ?? "Mahsulotni o'chirishda xatolik";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    // Cancel / Close Panel
+    [RelayCommand]
+    private void CancelPanel()
+    {
+        CloseAllPanels();
+        ClearForm();
+    }
+
+    // Navigation
     [RelayCommand]
     private void GoBack()
     {
         _navigationService.GoBack();
+    }
+
+    // Helper methods
+    private void CloseAllPanels()
+    {
+        IsAddPanelOpen = false;
+        IsEditPanelOpen = false;
+        IsStockInPanelOpen = false;
+    }
+
+    private void ClearForm()
+    {
+        FormName = string.Empty;
+        FormCategoryId = null;
+        FormUnitPrice = 0;
+        FormUnitType = UnitType.Dona;
+        FormStockQuantity = 0;
+        StockInQuantity = 0;
+        FormError = null;
+    }
+
+    private bool ValidateForm(bool isUpdate = false)
+    {
+        if (string.IsNullOrWhiteSpace(FormName))
+        {
+            FormError = "Mahsulot nomini kiriting";
+            return false;
+        }
+
+        if (FormCategoryId is null || FormCategoryId <= 0)
+        {
+            FormError = "Kategoriyani tanlang";
+            return false;
+        }
+
+        if (FormUnitPrice <= 0)
+        {
+            FormError = "Narx 0 dan katta bo'lishi kerak";
+            return false;
+        }
+
+        if (!isUpdate && FormStockQuantity < 0)
+        {
+            FormError = "Zaxira miqdori manfiy bo'lishi mumkin emas";
+            return false;
+        }
+
+        FormError = null;
+        return true;
     }
 }

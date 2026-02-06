@@ -12,6 +12,7 @@
         <converters:DecimalFormatConverter x:Key="DecimalFormatConverter"/>
         <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
 
         <!-- DataTemplates for View-ViewModel mapping -->
         <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
@@ -31,6 +32,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:ShellViewModel}">
             <views:ShellView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:CategoryViewModel}">
+            <views:CategoryView/>
         </DataTemplate>
     </Application.Resources>
 </Application>

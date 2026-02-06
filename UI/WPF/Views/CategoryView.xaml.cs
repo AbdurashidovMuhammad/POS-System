@@ -4,19 +4,18 @@ using WPF.ViewModels;
 
 namespace WPF.Views;
 
-public partial class ProductView : UserControl
+public partial class CategoryView : UserControl
 {
-    public ProductView()
+    public CategoryView()
     {
         InitializeComponent();
     }
 
     private async void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (DataContext is ProductViewModel viewModel)
+        if (DataContext is CategoryViewModel viewModel)
         {
             await viewModel.LoadCategoriesCommand.ExecuteAsync(null);
-            await viewModel.LoadProductsCommand.ExecuteAsync(null);
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿using Application.DTOs.ProductDTOs;
+﻿using Application.DTOs.Common;
+using Application.DTOs.ProductDTOs;
 
 namespace Application.Services;
 
 public interface IProductService
 {
     /// <summary>
-    /// Get all active products with their categories
+    /// Get all active products with pagination
     /// </summary>
-    Task<IEnumerable<ProductDto>> GetAllProductsAsync();
+    Task<PagedResult<ProductDto>> GetAllProductsAsync(PaginationParams paginationParams);
 
     /// <summary>
     /// Get product by ID
@@ -18,6 +19,11 @@ public interface IProductService
     /// Search products by name (autocomplete)
     /// </summary>
     Task<IEnumerable<ProductSuggestDto>> SearchProductsByNameAsync(string query);
+
+    /// <summary>
+    /// Full search products by name with pagination
+    /// </summary>
+    Task<PagedResult<ProductDto>> SearchProductsFullAsync(string query, PaginationParams paginationParams);
 
     /// <summary>
     /// Get product by barcode (for scanner input)

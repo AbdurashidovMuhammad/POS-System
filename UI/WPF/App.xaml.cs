@@ -43,6 +43,7 @@ public partial class App : Application
         services.AddTransient<ProductViewModel>();
         services.AddTransient<SalesViewModel>();
         services.AddTransient<ReportViewModel>();
+        services.AddTransient<CategoryViewModel>();
 
         // Views
         services.AddSingleton<MainWindow>();

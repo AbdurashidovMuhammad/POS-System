@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
 using Application.Services;
@@ -22,19 +23,19 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
-    /// Get all active products
+    /// Get all active products with pagination
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
     {
         try
         {
-            var products = await _productService.GetAllProductsAsync();
-            return Ok(ApiResult<List<ProductDto>>.Success(products.ToList()));
+            var result = await _productService.GetAllProductsAsync(paginationParams);
+            return Ok(ApiResult<PagedResult<ProductDto>>.Success(result));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ApiResult<List<ProductDto>>.Failure([ex.Message]));
+            return StatusCode(500, ApiResult<PagedResult<ProductDto>>.Failure([ex.Message]));
         }
     }
 
@@ -73,6 +74,23 @@ public class ProductController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, ApiResult<List<ProductSuggestDto>>.Failure([ex.Message]));
+        }
+    }
+
+    /// <summary>
+    /// Full search products by name or barcode with pagination
+    /// </summary>
+    [HttpGet("search/full")]
+    public async Task<IActionResult> SearchFull([FromQuery] string query, [FromQuery] PaginationParams paginationParams)
+    {
+        try
+        {
+            var result = await _productService.SearchProductsFullAsync(query, paginationParams);
+            return Ok(ApiResult<PagedResult<ProductDto>>.Success(result));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<PagedResult<ProductDto>>.Failure([ex.Message]));
         }
     }
 

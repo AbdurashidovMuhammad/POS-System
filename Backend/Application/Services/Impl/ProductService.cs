@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.CategoryDTOs;
+using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
 using Core.Entities;
@@ -19,14 +20,27 @@ public class ProductService : IProductService
         _barcodeService = barcodeService;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+    public async Task<PagedResult<ProductDto>> GetAllProductsAsync(PaginationParams paginationParams)
     {
-        var products = await _context.Products
+        var query = _context.Products
             .Include(p => p.Category)
             .Where(p => p.IsActive)
+            .OrderBy(p => p.Name);
+
+        var totalCount = await query.CountAsync();
+
+        var products = await query
+            .Skip((paginationParams.Page - 1) * paginationParams.PageSize)
+            .Take(paginationParams.PageSize)
             .ToListAsync();
 
-        return products.Select(MapToDto);
+        return new PagedResult<ProductDto>
+        {
+            Items = products.Select(MapToDto).ToList(),
+            Page = paginationParams.Page,
+            PageSize = paginationParams.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<ProductDto> GetProductByIdAsync(int id)
@@ -66,6 +80,37 @@ public class ProductService : IProductService
             .ToListAsync();
 
         return products;
+    }
+
+    public async Task<PagedResult<ProductDto>> SearchProductsFullAsync(string query, PaginationParams paginationParams)
+    {
+        var baseQuery = _context.Products
+            .Include(p => p.Category)
+            .Where(p => p.IsActive);
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var lowerQuery = query.Trim().ToLower();
+            baseQuery = baseQuery.Where(p =>
+                p.Name.ToLower().Contains(lowerQuery) ||
+                p.barcode.ToLower().Contains(lowerQuery));
+        }
+
+        var totalCount = await baseQuery.CountAsync();
+
+        var products = await baseQuery
+            .OrderBy(p => p.Name)
+            .Skip((paginationParams.Page - 1) * paginationParams.PageSize)
+            .Take(paginationParams.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<ProductDto>
+        {
+            Items = products.Select(MapToDto).ToList(),
+            Page = paginationParams.Page,
+            PageSize = paginationParams.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<ProductDto> GetProductByBarcodeAsync(string barcode)

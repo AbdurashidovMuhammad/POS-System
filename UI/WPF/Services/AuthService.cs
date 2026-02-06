@@ -1,3 +1,4 @@
+using System.Text.Json;
 using WPF.Models;
 
 namespace WPF.Services;
@@ -13,6 +14,8 @@ public class AuthService : IAuthService
 
     public string? AccessToken { get; private set; }
     public string? RefreshToken { get; private set; }
+    public int? UserId { get; private set; }
+    public string? Username { get; private set; }
     public bool IsAuthenticated => !string.IsNullOrEmpty(AccessToken);
 
     public async Task<(bool Success, string? ErrorMessage)> LoginAsync(string username, string password)
@@ -40,6 +43,8 @@ public class AuthService : IAuthService
         RefreshToken = result.Result.RefreshToken;
         _apiService.SetAuthToken(AccessToken);
 
+        ExtractUserInfoFromToken(AccessToken);
+
         return (true, null);
     }
 
@@ -63,6 +68,8 @@ public class AuthService : IAuthService
         RefreshToken = result.Result.RefreshToken;
         _apiService.SetAuthToken(AccessToken);
 
+        ExtractUserInfoFromToken(AccessToken);
+
         return true;
     }
 
@@ -70,6 +77,50 @@ public class AuthService : IAuthService
     {
         AccessToken = null;
         RefreshToken = null;
+        UserId = null;
+        Username = null;
         _apiService.ClearAuthToken();
+    }
+
+    private void ExtractUserInfoFromToken(string token)
+    {
+        try
+        {
+            var parts = token.Split('.');
+            if (parts.Length != 3) return;
+
+            var payload = parts[1];
+            // Add padding if needed
+            switch (payload.Length % 4)
+            {
+                case 2: payload += "=="; break;
+                case 3: payload += "="; break;
+            }
+
+            var jsonBytes = Convert.FromBase64String(payload.Replace('-', '+').Replace('_', '/'));
+            var json = System.Text.Encoding.UTF8.GetString(jsonBytes);
+
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("nameid", out var nameIdElement) ||
+                root.TryGetProperty("sub", out nameIdElement))
+            {
+                if (int.TryParse(nameIdElement.GetString(), out var userId))
+                {
+                    UserId = userId;
+                }
+            }
+
+            if (root.TryGetProperty("unique_name", out var usernameElement) ||
+                root.TryGetProperty("name", out usernameElement))
+            {
+                Username = usernameElement.GetString();
+            }
+        }
+        catch
+        {
+            // Token parsing failed, leave UserId/Username as null
+        }
     }
 }
