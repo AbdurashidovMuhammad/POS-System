@@ -90,15 +90,30 @@ public partial class SalesViewModel : ViewModelBase
         }
 
         IsLoading = true;
-        ClearError();
+        ClearMessages();
 
         try
         {
-            // TODO: Implement sale completion API call
-            // var saleItems = CartItems.Select(x => new { ProductId = x.Product.Id, Quantity = x.Quantity });
-            // await _apiService.PostAsync<object>("api/sales", new { Items = saleItems });
+            var createSaleDto = new CreateSaleDto
+            {
+                Items = CartItems.Select(x => new CreateSaleItemDto
+                {
+                    ProductId = x.Product.Id,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
 
-            ClearCart();
+            var result = await _apiService.PostAsync<SaleDto>("api/sales", createSaleDto);
+
+            if (result?.Succeeded == true)
+            {
+                SuccessMessage = $"Sotuv muvaffaqiyatli yakunlandi! Chek #{result.Result?.Id}";
+                ClearCart();
+            }
+            else
+            {
+                ErrorMessage = result?.Errors?.FirstOrDefault() ?? "Sotuvda xatolik yuz berdi";
+            }
         }
         catch (Exception ex)
         {

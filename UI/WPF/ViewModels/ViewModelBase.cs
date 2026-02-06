@@ -18,5 +18,18 @@ public abstract class ViewModelBase : ObservableObject
         set => SetProperty(ref _errorMessage, value);
     }
 
+    private string? _successMessage;
+    public string? SuccessMessage
+    {
+        get => _successMessage;
+        set => SetProperty(ref _successMessage, value);
+    }
+
     protected void ClearError() => ErrorMessage = null;
+    protected void ClearSuccess() => SuccessMessage = null;
+    protected void ClearMessages()
+    {
+        ErrorMessage = null;
+        SuccessMessage = null;
+    }
 }

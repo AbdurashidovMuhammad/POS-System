@@ -6,6 +6,7 @@ public class NavigationService : INavigationService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly Stack<object> _navigationStack = new();
+    private readonly Dictionary<Type, object> _viewModelCache = new();
 
     public NavigationService(IServiceProvider serviceProvider)
     {
@@ -29,7 +30,12 @@ public class NavigationService : INavigationService
             _navigationStack.Push(CurrentViewModel);
         }
 
-        var viewModel = _serviceProvider.GetRequiredService(viewModelType);
+        if (!_viewModelCache.TryGetValue(viewModelType, out var viewModel))
+        {
+            viewModel = _serviceProvider.GetRequiredService(viewModelType);
+            _viewModelCache[viewModelType] = viewModel;
+        }
+
         CurrentViewModel = viewModel;
         CurrentViewModelChanged?.Invoke(viewModel);
     }
@@ -40,5 +46,12 @@ public class NavigationService : INavigationService
 
         CurrentViewModel = _navigationStack.Pop();
         CurrentViewModelChanged?.Invoke(CurrentViewModel);
+    }
+
+    public void ClearCache()
+    {
+        _viewModelCache.Clear();
+        _navigationStack.Clear();
+        CurrentViewModel = null;
     }
 }

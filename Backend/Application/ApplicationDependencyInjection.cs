@@ -13,6 +13,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ICategoriesService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IBarcodeService, BarcodeService>();
+        services.AddScoped<ISaleService, SaleService>();
 
         return services;
     }

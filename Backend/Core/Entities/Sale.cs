@@ -7,6 +7,7 @@ public class Sale
     public decimal TotalAmount { get; set; }
     public DateTime SaleDate { get; set; } = DateTime.UtcNow;
 
-    // Navigation property
+    // Navigation properties
     public User User { get; set; } = null!;
+    public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
 }

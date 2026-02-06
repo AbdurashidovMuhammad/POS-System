@@ -39,6 +39,8 @@ public partial class ShellViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isSidebarCollapsed;
 
+    private readonly Dictionary<string, object> _viewModelCache = new();
+
     private void InitializeMenuItems()
     {
         MenuItems = new ObservableCollection<MenuItemViewModel>
@@ -68,15 +70,25 @@ public partial class ShellViewModel : ViewModelBase
 
     private void NavigateToView(string viewModelName)
     {
-        CurrentView = viewModelName switch
+        if (!_viewModelCache.TryGetValue(viewModelName, out var viewModel))
         {
-            nameof(DashboardViewModel) => _serviceProvider.GetService(typeof(DashboardViewModel)),
-            nameof(SalesViewModel) => _serviceProvider.GetService(typeof(SalesViewModel)),
-            nameof(ProductViewModel) => _serviceProvider.GetService(typeof(ProductViewModel)),
-            nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
-            nameof(ReportViewModel) => _serviceProvider.GetService(typeof(ReportViewModel)),
-            _ => null
-        };
+            viewModel = viewModelName switch
+            {
+                nameof(DashboardViewModel) => _serviceProvider.GetService(typeof(DashboardViewModel)),
+                nameof(SalesViewModel) => _serviceProvider.GetService(typeof(SalesViewModel)),
+                nameof(ProductViewModel) => _serviceProvider.GetService(typeof(ProductViewModel)),
+                nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
+                nameof(ReportViewModel) => _serviceProvider.GetService(typeof(ReportViewModel)),
+                _ => null
+            };
+
+            if (viewModel is not null)
+            {
+                _viewModelCache[viewModelName] = viewModel;
+            }
+        }
+
+        CurrentView = viewModel;
     }
 
     [RelayCommand]
@@ -108,6 +120,8 @@ public partial class ShellViewModel : ViewModelBase
     private void Logout()
     {
         _authService.Logout();
+        _viewModelCache.Clear();
+        _navigationService.ClearCache();
         _navigationService.NavigateTo<LoginViewModel>();
     }
 }

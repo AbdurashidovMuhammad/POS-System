@@ -37,6 +37,7 @@ public partial class DashboardViewModel : ViewModelBase
     private void Logout()
     {
         _authService.Logout();
+        _navigationService.ClearCache();
         _navigationService.NavigateTo<LoginViewModel>();
     }
 }
