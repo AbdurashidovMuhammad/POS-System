@@ -20,9 +20,9 @@ public class AuthController : ControllerBase
     {
         var result = await _authService.LoginAsync(dto);
         if (!result.Succeeded)
-            return Unauthorized(new { errors = result.Errors });
+            return Unauthorized(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpPost("refresh")]
@@ -30,8 +30,8 @@ public class AuthController : ControllerBase
     {
         var result = await _authService.RefreshAsync(dto.RefreshToken);
         if (!result.Succeeded)
-            return Unauthorized(new { errors = result.Errors });
+            return Unauthorized(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 }

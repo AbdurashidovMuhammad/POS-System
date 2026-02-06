@@ -1,4 +1,5 @@
-﻿using Application.DTOs.ProductDTOs;
+﻿using Application.DTOs;
+using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/products")]
 [Authorize]
 public class ProductController : ControllerBase
 {
@@ -29,11 +30,11 @@ public class ProductController : ControllerBase
         try
         {
             var products = await _productService.GetAllProductsAsync();
-            return Ok(products);
+            return Ok(ApiResult<List<ProductDto>>.Success(products.ToList()));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<List<ProductDto>>.Failure([ex.Message]));
         }
     }
 
@@ -46,15 +47,15 @@ public class ProductController : ControllerBase
         try
         {
             var product = await _productService.GetProductByIdAsync(id);
-            return Ok(product);
+            return Ok(ApiResult<ProductDto>.Success(product));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<ProductDto>.Failure([ex.Message]));
         }
     }
 
@@ -67,11 +68,11 @@ public class ProductController : ControllerBase
         try
         {
             var suggestions = await _productService.SearchProductsByNameAsync(query);
-            return Ok(suggestions);
+            return Ok(ApiResult<List<ProductSuggestDto>>.Success(suggestions.ToList()));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<List<ProductSuggestDto>>.Failure([ex.Message]));
         }
     }
 
@@ -84,15 +85,15 @@ public class ProductController : ControllerBase
         try
         {
             var product = await _productService.GetProductByBarcodeAsync(barcode);
-            return Ok(product);
+            return Ok(ApiResult<ProductDto>.Success(product));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<ProductDto>.Failure([ex.Message]));
         }
     }
 
@@ -106,27 +107,28 @@ public class ProductController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(ApiResult<int>.Failure(errors));
             }
 
             var productId = await _productService.CreateProductAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = productId }, new { id = productId });
+            return CreatedAtAction(nameof(GetById), new { id = productId }, ApiResult<int>.Success(productId));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<int>.Failure([ex.Message]));
         }
         catch (DuplicateException ex)
         {
-            return Conflict(new { error = ex.Message });
+            return Conflict(ApiResult<int>.Failure([ex.Message]));
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return BadRequest(ApiResult<int>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<int>.Failure([ex.Message]));
         }
     }
 
@@ -140,27 +142,28 @@ public class ProductController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(ApiResult<ProductDto>.Failure(errors));
             }
 
             var product = await _productService.UpdateProductAsync(id, dto);
-            return Ok(product);
+            return Ok(ApiResult<ProductDto>.Success(product));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (DuplicateException ex)
         {
-            return Conflict(new { error = ex.Message });
+            return Conflict(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return BadRequest(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<ProductDto>.Failure([ex.Message]));
         }
     }
 
@@ -174,19 +177,20 @@ public class ProductController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(ApiResult<ProductDto>.Failure(errors));
             }
 
             var product = await _productService.AddStockAsync(id, dto);
-            return Ok(product);
+            return Ok(ApiResult<ProductDto>.Success(product));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<ProductDto>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<ProductDto>.Failure([ex.Message]));
         }
     }
 
@@ -199,15 +203,15 @@ public class ProductController : ControllerBase
         try
         {
             await _productService.DeactivateProductAsync(id);
-            return Ok(new { message = "Mahsulot muvaffaqiyatli o'chirildi" });
+            return Ok(ApiResult<string>.Success("Mahsulot muvaffaqiyatli o'chirildi"));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<string>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<string>.Failure([ex.Message]));
         }
     }
 
@@ -229,11 +233,11 @@ public class ProductController : ControllerBase
         }
         catch (NotFoundException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFound(ApiResult<byte[]>.Failure([ex.Message]));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, ApiResult<byte[]>.Failure([ex.Message]));
         }
     }
 }

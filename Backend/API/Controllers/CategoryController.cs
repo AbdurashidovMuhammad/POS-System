@@ -22,9 +22,9 @@ public class CategoryController : ControllerBase
     {
         var result = await _categoriesService.CreateCategoryAsync(dto);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors });
+            return BadRequest(result);
 
-        return Ok(new { message = result.Result });
+        return Ok(result);
     }
 
     [HttpPut("{id:int}")]
@@ -32,16 +32,16 @@ public class CategoryController : ControllerBase
     {
         var result = await _categoriesService.UpdateCategoryAsync(id, dto);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors });
+            return BadRequest(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var result = await _categoriesService.GetAllCategoriesAsync();
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpGet("{id:int}")]
@@ -49,16 +49,16 @@ public class CategoryController : ControllerBase
     {
         var result = await _categoriesService.GetCategoryByIdAsync(id);
         if (!result.Succeeded)
-            return NotFound(new { errors = result.Errors });
+            return NotFound(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpGet("suggest")]
     public async Task<IActionResult> Suggest([FromQuery] string query)
     {
         var result = await _categoriesService.SuggestCategoriesAsync(query);
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpDelete("{id:int}")]
@@ -66,8 +66,8 @@ public class CategoryController : ControllerBase
     {
         var result = await _categoriesService.DeleteCategoryAsync(id);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors });
+            return BadRequest(result);
 
-        return Ok(new { message = "Category muvaffaqiyatli o'chirildi." });
+        return Ok(result);
     }
 }

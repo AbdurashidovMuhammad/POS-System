@@ -22,16 +22,16 @@ public class UserController : ControllerBase
     {
         var result = await _userService.CreateAdminAsync(dto);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors });
+            return BadRequest(result);
 
-        return Ok(new { message = "Admin muvaffaqiyatli yaratildi." });
+        return Ok(result);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllAdmins()
     {
         var result = await _userService.GetAllAdminsAsync();
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpGet("{id:int}")]
@@ -39,9 +39,9 @@ public class UserController : ControllerBase
     {
         var result = await _userService.GetAdminByIdAsync(id);
         if (!result.Succeeded)
-            return NotFound(new { errors = result.Errors });
+            return NotFound(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpPut("{id:int}")]
@@ -49,9 +49,9 @@ public class UserController : ControllerBase
     {
         var result = await _userService.UpdateAdminAsync(id, dto);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors });
+            return BadRequest(result);
 
-        return Ok(result.Result);
+        return Ok(result);
     }
 
     [HttpDelete("{id:int}")]
@@ -59,8 +59,8 @@ public class UserController : ControllerBase
     {
         var result = await _userService.DeactivateAdminAsync(id);
         if (!result.Succeeded)
-            return NotFound(new { errors = result.Errors });
+            return NotFound(result);
 
-        return Ok(new { message = "Admin muvaffaqiyatli o'chirildi." });
+        return Ok(result);
     }
 }
