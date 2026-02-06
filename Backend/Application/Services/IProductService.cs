@@ -1,12 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTOs.ProductDTOs;
 
-namespace Application.Services
+namespace Application.Services;
+
+public interface IProductService
 {
-    public interface IProductService
-    {
-    }
+    /// <summary>
+    /// Get all active products with their categories
+    /// </summary>
+    Task<IEnumerable<ProductDto>> GetAllProductsAsync();
+
+    /// <summary>
+    /// Get product by ID
+    /// </summary>
+    Task<ProductDto> GetProductByIdAsync(int id);
+
+    /// <summary>
+    /// Search products by name (autocomplete)
+    /// </summary>
+    Task<IEnumerable<ProductSuggestDto>> SearchProductsByNameAsync(string query);
+
+    /// <summary>
+    /// Get product by barcode (for scanner input)
+    /// </summary>
+    Task<ProductDto> GetProductByBarcodeAsync(string barcode);
+
+    /// <summary>
+    /// Create new product with auto-generated barcode, returns product ID
+    /// </summary>
+    Task<int> CreateProductAsync(CreateProductDto dto);
+
+    /// <summary>
+    /// Update product information
+    /// </summary>
+    Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto);
+
+    /// <summary>
+    /// Add stock to product
+    /// </summary>
+    Task<ProductDto> AddStockAsync(int id, AddStockDto dto);
+
+    /// <summary>
+    /// Deactivate product (soft delete)
+    /// </summary>
+    Task DeactivateProductAsync(int id);
 }
