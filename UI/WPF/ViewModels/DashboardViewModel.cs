@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using WPF.Messages;
 using WPF.Services;
 
 namespace WPF.ViewModels;
@@ -18,19 +20,19 @@ public partial class DashboardViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateToProducts()
     {
-        _navigationService.NavigateTo<ProductViewModel>();
+        WeakReferenceMessenger.Default.Send(new NavigateToViewMessage(nameof(ProductViewModel)));
     }
 
     [RelayCommand]
     private void NavigateToSales()
     {
-        _navigationService.NavigateTo<SalesViewModel>();
+        WeakReferenceMessenger.Default.Send(new NavigateToViewMessage(nameof(SalesViewModel)));
     }
 
     [RelayCommand]
     private void NavigateToReports()
     {
-        _navigationService.NavigateTo<ReportViewModel>();
+        WeakReferenceMessenger.Default.Send(new NavigateToViewMessage(nameof(ReportViewModel)));
     }
 
     [RelayCommand]

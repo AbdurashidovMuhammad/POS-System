@@ -486,14 +486,22 @@
                         </DataGrid.CellStyle>
                         <DataGrid.RowHeaderStyle>
                             <Style TargetType="DataGridRowHeader">
-                                <Setter Property="Background" Value="#f8f9fa"/>
-                                <Setter Property="Foreground" Value="#666"/>
-                                <Setter Property="FontWeight" Value="Normal"/>
                                 <Setter Property="Width" Value="45"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                <Setter Property="BorderBrush" Value="#e0e0e0"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridRowHeader">
+                                            <Border Background="#f8f9fa"
+                                                    BorderBrush="#e0e0e0"
+                                                    BorderThickness="0,0,1,0">
+                                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
+                                                           Foreground="#666"
+                                                           FontSize="13"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </DataGrid.RowHeaderStyle>
                         <DataGrid.Columns>

@@ -1,11 +1,13 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using WPF.Messages;
 using WPF.Services;
 
 namespace WPF.ViewModels;
 
-public partial class ShellViewModel : ViewModelBase
+public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMessage>
 {
     private readonly INavigationService _navigationService;
     private readonly IAuthService _authService;
@@ -20,8 +22,19 @@ public partial class ShellViewModel : ViewModelBase
         _authService = authService;
         _serviceProvider = serviceProvider;
 
+        WeakReferenceMessenger.Default.Register(this);
+
         InitializeMenuItems();
         NavigateToDashboard();
+    }
+
+    public void Receive(NavigateToViewMessage message)
+    {
+        var menuItem = MenuItems.FirstOrDefault(m => m.ViewModelName == message.Value);
+        if (menuItem is not null)
+        {
+            SelectedMenuItem = menuItem;
+        }
     }
 
     [ObservableProperty]

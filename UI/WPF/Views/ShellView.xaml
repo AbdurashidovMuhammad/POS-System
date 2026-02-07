@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:WPF.ViewModels"
+             xmlns:converters="clr-namespace:WPF.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ShellViewModel}"
              d:DesignHeight="700" d:DesignWidth="1200">
@@ -24,7 +25,9 @@
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
         <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
 
-        <!-- Menu Item Style -->
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+
+        <!-- Menu Item Style - Expanded -->
         <Style x:Key="MenuItemButtonStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
@@ -36,7 +39,8 @@
                     <ControlTemplate TargetType="RadioButton">
                         <Border x:Name="border"
                                 Background="{TemplateBinding Background}"
-                                Padding="0">
+                                Padding="0"
+                                ClipToBounds="True">
                             <Grid>
                                 <!-- Selection Indicator -->
                                 <Border x:Name="indicator"
@@ -46,7 +50,8 @@
                                         CornerRadius="0,2,2,0"
                                         Visibility="Collapsed"/>
 
-                                <StackPanel Orientation="Horizontal"
+                                <StackPanel x:Name="contentPanel"
+                                            Orientation="Horizontal"
                                             VerticalAlignment="Center"
                                             Margin="20,0,0,0">
                                     <!-- Icon -->
@@ -79,6 +84,42 @@
                                 <Setter TargetName="icon" Property="Fill" Value="{StaticResource AccentBrush}"/>
                                 <Setter TargetName="title" Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                             </Trigger>
+                            <DataTrigger Binding="{Binding DataContext.IsSidebarCollapsed, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <Setter TargetName="title" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="contentPanel" Property="Margin" Value="0"/>
+                                <Setter TargetName="contentPanel" Property="HorizontalAlignment" Value="Center"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Hamburger Toggle Button Style -->
+        <Style x:Key="ToggleButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="8">
+                            <Path Data="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"
+                                  Fill="{StaticResource TextSecondaryBrush}"
+                                  Width="20" Height="20"
+                                  Stretch="Uniform"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarHoverBrush}"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -88,12 +129,44 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}">
+        <Border x:Name="SidebarBorder" Grid.Column="0" Background="{StaticResource SidebarBgBrush}" Width="250">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width"
+                                                         To="62" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width"
+                                                         To="250" Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80"/>
@@ -102,17 +175,24 @@
                 </Grid.RowDefinitions>
 
                 <!-- Logo Area -->
-                <Border Grid.Row="0" Padding="20,0">
-                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Border Width="40" Height="40" Background="{StaticResource AccentBrush}" CornerRadius="8">
-                            <TextBlock Text="P"
-                                       Foreground="White"
-                                       FontSize="24"
-                                       FontWeight="Bold"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                <Border Grid.Row="0" Padding="10,0">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Toggle Button -->
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ToggleButtonStyle}"
+                                Command="{Binding ToggleSidebarCommand}"
+                                ToolTip="Menyuni yig'ish/ochish"/>
+
+                        <!-- Logo Text - hidden when collapsed -->
+                        <StackPanel Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}">
                             <TextBlock Text="POS Tizimi"
                                        Foreground="{StaticResource TextPrimaryBrush}"
                                        FontSize="18"
@@ -121,11 +201,11 @@
                                        Foreground="{StaticResource TextSecondaryBrush}"
                                        FontSize="11"/>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
                 </Border>
 
                 <!-- Separator -->
-                <Border Grid.Row="0" VerticalAlignment="Bottom" Height="1" Background="#333" Margin="20,0"/>
+                <Border Grid.Row="0" VerticalAlignment="Bottom" Height="1" Background="#333" Margin="10,0"/>
 
                 <!-- Navigation Menu -->
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding MenuItems}" Margin="0,20,0,0">
@@ -135,7 +215,8 @@
                                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                          GroupName="MenuItems"
                                          Command="{Binding DataContext.SelectMenuCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                         CommandParameter="{Binding}">
+                                         CommandParameter="{Binding}"
+                                         ToolTip="{Binding Title}">
                                 <RadioButton.InputBindings>
                                     <MouseBinding MouseAction="LeftClick"
                                                   Command="{Binding DataContext.SelectMenuCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -147,18 +228,20 @@
                 </ItemsControl>
 
                 <!-- Bottom Section - Logout -->
-                <Border Grid.Row="2" Padding="15" Margin="0,0,0,10">
+                <Border Grid.Row="2" Padding="10" Margin="0,0,0,10">
                     <Button Command="{Binding LogoutCommand}"
                             Background="Transparent"
                             BorderThickness="0"
-                            Cursor="Hand">
+                            Cursor="Hand"
+                            ToolTip="Chiqish">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border"
                                         Background="#2a2a3e"
                                         CornerRadius="8"
-                                        Padding="15,12">
-                                    <StackPanel Orientation="Horizontal">
+                                        Padding="10,12">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
                                         <Path Data="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
                                               Fill="{StaticResource AccentBrush}"
                                               Width="18"
@@ -168,7 +251,8 @@
                                                    Foreground="{StaticResource TextPrimaryBrush}"
                                                    FontSize="13"
                                                    VerticalAlignment="Center"
-                                                   Margin="12,0,0,0"/>
+                                                   Margin="12,0,0,0"
+                                                   Visibility="{Binding DataContext.IsSidebarCollapsed, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
