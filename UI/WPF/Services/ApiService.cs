@@ -115,6 +115,23 @@ public class ApiService : IApiService
         }
     }
 
+    public async Task<byte[]?> GetBytesAsync(string endpoint)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync(endpoint);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public void SetAuthToken(string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

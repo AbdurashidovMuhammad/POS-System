@@ -9,6 +9,7 @@ public interface IApiService
     Task<ApiResult<T>?> PutAsync<T>(string endpoint, object data);
     Task<ApiResult<T>?> PatchAsync<T>(string endpoint, object data);
     Task<ApiResult<T>?> DeleteAsync<T>(string endpoint);
+    Task<byte[]?> GetBytesAsync(string endpoint);
     void SetAuthToken(string token);
     void ClearAuthToken();
 }

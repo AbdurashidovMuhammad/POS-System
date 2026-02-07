@@ -4,11 +4,13 @@ using System.Windows.Data;
 
 namespace WPF.Converters;
 
-public class StringToVisibilityConverter : IValueConverter
+public class NullToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        bool hasValue = !string.IsNullOrWhiteSpace(value?.ToString());
+        bool hasValue = value is string str
+            ? !string.IsNullOrWhiteSpace(str)
+            : value != null;
         bool invert = parameter?.ToString()?.ToLower() == "invert";
         if (invert) hasValue = !hasValue;
         return hasValue ? Visibility.Visible : Visibility.Collapsed;

@@ -265,7 +265,7 @@
                             Padding="15"
                             CornerRadius="8"
                             Margin="0,0,0,15"
-                            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <TextBlock Text="{Binding ErrorMessage}"
                                    Foreground="#C62828"
                                    TextWrapping="Wrap"

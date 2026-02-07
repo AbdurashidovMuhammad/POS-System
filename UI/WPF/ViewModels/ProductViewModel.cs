@@ -1,6 +1,9 @@
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using WPF.Enums;
 using WPF.Models;
 using WPF.Services;
@@ -86,6 +89,18 @@ public partial class ProductViewModel : ViewModelBase
     private bool _isStockInPanelOpen;
 
     public bool IsPanelOpen => IsAddPanelOpen || IsEditPanelOpen || IsStockInPanelOpen;
+
+    // Barcode image dialog
+    [ObservableProperty]
+    private bool _isBarcodeDialogOpen;
+
+    [ObservableProperty]
+    private BitmapImage? _barcodeImage;
+
+    [ObservableProperty]
+    private string? _barcodeDialogProductName;
+
+    private byte[]? _barcodeImageBytes;
 
     // Form fields
     [ObservableProperty]
@@ -340,9 +355,11 @@ public partial class ProductViewModel : ViewModelBase
 
             if (result?.Succeeded == true)
             {
+                var productId = result.Result;
                 CloseAllPanels();
                 SuccessMessage = "Mahsulot muvaffaqiyatli qo'shildi";
                 await LoadProductsAsync();
+                await ShowBarcodeImageAsync(productId, FormName.Trim());
             }
             else
             {
@@ -478,6 +495,62 @@ public partial class ProductViewModel : ViewModelBase
         finally
         {
             IsSaving = false;
+        }
+    }
+
+    // Show barcode image for selected product
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
+    private async Task ShowBarcodeAsync()
+    {
+        if (SelectedProduct is null) return;
+        await ShowBarcodeImageAsync(SelectedProduct.Id, SelectedProduct.Name);
+    }
+
+    // Close barcode dialog
+    [RelayCommand]
+    private void CloseBarcodeDialog()
+    {
+        IsBarcodeDialogOpen = false;
+        BarcodeImage = null;
+        BarcodeDialogProductName = null;
+        _barcodeImageBytes = null;
+    }
+
+    // Save barcode image to file
+    [RelayCommand]
+    private void SaveBarcodeImage()
+    {
+        if (_barcodeImageBytes is null) return;
+
+        var dialog = new SaveFileDialog
+        {
+            Filter = "PNG rasm (*.png)|*.png",
+            FileName = $"barcode_{BarcodeDialogProductName}",
+            DefaultExt = ".png"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            File.WriteAllBytes(dialog.FileName, _barcodeImageBytes);
+        }
+    }
+
+    private async Task ShowBarcodeImageAsync(int productId, string productName)
+    {
+        var imageBytes = await _apiService.GetBytesAsync($"api/products/{productId}/barcode-image");
+        if (imageBytes is not null)
+        {
+            _barcodeImageBytes = imageBytes;
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.StreamSource = new MemoryStream(imageBytes);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            BarcodeImage = bitmap;
+            BarcodeDialogProductName = productName;
+            IsBarcodeDialogOpen = true;
         }
     }
 

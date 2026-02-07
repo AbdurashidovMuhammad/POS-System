@@ -308,7 +308,7 @@
                     CornerRadius="12"
                     Padding="15"
                     Margin="0,0,0,15"
-                    Visibility="{Binding SelectedCategory, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
                 </Border.Effect>
@@ -388,7 +388,7 @@
                     Padding="15"
                     CornerRadius="8"
                     Margin="0,0,0,15"
-                    Visibility="{Binding SuccessMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -423,6 +423,7 @@
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               CanUserAddRows="False"
+                              SelectionUnit="FullRow"
                               Background="White"
                               GridLinesVisibility="All"
                               VerticalGridLinesBrush="#e0e0e0"
@@ -431,7 +432,8 @@
                               BorderThickness="0"
                               Margin="15"
                               SelectionMode="Single"
-                              LoadingRow="CategoriesDataGrid_LoadingRow">
+                              LoadingRow="CategoriesDataGrid_LoadingRow"
+                              ClipboardCopyMode="ExcludeHeader">
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#f8f9fa"/>
@@ -461,6 +463,7 @@
                             <Style TargetType="DataGridCell">
                                 <Setter Property="BorderBrush" Value="#e0e0e0"/>
                                 <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                                <Setter Property="Cursor" Value="Hand"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="DataGridCell">
@@ -475,7 +478,7 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Background" Value="#e3f2fd"/>
                                         <Setter Property="Foreground" Value="#333"/>
                                     </Trigger>
                                 </Style.Triggers>
@@ -502,7 +505,8 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Holat" Width="120">
+                            <DataGridTemplateColumn Header="Holat" Width="120"
+                                                    ClipboardContentBinding="{Binding IsActive}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border CornerRadius="10" Padding="8,4" HorizontalAlignment="Left">
@@ -565,7 +569,7 @@
                             VerticalAlignment="Top"
                             HorizontalAlignment="Stretch"
                             Margin="15"
-                            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828"/>
                     </Border>
                 </Grid>
@@ -642,7 +646,7 @@
                                 Padding="12"
                                 CornerRadius="6"
                                 Margin="0,0,0,15"
-                                Visibility="{Binding FormError, Converter={StaticResource StringToVisibilityConverter}}">
+                                Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
                             <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap"/>
                         </Border>
                     </StackPanel>

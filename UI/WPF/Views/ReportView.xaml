@@ -171,7 +171,7 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Stretch"
                     Margin="10"
-                    Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                 <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828"/>
             </Border>
         </Grid>

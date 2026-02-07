@@ -47,7 +47,7 @@
                            Foreground="Red"
                            TextWrapping="Wrap"
                            Margin="0,0,0,15"
-                           Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+                           Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
 
                 <Button Content="Kirish"
                         Command="{Binding LoginCommand}"
