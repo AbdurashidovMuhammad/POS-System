@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WPF.Models;
@@ -15,6 +17,7 @@ public partial class SalesViewModel : ViewModelBase
     {
         _apiService = apiService;
         _navigationService = navigationService;
+        CartItems.CollectionChanged += CartItems_CollectionChanged;
     }
 
     [ObservableProperty]
@@ -25,6 +28,30 @@ public partial class SalesViewModel : ViewModelBase
 
     [ObservableProperty]
     private decimal _totalAmount;
+
+    [ObservableProperty]
+    private decimal _totalQuantity;
+
+    private void CartItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is not null)
+        {
+            foreach (CartItem item in e.NewItems)
+                item.PropertyChanged += CartItem_PropertyChanged;
+        }
+        if (e.OldItems is not null)
+        {
+            foreach (CartItem item in e.OldItems)
+                item.PropertyChanged -= CartItem_PropertyChanged;
+        }
+        CalculateTotal();
+    }
+
+    private void CartItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(CartItem.Quantity))
+            CalculateTotal();
+    }
 
     [RelayCommand]
     private async Task AddProductByBarcodeAsync()
@@ -39,16 +66,26 @@ public partial class SalesViewModel : ViewModelBase
             var result = await _apiService.GetAsync<ProductDto>($"api/products/barcode/{BarcodeInput}");
             if (result?.Succeeded == true && result.Result is not null)
             {
-                var existingItem = CartItems.FirstOrDefault(x => x.Product.Id == result.Result.Id);
-                if (existingItem is not null)
+                var product = result.Result;
+                var existingItem = CartItems.FirstOrDefault(x => x.Product.Id == product.Id);
+                var currentQty = existingItem?.Quantity ?? 0;
+
+                if (currentQty + 1 > product.StockQuantity)
                 {
-                    existingItem.Quantity++;
+                    ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity})";
                 }
                 else
                 {
-                    CartItems.Add(new CartItem { Product = result.Result, Quantity = 1 });
+                    if (existingItem is not null)
+                    {
+                        existingItem.Quantity++;
+                    }
+                    else
+                    {
+                        CartItems.Add(new CartItem { Product = product, Quantity = 1 });
+                    }
+                    CalculateTotal();
                 }
-                CalculateTotal();
             }
             else
             {
@@ -78,6 +115,7 @@ public partial class SalesViewModel : ViewModelBase
     {
         CartItems.Clear();
         TotalAmount = 0;
+        TotalQuantity = 0;
     }
 
     [RelayCommand]
@@ -134,6 +172,7 @@ public partial class SalesViewModel : ViewModelBase
     private void CalculateTotal()
     {
         TotalAmount = CartItems.Sum(x => x.Product.UnitPrice * x.Quantity);
+        TotalQuantity = CartItems.Sum(x => x.Quantity);
     }
 }
 
@@ -143,6 +182,7 @@ public partial class CartItem : ObservableObject
     private ProductDto _product = null!;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Subtotal))]
     private decimal _quantity;
 
     public decimal Subtotal => Product.UnitPrice * Quantity;

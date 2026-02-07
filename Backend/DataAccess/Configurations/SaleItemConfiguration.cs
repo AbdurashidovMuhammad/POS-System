@@ -27,7 +27,7 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
 
         // Foreign key relationship with Sale
         builder.HasOne(e => e.Sale)
-            .WithMany()
+            .WithMany(s => s.SaleItems)
             .HasForeignKey(e => e.SaleId)
             .OnDelete(DeleteBehavior.Cascade);
 
