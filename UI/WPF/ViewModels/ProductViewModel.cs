@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 using WPF.Enums;
 using WPF.Models;
 using WPF.Services;
@@ -445,9 +447,12 @@ public partial class ProductViewModel : ViewModelBase
 
             if (result?.Succeeded == true)
             {
+                var productId = SelectedProduct.Id;
+                var productName = SelectedProduct.Name;
                 CloseAllPanels();
                 SuccessMessage = $"{StockInQuantity:N2} {SelectedProduct.UnitType} zaxiraga qo'shildi";
                 await LoadProductsAsync();
+                await ShowBarcodeImageAsync(productId, productName);
             }
             else
             {
@@ -516,22 +521,39 @@ public partial class ProductViewModel : ViewModelBase
         _barcodeImageBytes = null;
     }
 
-    // Save barcode image to file
+    // Print barcode image
     [RelayCommand]
-    private void SaveBarcodeImage()
+    private void PrintBarcodeImage()
     {
         if (_barcodeImageBytes is null) return;
 
-        var dialog = new SaveFileDialog
+        var printDialog = new PrintDialog();
+        if (printDialog.ShowDialog() == true)
         {
-            Filter = "PNG rasm (*.png)|*.png",
-            FileName = $"barcode_{BarcodeDialogProductName}",
-            DefaultExt = ".png"
-        };
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.StreamSource = new MemoryStream(_barcodeImageBytes);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            bitmap.Freeze();
 
-        if (dialog.ShowDialog() == true)
-        {
-            File.WriteAllBytes(dialog.FileName, _barcodeImageBytes);
+            var visual = new DrawingVisual();
+            using (var dc = visual.RenderOpen())
+            {
+                var pageWidth = printDialog.PrintableAreaWidth;
+                var pageHeight = printDialog.PrintableAreaHeight;
+
+                var imgWidth = bitmap.PixelWidth;
+                var imgHeight = bitmap.PixelHeight;
+
+                // Center the barcode on the page
+                var x = (pageWidth - imgWidth) / 2;
+                var y = (pageHeight - imgHeight) / 2;
+
+                dc.DrawImage(bitmap, new Rect(x, y, imgWidth, imgHeight));
+            }
+
+            printDialog.PrintVisual(visual, $"Barcode - {BarcodeDialogProductName}");
         }
     }
 

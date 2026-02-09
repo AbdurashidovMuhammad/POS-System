@@ -53,7 +53,7 @@ public class BarcodeService : IBarcodeService
         const int barcodeWidth = 300;
         const int barcodeHeight = 80;
         const int finalWidth = 300;
-        const int finalHeight = 140;
+        const int finalHeight = 150;
 
         // Step 1: Generate barcode using ZXing
         var writer = new BarcodeWriterPixelData
@@ -107,7 +107,7 @@ public class BarcodeService : IBarcodeService
         string priceText = $"{price:N0} so'm";
         using var priceFont = new SKFont
         {
-            Size = 12,
+            Size = 16,
             Typeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
         };
         using var pricePaint = new SKPaint
@@ -116,7 +116,7 @@ public class BarcodeService : IBarcodeService
             IsAntialias = true
         };
 
-        canvas.DrawText(priceText, centerX, 115, SKTextAlign.Center, priceFont, pricePaint);
+        canvas.DrawText(priceText, centerX, 120, SKTextAlign.Center, priceFont, pricePaint);
 
         // Convert to PNG byte array
         using var image = surface.Snapshot();
