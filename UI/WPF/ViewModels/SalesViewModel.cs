@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using WPF.Enums;
 using WPF.Models;
 using WPF.Services;
 
@@ -31,6 +33,53 @@ public partial class SalesViewModel : ViewModelBase
 
     [ObservableProperty]
     private decimal _totalQuantity;
+
+    // --- Manual search dialog ---
+
+    [ObservableProperty]
+    private bool _isSearchDialogOpen;
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    private ObservableCollection<ProductDto> _searchResults = [];
+
+    [ObservableProperty]
+    private ProductDto? _selectedSearchProduct;
+
+    [ObservableProperty]
+    private string _manualQuantityText = "1";
+
+    [ObservableProperty]
+    private string? _searchError;
+
+    /// <summary>
+    /// Event raised when the search dialog closes so the view can refocus the barcode textbox.
+    /// </summary>
+    public event Action? SearchDialogClosed;
+
+    private CancellationTokenSource? _searchCts;
+
+    partial void OnSearchTextChanged(string value)
+    {
+        _searchCts?.Cancel();
+        _searchCts = new CancellationTokenSource();
+        var token = _searchCts.Token;
+
+        _ = DebounceSearchAsync(value, token);
+    }
+
+    private async Task DebounceSearchAsync(string query, CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(300, token);
+            if (token.IsCancellationRequested) return;
+            await SearchProductsAsync();
+        }
+        catch (TaskCanceledException) { }
+    }
 
     private void CartItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -101,6 +150,113 @@ public partial class SalesViewModel : ViewModelBase
             IsLoading = false;
             BarcodeInput = string.Empty;
         }
+    }
+
+    [RelayCommand]
+    private void OpenSearchDialog()
+    {
+        SearchText = string.Empty;
+        SearchResults.Clear();
+        SelectedSearchProduct = null;
+        ManualQuantityText = "1";
+        SearchError = null;
+        IsSearchDialogOpen = true;
+    }
+
+    [RelayCommand]
+    private void CloseSearchDialog()
+    {
+        IsSearchDialogOpen = false;
+        SearchDialogClosed?.Invoke();
+    }
+
+    [RelayCommand]
+    private async Task SearchProductsAsync()
+    {
+        SearchError = null;
+        SelectedSearchProduct = null;
+
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            SearchResults.Clear();
+            return;
+        }
+
+        try
+        {
+            var url = $"api/products/search/full?query={Uri.EscapeDataString(SearchText)}&page=1&pageSize=20";
+            var result = await _apiService.GetAsync<PagedResult<ProductDto>>(url);
+
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                SearchResults = new ObservableCollection<ProductDto>(result.Result.Items);
+                if (SearchResults.Count == 0)
+                    SearchError = "Mahsulot topilmadi";
+            }
+            else
+            {
+                SearchResults.Clear();
+                SearchError = "Mahsulot topilmadi";
+            }
+        }
+        catch
+        {
+            SearchResults.Clear();
+            SearchError = "Qidiruvda xatolik yuz berdi";
+        }
+    }
+
+    [RelayCommand]
+    private void SelectSearchProduct(ProductDto product)
+    {
+        SelectedSearchProduct = product;
+        // Set default quantity based on unit type
+        ManualQuantityText = product.UnitType == UnitType.Dona
+            || product.UnitType == UnitType.Quti
+            || product.UnitType == UnitType.Paket
+            || product.UnitType == UnitType.Shisha
+            || product.UnitType == UnitType.Oram
+            || product.UnitType == UnitType.Juft
+            ? "1"
+            : "";
+        SearchError = null;
+    }
+
+    [RelayCommand]
+    private void AddManualProduct()
+    {
+        if (SelectedSearchProduct is null) return;
+
+        var qtyText = ManualQuantityText.Trim().Replace(',', '.');
+        if (!decimal.TryParse(qtyText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var qty) || qty <= 0)
+        {
+            SearchError = "Miqdorni to'g'ri kiriting";
+            return;
+        }
+
+        var product = SelectedSearchProduct;
+        var existingItem = CartItems.FirstOrDefault(x => x.Product.Id == product.Id);
+        var currentQty = existingItem?.Quantity ?? 0;
+
+        if (currentQty + qty > product.StockQuantity)
+        {
+            SearchError = $"Omborda yetarli mahsulot yo'q! (Mavjud: {product.StockQuantity})";
+            return;
+        }
+
+        if (existingItem is not null)
+        {
+            existingItem.Quantity += qty;
+        }
+        else
+        {
+            CartItems.Add(new CartItem { Product = product, Quantity = qty });
+        }
+        CalculateTotal();
+
+        // Close dialog and return focus to barcode
+        IsSearchDialogOpen = false;
+        SearchDialogClosed?.Invoke();
     }
 
     [RelayCommand]

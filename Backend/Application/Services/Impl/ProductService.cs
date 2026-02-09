@@ -91,8 +91,8 @@ public class ProductService : IProductService
         {
             var lowerQuery = query.Trim().ToLower();
             baseQuery = baseQuery.Where(p =>
-                p.Name.ToLower().Contains(lowerQuery) ||
-                p.barcode.ToLower().Contains(lowerQuery));
+                p.Name.ToLower().StartsWith(lowerQuery) ||
+                p.barcode.ToLower().StartsWith(lowerQuery));
         }
 
         var totalCount = await baseQuery.CountAsync();
