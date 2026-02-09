@@ -53,6 +53,11 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // Token refresh callback'ni ulash
+        var apiService = _serviceProvider.GetRequiredService<IApiService>();
+        var authService = _serviceProvider.GetRequiredService<IAuthService>();
+        apiService.OnUnauthorized = authService.RefreshTokenAsync;
+
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
 

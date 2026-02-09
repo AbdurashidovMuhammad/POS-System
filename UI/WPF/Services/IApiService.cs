@@ -4,6 +4,7 @@ namespace WPF.Services;
 
 public interface IApiService
 {
+    Func<Task<bool>>? OnUnauthorized { get; set; }
     Task<ApiResult<T>?> GetAsync<T>(string endpoint);
     Task<ApiResult<T>?> PostAsync<T>(string endpoint, object data);
     Task<ApiResult<T>?> PutAsync<T>(string endpoint, object data);

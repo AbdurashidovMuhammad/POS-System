@@ -232,7 +232,7 @@ public partial class CategoryViewModel : ViewModelBase
                 Name = FormName.Trim()
             };
 
-            var result = await _apiService.PostAsync<int>("api/category/create", dto);
+            var result = await _apiService.PostAsync<string>("api/category/create", dto);
 
             if (result?.Succeeded == true)
             {
@@ -345,7 +345,7 @@ public partial class CategoryViewModel : ViewModelBase
 
         try
         {
-            var result = await _apiService.DeleteAsync<string>($"api/category/{SelectedCategory.Id}");
+            var result = await _apiService.DeleteAsync<bool>($"api/category/{SelectedCategory.Id}");
 
             if (result?.Succeeded == true)
             {

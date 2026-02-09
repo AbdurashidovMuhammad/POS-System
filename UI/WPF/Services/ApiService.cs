@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -8,17 +9,20 @@ namespace WPF.Services;
 public class ApiService : IApiService
 {
     private readonly HttpClient _httpClient;
+    private bool _isRefreshing;
 
     public ApiService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    public Func<Task<bool>>? OnUnauthorized { get; set; }
+
     public async Task<ApiResult<T>?> GetAsync<T>(string endpoint)
     {
         try
         {
-            var response = await _httpClient.GetAsync(endpoint);
+            var response = await SendWithRefreshAsync(() => _httpClient.GetAsync(endpoint));
 
             if (!response.IsSuccessStatusCode)
             {
@@ -49,7 +53,7 @@ public class ApiService : IApiService
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync(endpoint, data);
+            var response = await SendWithRefreshAsync(() => _httpClient.PostAsJsonAsync(endpoint, data));
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -66,7 +70,7 @@ public class ApiService : IApiService
     {
         try
         {
-            var response = await _httpClient.PutAsJsonAsync(endpoint, data);
+            var response = await SendWithRefreshAsync(() => _httpClient.PutAsJsonAsync(endpoint, data));
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -83,9 +87,12 @@ public class ApiService : IApiService
     {
         try
         {
-            var content = JsonContent.Create(data);
-            var request = new HttpRequestMessage(HttpMethod.Patch, endpoint) { Content = content };
-            var response = await _httpClient.SendAsync(request);
+            var response = await SendWithRefreshAsync(() =>
+            {
+                var content = JsonContent.Create(data);
+                var request = new HttpRequestMessage(HttpMethod.Patch, endpoint) { Content = content };
+                return _httpClient.SendAsync(request);
+            });
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -102,7 +109,7 @@ public class ApiService : IApiService
     {
         try
         {
-            var response = await _httpClient.DeleteAsync(endpoint);
+            var response = await SendWithRefreshAsync(() => _httpClient.DeleteAsync(endpoint));
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -119,7 +126,7 @@ public class ApiService : IApiService
     {
         try
         {
-            var response = await _httpClient.GetAsync(endpoint);
+            var response = await SendWithRefreshAsync(() => _httpClient.GetAsync(endpoint));
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsByteArrayAsync();
@@ -140,5 +147,28 @@ public class ApiService : IApiService
     public void ClearAuthToken()
     {
         _httpClient.DefaultRequestHeaders.Authorization = null;
+    }
+
+    private async Task<HttpResponseMessage> SendWithRefreshAsync(Func<Task<HttpResponseMessage>> sendFunc)
+    {
+        var response = await sendFunc();
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized && !_isRefreshing && OnUnauthorized != null)
+        {
+            _isRefreshing = true;
+            try
+            {
+                if (await OnUnauthorized())
+                {
+                    response = await sendFunc();
+                }
+            }
+            finally
+            {
+                _isRefreshing = false;
+            }
+        }
+
+        return response;
     }
 }

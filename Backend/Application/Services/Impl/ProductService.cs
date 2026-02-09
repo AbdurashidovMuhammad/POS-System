@@ -24,7 +24,6 @@ public class ProductService : IProductService
     {
         var query = _context.Products
             .Include(p => p.Category)
-            .Where(p => p.IsActive)
             .OrderBy(p => p.Name);
 
         var totalCount = await query.CountAsync();
@@ -86,7 +85,7 @@ public class ProductService : IProductService
     {
         var baseQuery = _context.Products
             .Include(p => p.Category)
-            .Where(p => p.IsActive);
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query))
         {

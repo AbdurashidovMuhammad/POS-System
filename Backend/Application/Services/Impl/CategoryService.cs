@@ -60,7 +60,6 @@ internal class CategoryService : ICategoriesService
     public async Task<ApiResult<List<CategoryDto>>> GetAllCategoriesAsync()
     {
         var categories = await _context.Categories
-            .Where(c => c.IsActive)
             .OrderBy(c => c.Name)
             .ToListAsync();
 
