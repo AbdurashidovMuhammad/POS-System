@@ -23,9 +23,18 @@ public partial class LoginViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    private bool _isPasswordVisible;
+
     private bool CanLogin => !string.IsNullOrWhiteSpace(Username)
                            && !string.IsNullOrWhiteSpace(Password)
                            && !IsLoading;
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 
     [RelayCommand(CanExecute = nameof(CanLogin))]
     private async Task LoginAsync()
