@@ -9,6 +9,7 @@ namespace Application.Services.Impl;
 
 public class ReportService : IReportService
 {
+    private static readonly TimeZoneInfo _localTz = TimeZoneInfo.FindSystemTimeZoneById("Asia/Tashkent");
     private readonly DatabaseContext _context;
 
     public ReportService(DatabaseContext context)
@@ -37,6 +38,9 @@ public class ReportService : IReportService
                 TotalPrice = si.Quantity * si.UnitPrice
             })
             .ToListAsync();
+
+        foreach (var item in items)
+            item.Date = TimeZoneInfo.ConvertTimeFromUtc(item.Date, _localTz);
 
         return new SalesReportDto
         {
@@ -67,6 +71,9 @@ public class ReportService : IReportService
                 UnitTypeName = sm.Product.Unit_Type.ToString()
             })
             .ToListAsync();
+
+        foreach (var item in items)
+            item.Date = TimeZoneInfo.ConvertTimeFromUtc(item.Date, _localTz);
 
         return new StockInReportDto
         {
