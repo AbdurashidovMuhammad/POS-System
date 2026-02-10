@@ -539,7 +539,7 @@
                                             </StackPanel>
                                         </StackPanel>
                                         <TextBlock Grid.Column="1"
-                                                   Text="{Binding StockQuantity, StringFormat=Ombor: {0:G}}"
+                                                   Text="{Binding StockQuantity, StringFormat=Ombor: {0:0.##}}"
                                                    FontSize="12" Foreground="#FF9800"
                                                    VerticalAlignment="Center" Margin="10,0"/>
                                         <TextBlock Grid.Column="2"

@@ -400,7 +400,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock>
-                                            <Run Text="{Binding Quantity, StringFormat=N2}"/>
+                                            <Run Text="{Binding Quantity, StringFormat=0.##}"/>
                                             <Run Text="{Binding UnitTypeName}" Foreground="#888"/>
                                         </TextBlock>
                                     </DataTemplate>
@@ -483,7 +483,7 @@
                     </Border>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <TextBlock Text="Jami kirim miqdori" FontSize="13" Foreground="#888"/>
-                        <TextBlock Text="{Binding TotalStockInQuantity, StringFormat={}{0:N2}}"
+                        <TextBlock Text="{Binding TotalStockInQuantity, StringFormat={}{0:0.##}}"
                                    FontSize="24" FontWeight="Bold" Foreground="#e65100" Margin="0,4,0,0"/>
                     </StackPanel>
 
@@ -586,7 +586,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="SemiBold" Foreground="#e65100">
-                                            <Run Text="{Binding Quantity, StringFormat=N2}"/>
+                                            <Run Text="{Binding Quantity, StringFormat=0.##}"/>
                                             <Run Text=" "/>
                                             <Run Text="{Binding UnitTypeName}" Foreground="#888"/>
                                         </TextBlock>

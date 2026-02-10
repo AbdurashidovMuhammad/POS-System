@@ -507,7 +507,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                             <DataGridTemplateColumn Header="Zaxira" Width="100"
-                                                    ClipboardContentBinding="{Binding StockQuantity, StringFormat=N2}">
+                                                    ClipboardContentBinding="{Binding StockQuantity, StringFormat=0.##}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="SemiBold">
@@ -521,7 +521,7 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
-                                            <Run Text="{Binding StockQuantity, StringFormat=N2}"/>
+                                            <Run Text="{Binding StockQuantity, StringFormat=0.##}"/>
                                         </TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -777,7 +777,7 @@
                             <!-- Initial Stock (only for new products) -->
                             <StackPanel Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Text="Boshlang'ich zaxira" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                                <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                          Style="{StaticResource FormInputStyle}"
                                          Margin="0,0,0,20"/>
                             </StackPanel>
@@ -791,7 +791,7 @@
                                     <TextBlock Text="{Binding SelectedProduct.Name}" FontSize="16" FontWeight="SemiBold" Foreground="#1a1a2e"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                                         <TextBlock Text="Joriy zaxira: " Foreground="#666"/>
-                                        <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=N2}" FontWeight="SemiBold" Foreground="#4CAF50"/>
+                                        <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=0.##}" FontWeight="SemiBold" Foreground="#4CAF50"/>
                                         <TextBlock Text="{Binding SelectedProduct.UnitType}" Foreground="#666" Margin="5,0,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -799,7 +799,7 @@
 
                             <!-- Stock Quantity -->
                             <TextBlock Text="Qo'shiladigan miqdor" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                            <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                      Style="{StaticResource FormInputStyle}"
                                      FontSize="18"
                                      Margin="0,0,0,10"/>
@@ -807,13 +807,13 @@
                                 <Run Text="Yangi zaxira: "/>
                                 <Run FontWeight="SemiBold" Foreground="#4CAF50">
                                     <Run.Text>
-                                        <MultiBinding StringFormat="{}{0:N2}">
+                                        <MultiBinding StringFormat="{}{0:0.##}">
                                             <Binding Path="SelectedProduct.StockQuantity"/>
                                         </MultiBinding>
                                     </Run.Text>
                                 </Run>
                                 <Run Text=" + "/>
-                                <Run Text="{Binding StockInQuantity, StringFormat=N2}" FontWeight="SemiBold"/>
+                                <Run Text="{Binding StockInQuantity, StringFormat=0.##}" FontWeight="SemiBold"/>
                             </TextBlock>
                         </StackPanel>
 
