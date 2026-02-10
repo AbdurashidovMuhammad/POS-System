@@ -21,10 +21,18 @@ public partial class MainWindow : Window
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainViewModel.CurrentViewModel)
-            && sender is MainViewModel vm
-            && vm.CurrentViewModel is ShellViewModel)
+            && sender is MainViewModel vm)
         {
-            WindowState = WindowState.Maximized;
+            if (vm.CurrentViewModel is ShellViewModel)
+            {
+                ResizeMode = ResizeMode.CanResize;
+                WindowState = WindowState.Maximized;
+            }
+            else if (vm.CurrentViewModel is LoginViewModel)
+            {
+                WindowState = WindowState.Normal;
+                ResizeMode = ResizeMode.NoResize;
+            }
         }
     }
 }
