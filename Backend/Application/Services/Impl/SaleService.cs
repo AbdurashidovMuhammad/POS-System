@@ -24,6 +24,12 @@ public class SaleService : ISaleService
             throw new ArgumentException("Savat bo'sh bo'lishi mumkin emas");
         }
 
+        // Validate payment type
+        if (!Enum.IsDefined(typeof(Payment_Type), dto.PaymentType))
+        {
+            throw new ArgumentException("To'lov usuli noto'g'ri");
+        }
+
         // Get all product IDs from items
         var productIds = dto.Items.Select(i => i.ProductId).Distinct().ToList();
 
@@ -75,6 +81,7 @@ public class SaleService : ISaleService
             {
                 UserId = userId,
                 TotalAmount = totalAmount,
+                PaymentType = (Payment_Type)dto.PaymentType,
                 SaleDate = DateTime.UtcNow
             };
 
@@ -127,6 +134,8 @@ public class SaleService : ISaleService
                 UserId = sale.UserId,
                 UserFullName = user?.Username ?? "Noma'lum",
                 TotalAmount = sale.TotalAmount,
+                PaymentType = (int)sale.PaymentType,
+                PaymentTypeName = sale.PaymentType.ToString(),
                 SaleDate = sale.SaleDate,
                 Items = saleItems.Select(si => new SaleItemDto
                 {

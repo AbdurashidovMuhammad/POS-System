@@ -19,6 +19,9 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
             .IsRequired()
             .HasPrecision(18, 2);
 
+        builder.Property(e => e.PaymentType)
+            .IsRequired();
+
         builder.Property(e => e.SaleDate)
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");

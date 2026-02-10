@@ -35,7 +35,8 @@ public class ReportService : IReportService
                 Quantity = si.Quantity,
                 UnitTypeName = si.Product.Unit_Type.ToString(),
                 UnitPrice = si.UnitPrice,
-                TotalPrice = si.Quantity * si.UnitPrice
+                TotalPrice = si.Quantity * si.UnitPrice,
+                PaymentTypeName = si.Sale.PaymentType.ToString()
             })
             .ToListAsync();
 
@@ -93,14 +94,14 @@ public class ReportService : IReportService
 
         // Title
         worksheet.Cell(1, 1).Value = $"Sotilgan mahsulotlar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
-        worksheet.Range(1, 1, 1, 5).Merge();
+        worksheet.Range(1, 1, 1, 6).Merge();
         worksheet.Cell(1, 1).Style.Font.Bold = true;
         worksheet.Cell(1, 1).Style.Font.FontSize = 14;
         worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         // Headers
         var headerRow = 3;
-        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Narxi", "Jami" };
+        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Narxi", "Jami", "To'lov usuli" };
         for (int i = 0; i < headers.Length; i++)
         {
             var cell = worksheet.Cell(headerRow, i + 1);
@@ -123,14 +124,15 @@ public class ReportService : IReportService
             worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0 \"so'm\"";
             worksheet.Cell(row, 5).Value = item.TotalPrice;
             worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+            worksheet.Cell(row, 6).Value = item.PaymentTypeName;
 
             // Alternate row colors
             if (row % 2 == 0)
             {
-                worksheet.Range(row, 1, row, 5).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
             }
 
-            for (int col = 1; col <= 5; col++)
+            for (int col = 1; col <= 6; col++)
             {
                 worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
@@ -147,8 +149,8 @@ public class ReportService : IReportService
         worksheet.Cell(row, 5).Value = report.TotalAmount;
         worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
         worksheet.Cell(row, 5).Style.Font.Bold = true;
-        worksheet.Range(row, 1, row, 5).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
-        for (int col = 1; col <= 5; col++)
+        worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
+        for (int col = 1; col <= 6; col++)
         {
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }

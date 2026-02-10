@@ -16,6 +16,7 @@ public class SalesReportItemDto
     public string UnitTypeName { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
     public decimal TotalPrice { get; set; }
+    public string PaymentTypeName { get; set; } = string.Empty;
 }
 
 public class StockInReportDto

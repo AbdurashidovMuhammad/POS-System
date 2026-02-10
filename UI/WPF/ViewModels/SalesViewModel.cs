@@ -34,6 +34,17 @@ public partial class SalesViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _totalQuantity;
 
+    // --- Payment type selection ---
+    [ObservableProperty]
+    private int _selectedPaymentType = 1; // Default: Naqd
+
+    [RelayCommand]
+    private void SelectPaymentType(string paymentType)
+    {
+        if (int.TryParse(paymentType, out var value))
+            SelectedPaymentType = value;
+    }
+
     // --- Manual search dialog ---
 
     [ObservableProperty]
@@ -272,6 +283,7 @@ public partial class SalesViewModel : ViewModelBase
         CartItems.Clear();
         TotalAmount = 0;
         TotalQuantity = 0;
+        SelectedPaymentType = 1;
     }
 
     [RelayCommand]
@@ -294,7 +306,8 @@ public partial class SalesViewModel : ViewModelBase
                 {
                     ProductId = x.Product.Id,
                     Quantity = x.Quantity
-                }).ToList()
+                }).ToList(),
+                PaymentType = SelectedPaymentType
             };
 
             var result = await _apiService.PostAsync<SaleDto>("api/sales", createSaleDto);

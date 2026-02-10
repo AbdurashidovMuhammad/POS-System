@@ -9,6 +9,7 @@ public class CreateSaleItemDto
 public class CreateSaleDto
 {
     public List<CreateSaleItemDto> Items { get; set; } = new();
+    public int PaymentType { get; set; }
 }
 
 public class SaleItemDto
@@ -28,6 +29,8 @@ public class SaleDto
     public int UserId { get; set; }
     public string UserFullName { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
+    public int PaymentType { get; set; }
+    public string PaymentTypeName { get; set; } = string.Empty;
     public DateTime SaleDate { get; set; }
     public List<SaleItemDto> Items { get; set; } = new();
 }

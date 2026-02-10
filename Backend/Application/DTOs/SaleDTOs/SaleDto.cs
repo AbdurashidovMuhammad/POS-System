@@ -6,6 +6,8 @@ public class SaleDto
     public int UserId { get; set; }
     public string UserFullName { get; set; } = null!;
     public decimal TotalAmount { get; set; }
+    public int PaymentType { get; set; }
+    public string PaymentTypeName { get; set; } = null!;
     public DateTime SaleDate { get; set; }
     public List<SaleItemDto> Items { get; set; } = new();
 }

@@ -426,6 +426,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="To'lov usuli" Binding="{Binding PaymentTypeName}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
