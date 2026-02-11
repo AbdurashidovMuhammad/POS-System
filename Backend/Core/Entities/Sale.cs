@@ -8,7 +8,7 @@ public class Sale
     public int UserId { get; set; }
     public decimal TotalAmount { get; set; }
     public Payment_Type PaymentType { get; set; }
-    public DateTime SaleDate { get; set; } = DateTime.UtcNow;
+    public DateTime SaleDate { get; set; } = DateTime.Now;
 
     // Navigation properties
     public User User { get; set; } = null!;

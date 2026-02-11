@@ -12,7 +12,7 @@ public class Product
     public decimal StockQuantity { get; set; } = 0;
     public string barcode { get; set; } = null!;
     public bool IsActive { get; set; } = true;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     // Navigation property
     public Category Category { get; set; } = null!;

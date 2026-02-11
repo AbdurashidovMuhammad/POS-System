@@ -16,6 +16,7 @@ public class AuthService : IAuthService
     public string? RefreshToken { get; private set; }
     public int? UserId { get; private set; }
     public string? Username { get; private set; }
+    public string? Role { get; private set; }
     public bool IsAuthenticated => !string.IsNullOrEmpty(AccessToken);
 
     public async Task<(bool Success, string? ErrorMessage)> LoginAsync(string username, string password)
@@ -79,6 +80,7 @@ public class AuthService : IAuthService
         RefreshToken = null;
         UserId = null;
         Username = null;
+        Role = null;
         _apiService.ClearAuthToken();
     }
 
@@ -116,6 +118,12 @@ public class AuthService : IAuthService
                 root.TryGetProperty("name", out usernameElement))
             {
                 Username = usernameElement.GetString();
+            }
+
+            if (root.TryGetProperty("role", out var roleElement) ||
+                root.TryGetProperty("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", out roleElement))
+            {
+                Role = roleElement.GetString();
             }
         }
         catch

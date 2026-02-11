@@ -9,7 +9,6 @@ namespace Application.Services.Impl;
 
 public class ReportService : IReportService
 {
-    private static readonly TimeZoneInfo _localTz = TimeZoneInfo.FindSystemTimeZoneById("Asia/Tashkent");
     private readonly DatabaseContext _context;
 
     public ReportService(DatabaseContext context)
@@ -19,14 +18,14 @@ public class ReportService : IReportService
 
     public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to)
     {
-        var fromUtc = DateTime.SpecifyKind(from.Date, DateTimeKind.Utc);
-        var toUtc = DateTime.SpecifyKind(to.Date.AddDays(1), DateTimeKind.Utc);
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
 
         var items = await _context.SaleItems
             .AsNoTracking()
             .Include(si => si.Sale)
             .Include(si => si.Product)
-            .Where(si => si.Sale.SaleDate >= fromUtc && si.Sale.SaleDate < toUtc)
+            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate)
             .OrderByDescending(si => si.Sale.SaleDate)
             .Select(si => new SalesReportItemDto
             {
@@ -40,9 +39,6 @@ public class ReportService : IReportService
             })
             .ToListAsync();
 
-        foreach (var item in items)
-            item.Date = TimeZoneInfo.ConvertTimeFromUtc(item.Date, _localTz);
-
         return new SalesReportDto
         {
             DateFrom = from.Date,
@@ -54,15 +50,15 @@ public class ReportService : IReportService
 
     public async Task<StockInReportDto> GetStockInReportAsync(DateTime from, DateTime to)
     {
-        var fromUtc = DateTime.SpecifyKind(from.Date, DateTimeKind.Utc);
-        var toUtc = DateTime.SpecifyKind(to.Date.AddDays(1), DateTimeKind.Utc);
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
 
         var items = await _context.StockMovements
             .AsNoTracking()
             .Include(sm => sm.Product)
             .Where(sm => sm.MovementType == Movement_Type.StockIn
-                         && sm.MovementDate >= fromUtc
-                         && sm.MovementDate < toUtc)
+                         && sm.MovementDate >= fromDate
+                         && sm.MovementDate < toDate)
             .OrderByDescending(sm => sm.MovementDate)
             .Select(sm => new StockInReportItemDto
             {
@@ -72,9 +68,6 @@ public class ReportService : IReportService
                 UnitTypeName = sm.Product.Unit_Type.ToString()
             })
             .ToListAsync();
-
-        foreach (var item in items)
-            item.Date = TimeZoneInfo.ConvertTimeFromUtc(item.Date, _localTz);
 
         return new StockInReportDto
         {

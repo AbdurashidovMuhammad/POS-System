@@ -35,11 +35,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+        builder.Property(e => e.Password)
+            .IsRequired()
+            .HasMaxLength(256);
+
         // SuperAdmin seed data
         builder.HasData(new User
         {
             Id = 1,
             Username = "superadmin",
+            Password = "superadmin",
             PasswordHash = "$2a$11$TjYDrGYAX3yCCQwH2yE7XuU5tWgDTl7DhwU3uWxOZxOyW5ukOeQOK",
             Role = Role.SuperAdmin,
             IsActive = true,

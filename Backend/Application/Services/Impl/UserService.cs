@@ -31,6 +31,7 @@ internal class UserService : IUserService
         var user = new User
         {
             Username = dto.Username,
+            Password = dto.Password,
             PasswordHash = PasswordHelper.HashPassword(dto.Password),
             Role = Role.Admin,
             IsActive = true
@@ -84,6 +85,7 @@ internal class UserService : IUserService
             if (dto.Password.Length < 6)
                 return ApiResult<UserDto>.Failure(new[] { "Password must be at least 6 characters." });
 
+            user.Password = dto.Password;
             user.PasswordHash = PasswordHelper.HashPassword(dto.Password);
         }
 
@@ -122,6 +124,7 @@ internal class UserService : IUserService
     {
         Id = user.Id,
         Username = user.Username,
+        Password = user.Password,
         Role = user.Role.ToString(),
         IsActive = user.IsActive,
         CreatedAt = user.CreatedAt

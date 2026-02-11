@@ -10,4 +10,5 @@ public interface IAuthService
     string? RefreshToken { get; }
     int? UserId { get; }
     string? Username { get; }
+    string? Role { get; }
 }

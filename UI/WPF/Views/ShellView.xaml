@@ -315,6 +315,34 @@
             <Border Grid.Row="1" Margin="20">
                 <ContentControl Content="{Binding CurrentView}"/>
             </Border>
+
+            <!-- Toast Notification -->
+            <Border Grid.Row="0" Grid.RowSpan="2"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0,80,0,0"
+                    CornerRadius="10"
+                    Padding="24,14"
+                    Visibility="{Binding IsToastVisible, Converter={StaticResource BoolToVisibility}}">
+                <Border.Background>
+                    <SolidColorBrush Color="#D32F2F"/>
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="3" Opacity="0.3" Direction="270"/>
+                </Border.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <Path Data="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"
+                          Fill="White"
+                          Width="20" Height="20"
+                          Stretch="Uniform"
+                          Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding ToastMessage}"
+                               Foreground="White"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

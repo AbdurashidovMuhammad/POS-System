@@ -8,7 +8,7 @@ public class StockMovement
     public int ProductId { get; set; }
     public Movement_Type MovementType { get; set; }
     public decimal Quantity { get; set; }
-    public DateTime MovementDate { get; set; } = DateTime.UtcNow;
+    public DateTime MovementDate { get; set; } = DateTime.Now;
     public int UserId { get; set; }
 
 

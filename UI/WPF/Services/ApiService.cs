@@ -17,6 +17,7 @@ public class ApiService : IApiService
     }
 
     public Func<Task<bool>>? OnUnauthorized { get; set; }
+    public Action<string>? OnForbidden { get; set; }
 
     public async Task<ApiResult<T>?> GetAsync<T>(string endpoint)
     {
@@ -26,6 +27,15 @@ public class ApiService : IApiService
 
             if (!response.IsSuccessStatusCode)
             {
+                if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return new ApiResult<T>
+                    {
+                        Succeeded = false,
+                        Errors = ["Sizda bu amalni bajarish uchun ruxsat yo'q"]
+                    };
+                }
+
                 var content = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrWhiteSpace(content))
                 {
@@ -54,6 +64,8 @@ public class ApiService : IApiService
         try
         {
             var response = await SendWithRefreshAsync(() => _httpClient.PostAsJsonAsync(endpoint, data));
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                return new ApiResult<T> { Succeeded = false, Errors = ["Sizda bu amalni bajarish uchun ruxsat yo'q"] };
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -71,6 +83,8 @@ public class ApiService : IApiService
         try
         {
             var response = await SendWithRefreshAsync(() => _httpClient.PutAsJsonAsync(endpoint, data));
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                return new ApiResult<T> { Succeeded = false, Errors = ["Sizda bu amalni bajarish uchun ruxsat yo'q"] };
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -93,6 +107,8 @@ public class ApiService : IApiService
                 var request = new HttpRequestMessage(HttpMethod.Patch, endpoint) { Content = content };
                 return _httpClient.SendAsync(request);
             });
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                return new ApiResult<T> { Succeeded = false, Errors = ["Sizda bu amalni bajarish uchun ruxsat yo'q"] };
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -110,6 +126,8 @@ public class ApiService : IApiService
         try
         {
             var response = await SendWithRefreshAsync(() => _httpClient.DeleteAsync(endpoint));
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                return new ApiResult<T> { Succeeded = false, Errors = ["Sizda bu amalni bajarish uchun ruxsat yo'q"] };
             return await response.Content.ReadFromJsonAsync<ApiResult<T>>();
         }
         catch (Exception ex)
@@ -167,6 +185,11 @@ public class ApiService : IApiService
             {
                 _isRefreshing = false;
             }
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            OnForbidden?.Invoke("Sizda bu amalni bajarish uchun ruxsat yo'q");
         }
 
         return response;
