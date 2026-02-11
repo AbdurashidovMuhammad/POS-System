@@ -15,6 +15,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IBarcodeService, BarcodeService>();
         services.AddScoped<ISaleService, SaleService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
 
         return services;
     }

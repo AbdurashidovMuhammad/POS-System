@@ -45,6 +45,7 @@ public partial class App : Application
         services.AddTransient<ReportViewModel>();
         services.AddTransient<CategoryViewModel>();
         services.AddTransient<UserViewModel>();
+        services.AddTransient<ActivityLogViewModel>();
 
         // Views
         services.AddSingleton<MainWindow>();

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.DTOs.CategoryDTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,10 @@ public class CategoryController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
     {
-        var result = await _categoriesService.CreateCategoryAsync(dto);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _categoriesService.CreateCategoryAsync(dto, userId);
         if (!result.Succeeded)
             return BadRequest(result);
 
@@ -30,7 +34,10 @@ public class CategoryController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDto dto)
     {
-        var result = await _categoriesService.UpdateCategoryAsync(id, dto);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _categoriesService.UpdateCategoryAsync(id, dto, userId);
         if (!result.Succeeded)
             return BadRequest(result);
 
@@ -64,7 +71,10 @@ public class CategoryController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await _categoriesService.DeleteCategoryAsync(id);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _categoriesService.DeleteCategoryAsync(id, userId);
         if (!result.Succeeded)
             return BadRequest(result);
 

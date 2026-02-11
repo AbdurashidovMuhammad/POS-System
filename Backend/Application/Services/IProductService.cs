@@ -33,12 +33,12 @@ public interface IProductService
     /// <summary>
     /// Create new product with auto-generated barcode, returns product ID
     /// </summary>
-    Task<int> CreateProductAsync(CreateProductDto dto);
+    Task<int> CreateProductAsync(CreateProductDto dto, int userId);
 
     /// <summary>
     /// Update product information
     /// </summary>
-    Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto);
+    Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto, int userId);
 
     /// <summary>
     /// Add stock to product
@@ -48,5 +48,5 @@ public interface IProductService
     /// <summary>
     /// Deactivate product (soft delete)
     /// </summary>
-    Task DeactivateProductAsync(int id);
+    Task DeactivateProductAsync(int id, int userId);
 }

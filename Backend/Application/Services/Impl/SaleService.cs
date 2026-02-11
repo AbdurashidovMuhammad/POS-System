@@ -10,10 +10,12 @@ namespace Application.Services.Impl;
 public class SaleService : ISaleService
 {
     private readonly DatabaseContext _context;
+    private readonly IAuditLogService _auditLogService;
 
-    public SaleService(DatabaseContext context)
+    public SaleService(DatabaseContext context, IAuditLogService auditLogService)
     {
         _context = context;
+        _auditLogService = auditLogService;
     }
 
     public async Task<SaleDto> CreateSaleAsync(CreateSaleDto dto, int userId)
@@ -82,7 +84,7 @@ public class SaleService : ISaleService
                 UserId = userId,
                 TotalAmount = totalAmount,
                 PaymentType = (Payment_Type)dto.PaymentType,
-                SaleDate = DateTime.UtcNow
+                SaleDate = DateTime.Now
             };
 
             _context.Sales.Add(sale);
@@ -116,13 +118,22 @@ public class SaleService : ISaleService
                     MovementType = Movement_Type.StockOut,
                     Quantity = item.Quantity,
                     UserId = userId,
-                    MovementDate = DateTime.UtcNow
+                    MovementDate = DateTime.Now
                 };
                 _context.StockMovements.Add(stockMovement);
             }
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            // Audit log
+            try
+            {
+                var itemDescriptions = dto.Items.Select(i => $"{products[i.ProductId].Name} x{i.Quantity}");
+                var description = $"Sotdi: {string.Join(", ", itemDescriptions)} = {totalAmount:N0} sum";
+                await _auditLogService.LogAsync(userId, Action_Type.Sale, "Sale", sale.Id, description);
+            }
+            catch { /* audit log failure should not break sale */ }
 
             // Load user for response
             var user = await _context.Users.FindAsync(userId);

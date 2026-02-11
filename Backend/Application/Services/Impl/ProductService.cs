@@ -13,11 +13,13 @@ public class ProductService : IProductService
 {
     private readonly DatabaseContext _context;
     private readonly IBarcodeService _barcodeService;
+    private readonly IAuditLogService _auditLogService;
 
-    public ProductService(DatabaseContext context, IBarcodeService barcodeService)
+    public ProductService(DatabaseContext context, IBarcodeService barcodeService, IAuditLogService auditLogService)
     {
         _context = context;
         _barcodeService = barcodeService;
+        _auditLogService = auditLogService;
     }
 
     public async Task<PagedResult<ProductDto>> GetAllProductsAsync(PaginationParams paginationParams)
@@ -131,7 +133,7 @@ public class ProductService : IProductService
         return MapToDto(product);
     }
 
-    public async Task<int> CreateProductAsync(CreateProductDto dto)
+    public async Task<int> CreateProductAsync(CreateProductDto dto, int userId)
     {
         // Validate category exists
         var categoryExists = await _context.Categories
@@ -170,16 +172,19 @@ public class ProductService : IProductService
             StockQuantity = dto.StockQuantity,
             barcode = barcode,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.Now
         };
 
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
+        try { await _auditLogService.LogAsync(userId, Action_Type.ProductCreate, "Product", product.Id, $"Mahsulot yaratdi: {dto.Name}"); }
+        catch { }
+
         return product.Id;
     }
 
-    public async Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto)
+    public async Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto, int userId)
     {
         var product = await _context.Products
             .Include(p => p.Category)
@@ -225,6 +230,9 @@ public class ProductService : IProductService
 
         await _context.SaveChangesAsync();
 
+        try { await _auditLogService.LogAsync(userId, Action_Type.ProductUpdate, "Product", id, $"Mahsulotni yangiladi: {dto.Name}"); }
+        catch { }
+
         // Reload category if changed
         if (product.CategoryId != dto.CategoryId)
         {
@@ -267,7 +275,7 @@ public class ProductService : IProductService
                 MovementType = Movement_Type.StockIn,
                 Quantity = dto.Quantity,
                 UserId = dto.UserId,
-                MovementDate = DateTime.UtcNow
+                MovementDate = DateTime.Now
             };
 
             _context.StockMovements.Add(stockMovement);
@@ -275,6 +283,9 @@ public class ProductService : IProductService
             // Save changes
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            try { await _auditLogService.LogAsync(dto.UserId, Action_Type.StockIn, "Product", id, $"Zaxiraga qo'shdi: {product.Name} +{dto.Quantity}"); }
+            catch { }
 
             return MapToDto(product);
         }
@@ -285,7 +296,7 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task DeactivateProductAsync(int id)
+    public async Task DeactivateProductAsync(int id, int userId)
     {
         var product = await _context.Products.FindAsync(id);
 
@@ -296,6 +307,9 @@ public class ProductService : IProductService
 
         product.IsActive = false;
         await _context.SaveChangesAsync();
+
+        try { await _auditLogService.LogAsync(userId, Action_Type.ProductDeactivate, "Product", id, $"Mahsulotni o'chirdi: {product.Name}"); }
+        catch { }
     }
 
     // Private helper method to map Product to ProductDto

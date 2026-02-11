@@ -11,13 +11,15 @@ namespace Application.Services.Impl;
 internal class UserService : IUserService
 {
     private readonly DatabaseContext _context;
+    private readonly IAuditLogService _auditLogService;
 
-    public UserService(DatabaseContext context)
+    public UserService(DatabaseContext context, IAuditLogService auditLogService)
     {
         _context = context;
+        _auditLogService = auditLogService;
     }
 
-    public async Task<ApiResult<UserDto>> CreateAdminAsync(CreateUserDto dto)
+    public async Task<ApiResult<UserDto>> CreateAdminAsync(CreateUserDto dto, int performedByUserId)
     {
         if (string.IsNullOrWhiteSpace(dto.Username))
             return ApiResult<UserDto>.Failure(new[] { "Username cannot be empty." });
@@ -39,6 +41,9 @@ internal class UserService : IUserService
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
+
+        try { await _auditLogService.LogAsync(performedByUserId, Action_Type.UserCreate, "User", user.Id, $"Foydalanuvchi yaratdi: {dto.Username}"); }
+        catch { }
 
         return ApiResult<UserDto>.Success(MapToDto(user));
     }
@@ -62,7 +67,7 @@ internal class UserService : IUserService
         return ApiResult<UserDto>.Success(MapToDto(user));
     }
 
-    public async Task<ApiResult<UserDto>> UpdateAdminAsync(int id, UpdateUserDto dto)
+    public async Task<ApiResult<UserDto>> UpdateAdminAsync(int id, UpdateUserDto dto, int performedByUserId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
@@ -94,10 +99,13 @@ internal class UserService : IUserService
 
         await _context.SaveChangesAsync();
 
+        try { await _auditLogService.LogAsync(performedByUserId, Action_Type.UserUpdate, "User", id, $"Foydalanuvchini yangiladi: {user.Username}"); }
+        catch { }
+
         return ApiResult<UserDto>.Success(MapToDto(user));
     }
 
-    public async Task<ApiResult<bool>> DeactivateAdminAsync(int id)
+    public async Task<ApiResult<bool>> DeactivateAdminAsync(int id, int performedByUserId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
@@ -106,6 +114,9 @@ internal class UserService : IUserService
 
         user.IsActive = false;
         await _context.SaveChangesAsync();
+
+        try { await _auditLogService.LogAsync(performedByUserId, Action_Type.UserDeactivate, "User", id, $"Foydalanuvchini o'chirdi: {user.Username}"); }
+        catch { }
 
         return ApiResult<bool>.Success(true);
     }

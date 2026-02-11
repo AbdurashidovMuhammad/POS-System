@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.DTOs.UserDTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,10 @@ public class UserController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateAdmin([FromBody] CreateUserDto dto)
     {
-        var result = await _userService.CreateAdminAsync(dto);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _userService.CreateAdminAsync(dto, userId);
         if (!result.Succeeded)
             return BadRequest(result);
 
@@ -47,7 +51,10 @@ public class UserController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAdmin(int id, [FromBody] UpdateUserDto dto)
     {
-        var result = await _userService.UpdateAdminAsync(id, dto);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _userService.UpdateAdminAsync(id, dto, userId);
         if (!result.Succeeded)
             return BadRequest(result);
 
@@ -57,7 +64,10 @@ public class UserController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeactivateAdmin(int id)
     {
-        var result = await _userService.DeactivateAdminAsync(id);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        int.TryParse(userIdClaim?.Value, out var userId);
+
+        var result = await _userService.DeactivateAdminAsync(id, userId);
         if (!result.Succeeded)
             return NotFound(result);
 

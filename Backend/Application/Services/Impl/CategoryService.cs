@@ -1,6 +1,7 @@
 using Application.DTOs;
 using Application.DTOs.CategoryDTOs;
 using Core.Entities;
+using Core.Enums;
 using DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +10,15 @@ namespace Application.Services.Impl;
 internal class CategoryService : ICategoriesService
 {
     private readonly DatabaseContext _context;
+    private readonly IAuditLogService _auditLogService;
 
-    public CategoryService(DatabaseContext context)
+    public CategoryService(DatabaseContext context, IAuditLogService auditLogService)
     {
         _context = context;
+        _auditLogService = auditLogService;
     }
 
-    public async Task<ApiResult<string>> CreateCategoryAsync(CreateCategoryDto dto)
+    public async Task<ApiResult<string>> CreateCategoryAsync(CreateCategoryDto dto, int userId)
     {
         if (string.IsNullOrWhiteSpace(dto.Name))
             return ApiResult<string>.Failure(new[] { "Category name cannot be empty." });
@@ -28,10 +31,13 @@ internal class CategoryService : ICategoriesService
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
+        try { await _auditLogService.LogAsync(userId, Action_Type.CategoryCreate, "Category", category.Id, $"Kategoriya yaratdi: {dto.Name}"); }
+        catch { }
+
         return ApiResult<string>.Success("Category muvaffaqiyatli yaratildi.");
     }
 
-    public async Task<ApiResult<CategoryDto>> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
+    public async Task<ApiResult<CategoryDto>> UpdateCategoryAsync(int id, UpdateCategoryDto dto, int userId)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -53,6 +59,9 @@ internal class CategoryService : ICategoriesService
             category.IsActive = dto.IsActive.Value;
 
         await _context.SaveChangesAsync();
+
+        try { await _auditLogService.LogAsync(userId, Action_Type.CategoryUpdate, "Category", id, $"Kategoriyani yangiladi: {category.Name}"); }
+        catch { }
 
         return ApiResult<CategoryDto>.Success(MapToDto(category));
     }
@@ -93,7 +102,7 @@ internal class CategoryService : ICategoriesService
         return ApiResult<List<CategorySuggestDto>>.Success(categories);
     }
 
-    public async Task<ApiResult<bool>> DeleteCategoryAsync(int id)
+    public async Task<ApiResult<bool>> DeleteCategoryAsync(int id, int userId)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -105,8 +114,12 @@ internal class CategoryService : ICategoriesService
         if (hasProducts)
             return ApiResult<bool>.Failure(new[] { "This category has products and cannot be deleted." });
 
+        var categoryName = category.Name;
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
+
+        try { await _auditLogService.LogAsync(userId, Action_Type.CategoryDelete, "Category", id, $"Kategoriyani o'chirdi: {categoryName}"); }
+        catch { }
 
         return ApiResult<bool>.Success(true);
     }

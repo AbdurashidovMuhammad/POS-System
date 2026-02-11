@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using System.Security.Claims;
+using Application.DTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
@@ -129,7 +130,10 @@ public class ProductController : ControllerBase
                 return BadRequest(ApiResult<int>.Failure(errors));
             }
 
-            var productId = await _productService.CreateProductAsync(dto);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            int.TryParse(userIdClaim?.Value, out var userId);
+
+            var productId = await _productService.CreateProductAsync(dto, userId);
             return CreatedAtAction(nameof(GetById), new { id = productId }, ApiResult<int>.Success(productId));
         }
         catch (NotFoundException ex)
@@ -164,7 +168,10 @@ public class ProductController : ControllerBase
                 return BadRequest(ApiResult<ProductDto>.Failure(errors));
             }
 
-            var product = await _productService.UpdateProductAsync(id, dto);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            int.TryParse(userIdClaim?.Value, out var userId);
+
+            var product = await _productService.UpdateProductAsync(id, dto, userId);
             return Ok(ApiResult<ProductDto>.Success(product));
         }
         catch (NotFoundException ex)
@@ -220,7 +227,10 @@ public class ProductController : ControllerBase
     {
         try
         {
-            await _productService.DeactivateProductAsync(id);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            int.TryParse(userIdClaim?.Value, out var userId);
+
+            await _productService.DeactivateProductAsync(id, userId);
             return Ok(ApiResult<string>.Success("Mahsulot muvaffaqiyatli o'chirildi"));
         }
         catch (NotFoundException ex)

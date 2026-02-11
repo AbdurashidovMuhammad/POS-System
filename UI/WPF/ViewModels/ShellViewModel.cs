@@ -79,6 +79,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
             new("Kategoriyalar", "M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9", nameof(CategoryViewModel)),
             new("Hisobotlar", "M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M9,17H7V10H9V17M13,17H11V7H13V17M17,17H15V13H17V17Z", nameof(ReportViewModel), requiredRole: "SuperAdmin"),
             new("Foydalanuvchilar", "M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z", nameof(UserViewModel), requiredRole: "SuperAdmin"),
+            new("Faoliyat jurnali", "M13,2.05V4.05C17.39,4.59 20.5,8.58 19.96,12.97C19.5,16.61 16.64,19.5 13,19.93V21.93C18.5,21.38 22.5,16.5 21.95,11C21.5,6.25 17.73,2.5 13,2.05M5.67,19.74C7.18,21 9.04,21.79 11,22V20C9.58,19.82 8.23,19.25 7.1,18.37L5.67,19.74M2.06,13C2.26,14.96 3.03,16.81 4.27,18.33L5.68,16.92C4.82,15.79 4.24,14.45 4.06,13H2.06M4.26,5.67L5.67,7.1C6.81,6.22 8.15,5.64 9.57,5.44V3.42C7.62,3.64 5.78,4.39 4.26,5.67M2.06,11H4.06C4.24,9.58 4.8,8.23 5.67,7.1L4.26,5.68C3.03,7.19 2.26,9.04 2.06,11M7,12.5A5,5 0 0,0 12,17.5A5,5 0 0,0 17,12.5A5,5 0 0,0 12,7.5A5,5 0 0,0 7,12.5M12,9.5A3,3 0 0,1 15,12.5A3,3 0 0,1 12,15.5A3,3 0 0,1 9,12.5A3,3 0 0,1 12,9.5Z", nameof(ActivityLogViewModel), requiredRole: "SuperAdmin"),
         };
 
         // Filter out menu items the user doesn't have access to
@@ -117,6 +118,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
                 nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
                 nameof(ReportViewModel) => _serviceProvider.GetService(typeof(ReportViewModel)),
                 nameof(UserViewModel) => _serviceProvider.GetService(typeof(UserViewModel)),
+                nameof(ActivityLogViewModel) => _serviceProvider.GetService(typeof(ActivityLogViewModel)),
                 _ => null
             };
 

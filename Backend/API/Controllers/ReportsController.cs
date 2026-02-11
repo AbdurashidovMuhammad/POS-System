@@ -102,7 +102,7 @@ public class ReportsController : ControllerBase
         if (from.Date > to.Date)
             return "Boshlanish sanasi tugash sanasidan katta bo'lishi mumkin emas";
 
-        if (from.Date > DateTime.UtcNow.Date)
+        if (from.Date > DateTime.Now.Date)
             return "Kelajakdagi sana bo'lishi mumkin emas";
 
         return null;
