@@ -35,7 +35,8 @@ public class ReportService : IReportService
                 UnitTypeName = si.Product.Unit_Type.ToString(),
                 UnitPrice = si.UnitPrice,
                 TotalPrice = si.Quantity * si.UnitPrice,
-                PaymentTypeName = si.Sale.PaymentType.ToString()
+                PaymentTypeName = si.Sale.PaymentType.ToString(),
+                Username = si.Sale.User.Username
             })
             .ToListAsync();
 
@@ -65,7 +66,8 @@ public class ReportService : IReportService
                 Date = sm.MovementDate,
                 ProductName = sm.Product.Name,
                 Quantity = sm.Quantity,
-                UnitTypeName = sm.Product.Unit_Type.ToString()
+                UnitTypeName = sm.Product.Unit_Type.ToString(),
+                Username = sm.User.Username
             })
             .ToListAsync();
 
@@ -87,14 +89,14 @@ public class ReportService : IReportService
 
         // Title
         worksheet.Cell(1, 1).Value = $"Sotilgan mahsulotlar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
-        worksheet.Range(1, 1, 1, 6).Merge();
+        worksheet.Range(1, 1, 1, 7).Merge();
         worksheet.Cell(1, 1).Style.Font.Bold = true;
         worksheet.Cell(1, 1).Style.Font.FontSize = 14;
         worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         // Headers
         var headerRow = 3;
-        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Narxi", "Jami", "To'lov usuli" };
+        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Narxi", "Jami", "To'lov usuli", "Foydalanuvchi" };
         for (int i = 0; i < headers.Length; i++)
         {
             var cell = worksheet.Cell(headerRow, i + 1);
@@ -118,14 +120,15 @@ public class ReportService : IReportService
             worksheet.Cell(row, 5).Value = item.TotalPrice;
             worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
             worksheet.Cell(row, 6).Value = item.PaymentTypeName;
+            worksheet.Cell(row, 7).Value = item.Username;
 
             // Alternate row colors
             if (row % 2 == 0)
             {
-                worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
             }
 
-            for (int col = 1; col <= 6; col++)
+            for (int col = 1; col <= 7; col++)
             {
                 worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
@@ -142,8 +145,8 @@ public class ReportService : IReportService
         worksheet.Cell(row, 5).Value = report.TotalAmount;
         worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
         worksheet.Cell(row, 5).Style.Font.Bold = true;
-        worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
-        for (int col = 1; col <= 6; col++)
+        worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
+        for (int col = 1; col <= 7; col++)
         {
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }
@@ -165,14 +168,14 @@ public class ReportService : IReportService
 
         // Title
         worksheet.Cell(1, 1).Value = $"Kirib kelgan mahsulotlar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
-        worksheet.Range(1, 1, 1, 3).Merge();
+        worksheet.Range(1, 1, 1, 4).Merge();
         worksheet.Cell(1, 1).Style.Font.Bold = true;
         worksheet.Cell(1, 1).Style.Font.FontSize = 14;
         worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         // Headers
         var headerRow = 3;
-        var headers = new[] { "Sana", "Mahsulot", "Miqdor" };
+        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Foydalanuvchi" };
         for (int i = 0; i < headers.Length; i++)
         {
             var cell = worksheet.Cell(headerRow, i + 1);
@@ -191,13 +194,14 @@ public class ReportService : IReportService
             worksheet.Cell(row, 1).Value = item.Date.ToString("dd.MM.yyyy HH:mm");
             worksheet.Cell(row, 2).Value = item.ProductName;
             worksheet.Cell(row, 3).Value = $"{item.Quantity} {item.UnitTypeName}";
+            worksheet.Cell(row, 4).Value = item.Username;
 
             if (row % 2 == 0)
             {
-                worksheet.Range(row, 1, row, 3).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                worksheet.Range(row, 1, row, 4).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
             }
 
-            for (int col = 1; col <= 3; col++)
+            for (int col = 1; col <= 4; col++)
             {
                 worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
@@ -213,8 +217,8 @@ public class ReportService : IReportService
         worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         worksheet.Cell(row, 3).Value = report.TotalQuantity;
         worksheet.Cell(row, 3).Style.Font.Bold = true;
-        worksheet.Range(row, 1, row, 3).Style.Fill.BackgroundColor = XLColor.FromHtml("#e3f2fd");
-        for (int col = 1; col <= 3; col++)
+        worksheet.Range(row, 1, row, 4).Style.Fill.BackgroundColor = XLColor.FromHtml("#e3f2fd");
+        for (int col = 1; col <= 4; col++)
         {
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }

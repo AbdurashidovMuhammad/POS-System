@@ -9,4 +9,5 @@ public class SalesReportItemDto
     public decimal UnitPrice { get; set; }
     public decimal TotalPrice { get; set; }
     public string PaymentTypeName { get; set; } = null!;
+    public string Username { get; set; } = null!;
 }

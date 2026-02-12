@@ -13,10 +13,12 @@ public class SalesReportItemDto
     public DateTime Date { get; set; }
     public string ProductName { get; set; } = string.Empty;
     public decimal Quantity { get; set; }
+    public string FormattedQuantity => Quantity.ToString("0.##");
     public string UnitTypeName { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
     public decimal TotalPrice { get; set; }
     public string PaymentTypeName { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
 }
 
 public class StockInReportDto
@@ -32,5 +34,7 @@ public class StockInReportItemDto
     public DateTime Date { get; set; }
     public string ProductName { get; set; } = string.Empty;
     public decimal Quantity { get; set; }
+    public string FormattedQuantity => Quantity.ToString("0.##");
     public string UnitTypeName { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
 }

@@ -400,7 +400,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock>
-                                            <Run Text="{Binding Quantity, StringFormat=0.##}"/>
+                                            <Run Text="{Binding FormattedQuantity, Mode=OneWay}"/>
                                             <Run Text="{Binding UnitTypeName}" Foreground="#888"/>
                                         </TextBlock>
                                     </DataTemplate>
@@ -427,6 +427,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="To'lov usuli" Binding="{Binding PaymentTypeName}" Width="120"/>
+                            <DataGridTextColumn Header="Foydalanuvchi" Binding="{Binding Username}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -587,13 +588,14 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="SemiBold" Foreground="#e65100">
-                                            <Run Text="{Binding Quantity, StringFormat=0.##}"/>
+                                            <Run Text="{Binding FormattedQuantity, Mode=OneWay}"/>
                                             <Run Text=" "/>
                                             <Run Text="{Binding UnitTypeName}" Foreground="#888"/>
                                         </TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Foydalanuvchi" Binding="{Binding Username}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
