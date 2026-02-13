@@ -23,6 +23,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -39,7 +40,7 @@
                             <Path Data="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z"
                                   Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
                             <TextBlock Text="Savat" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                            <Border Background="#FFFFFF60" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="#FFFFFF90" BorderThickness="1.5">
                                 <TextBlock Text="{Binding CartItems.Count, StringFormat={}{0} ta}" FontSize="12" Foreground="White" FontWeight="Bold"/>
                             </Border>
                         </StackPanel>
@@ -144,7 +145,7 @@
                 </Border>
 
                 <!-- Column headers -->
-                <Border Grid.Row="1" Padding="20,0,20,0" Margin="0,58,0,0"
+                <Border Grid.Row="2" Padding="20,0,20,0"
                         Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}}">
                     <Border Background="#f8f9fa" CornerRadius="8" Padding="12,10" Margin="0,4,0,0">
                         <Grid>
@@ -164,7 +165,7 @@
                 </Border>
 
                 <!-- Cart Items List -->
-                <ListView Grid.Row="2"
+                <ListView Grid.Row="3"
                           ItemsSource="{Binding CartItems}"
                           BorderThickness="0"
                           Background="Transparent"
@@ -329,7 +330,7 @@
                 </ListView>
 
                 <!-- Empty Cart -->
-                <StackPanel Grid.Row="2"
+                <StackPanel Grid.Row="3"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
