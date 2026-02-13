@@ -707,7 +707,7 @@
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#FFFFFF20" CornerRadius="8" Padding="8">
+                                    <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
                                         <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                               Fill="White"
                                               Width="14" Height="14"
@@ -715,7 +715,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#FFFFFF40"/>
+                                            <Setter TargetName="border" Property="Background" Value="#c62828"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -879,16 +879,23 @@
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="border"
-                                            Background="#f8f9fa"
                                             CornerRadius="12"
-                                            Padding="0,16"
-                                            BorderBrush="#e8e8e8"
-                                            BorderThickness="1.5">
-                                        <TextBlock Text="Bekor qilish" Foreground="#666" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            Padding="0,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ef5350" Offset="0"/>
+                                                <GradientStop Color="#c62828" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Bekor qilish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                        </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -1053,13 +1060,13 @@
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Backgz`round="#FFFFFF20" CornerRadius="8" Padding="8">
+                                        <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                                   Fill="White" Width="14" Height="14" Stretch="Uniform"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#FFFFFF40"/>
+                                                <Setter TargetName="border" Property="Background" Value="#c62828"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
