@@ -9,694 +9,643 @@
              d:DesignHeight="700" d:DesignWidth="1200"
              Loaded="UserControl_Loaded">
 
-    <UserControl.Resources>
-        <!-- Primary Button Style -->
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#2196F3"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="20,12"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1976D2"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Success Button Style -->
-        <Style x:Key="SuccessButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#4CAF50"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="20,12"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#388E3C"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Warning Button Style -->
-        <Style x:Key="WarningButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF9800"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#F57C00"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Danger Button Style -->
-        <Style x:Key="DangerButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#f44336"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#d32f2f"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Secondary Button Style -->
-        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#f5f5f5"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#ddd"/>
-            <Setter Property="Padding" Value="20,12"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#e8e8e8"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Form Input Style -->
-        <Style x:Key="FormInputStyle" TargetType="TextBox">
-            <Setter Property="Background" Value="#f8f9fa"/>
-            <Setter Property="BorderBrush" Value="#e0e0e0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#2196F3"/>
-                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Form ComboBox Style -->
-        <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#f8f9fa"/>
-            <Setter Property="BorderBrush" Value="#e0e0e0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-    </UserControl.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Main Content -->
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+        <Border Grid.Column="0" Background="White" CornerRadius="16">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <!-- Header with Search and Add Button -->
-            <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <!-- Gradient Header -->
+                <Border Grid.Row="0" CornerRadius="16,16,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                            <GradientStop Color="#4361ee" Offset="0"/>
+                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid Margin="24,18">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Search Box -->
-                    <Border x:Name="SearchBorder" Grid.Column="0" Background="#f5f5f5" CornerRadius="8" Margin="0,0,15,0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Path Grid.Column="0"
-                                  Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                  Fill="#888"
-                                  Width="18" Height="18"
-                                  Stretch="Uniform"
-                                  Margin="15,0,10,0"
-                                  VerticalAlignment="Center"/>
-                            <TextBox x:Name="SearchTextBox"
-                                     Grid.Column="1"
-                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Padding="5,12"
-                                     FontSize="14"
-                                     VerticalContentAlignment="Center"
-                                     LostFocus="SearchTextBox_LostFocus">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Enter" Command="{Binding SearchProductsCommand}"/>
-                                    <KeyBinding Key="Escape" Command="{Binding CloseSuggestionsCommand}"/>
-                                </TextBox.InputBindings>
-                            </TextBox>
-                            <Button Grid.Column="2"
-                                    Content="Qidirish"
-                                    Command="{Binding SearchProductsCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}"
-                                    Padding="20,10"
-                                    Margin="5"/>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M7,10L12,15L17,10H7Z"
+                                  Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
+                            <TextBlock Text="Mahsulotlar" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="#FFFFFF90" BorderThickness="1.5">
+                                <TextBlock Text="{Binding TotalCount, StringFormat={}{0} ta}" FontSize="12" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                        </StackPanel>
 
-                            <!-- Suggestions Popup -->
-                            <Popup Grid.Column="1"
-                                   IsOpen="{Binding IsSuggestionsOpen}"
-                                   PlacementTarget="{Binding ElementName=SearchBorder}"
-                                   Placement="Bottom"
-                                   Width="{Binding ElementName=SearchBorder, Path=ActualWidth}"
-                                   StaysOpen="False"
-                                   AllowsTransparency="True"
-                                   PopupAnimation="Slide">
-                                <Border Background="White"
-                                        BorderBrush="#e0e0e0"
-                                        BorderThickness="1"
-                                        CornerRadius="8"
-                                        MaxHeight="350">
-                                    <Border.Effect>
-                                        <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.15" Direction="270"/>
-                                    </Border.Effect>
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="340">
-                                        <ItemsControl ItemsSource="{Binding Suggestions}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Padding="10,8"
-                                                            Cursor="Hand"
-                                                            Background="Transparent"
-                                                            BorderBrush="#f0f0f0"
-                                                            BorderThickness="0,0,0,1">
-                                                        <Border.InputBindings>
-                                                            <MouseBinding MouseAction="LeftClick"
-                                                                          Command="{Binding DataContext.SelectSuggestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                          CommandParameter="{Binding}"/>
-                                                        </Border.InputBindings>
-                                                        <TextBlock Text="{Binding Name}"
-                                                                   FontSize="14"
-                                                                   Foreground="#333"/>
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
+                        <!-- Add Product Button -->
+                        <Button Grid.Column="1"
+                                Command="{Binding ShowAddPanelCommand}"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="12" Padding="22,12">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#4CAF50" Offset="0"/>
+                                                <GradientStop Color="#2e7d32" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Yangi mahsulot" Foreground="White" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Search Bar -->
+                <Border Grid.Row="1" Padding="20,16,20,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border x:Name="SearchBorder" Grid.Column="0" Background="#f8f9fa" CornerRadius="12" BorderBrush="#e8e8e8" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="#4361ee" CornerRadius="12,0,0,12" Padding="14,0">
+                                    <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                                          Fill="White"
+                                          Width="18" Height="18"
+                                          Stretch="Uniform"
+                                          VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBox x:Name="SearchTextBox"
+                                         Grid.Column="1"
+                                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="12,13"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         LostFocus="SearchTextBox_LostFocus">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding SearchProductsCommand}"/>
+                                        <KeyBinding Key="Escape" Command="{Binding CloseSuggestionsCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button Grid.Column="2"
+                                        Command="{Binding SearchProductsCommand}"
+                                        Margin="4"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border" CornerRadius="10" Padding="22,12">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="#4361ee" Offset="0"/>
+                                                        <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <TextBlock Text="Qidirish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <!-- Suggestions Popup -->
+                                <Popup Grid.Column="1"
+                                       IsOpen="{Binding IsSuggestionsOpen}"
+                                       PlacementTarget="{Binding ElementName=SearchBorder}"
+                                       Placement="Bottom"
+                                       Width="{Binding ElementName=SearchBorder, Path=ActualWidth}"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True"
+                                       PopupAnimation="Slide">
+                                    <Border Background="White"
+                                            BorderBrush="#e0e0e0"
+                                            BorderThickness="1"
+                                            CornerRadius="12"
+                                            Margin="0,4,0,0"
+                                            MaxHeight="350">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.15" Direction="270"/>
+                                        </Border.Effect>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="340">
+                                            <ItemsControl ItemsSource="{Binding Suggestions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="14,10"
+                                                                Cursor="Hand"
+                                                                Background="Transparent"
+                                                                BorderBrush="#f0f0f0"
+                                                                BorderThickness="0,0,0,1">
+                                                            <Border.InputBindings>
+                                                                <MouseBinding MouseAction="LeftClick"
+                                                                              Command="{Binding DataContext.SelectSuggestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                              CommandParameter="{Binding}"/>
+                                                            </Border.InputBindings>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Name}"
+                                                                           FontSize="14"
+                                                                           FontWeight="SemiBold"
+                                                                           Foreground="#1a1a2e"/>
+                                                                <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                                    <TextBlock Text="{Binding Barcode}" FontSize="11" Foreground="#aaa"/>
+                                                                    <TextBlock Text="  ·  " FontSize="11" Foreground="#ccc"/>
+                                                                    <TextBlock Text="{Binding UnitPrice, StringFormat={}{0:N0} sum}" FontSize="11" Foreground="#4CAF50" FontWeight="SemiBold"/>
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Background" Value="#f8f9fa"/>
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Success Message -->
+                <Border Grid.Row="2"
+                        Margin="20,0,20,8"
+                        Background="#e8f5e9"
+                        Padding="14"
+                        CornerRadius="10"
+                        Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
+                              Fill="#4CAF50" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#2E7D32" FontSize="13" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Error Message -->
+                <Border Grid.Row="3"
+                        Margin="20,0,20,8"
+                        Background="#FFEBEE"
+                        Padding="14"
+                        CornerRadius="10"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+                              Fill="#e53935" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828" FontSize="13" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Column Headers -->
+                <Border Grid.Row="4" Padding="20,0,20,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Table Header -->
+                        <Border Grid.Row="0" Background="#f8f9fa" CornerRadius="10" Padding="16,12" Margin="0,0,0,4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="Nomi" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="2" Text="Kategoriya" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="3" Text="Narxi" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="4" Text="O'lchov" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="5" Text="Zaxira" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="6" Text="Shtrix kod" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="7" Text="Holat" FontSize="12" Foreground="#666" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="8" Text="Amallar" FontSize="12" Foreground="#666" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Products List -->
+                        <ListView Grid.Row="1"
+                                  x:Name="ProductsListView"
+                                  ItemsSource="{Binding Products}"
+                                  SelectedItem="{Binding SelectedProduct}"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  SelectionMode="Single">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0,1"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListViewItem">
+                                                <Border x:Name="border" Background="Transparent" CornerRadius="10">
+                                                    <ContentPresenter/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#f8f9fa"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#e8f0fe"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu FontSize="15">
+                                                <MenuItem Header="Shtrix kod" Padding="6,8,20,8"
+                                                          Command="{Binding PlacementTarget.Tag.ShowBarcodeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z"
+                                                              Fill="#333" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="Tahrirlash" Padding="6,8,20,8"
+                                                          Command="{Binding PlacementTarget.Tag.EditProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+                                                              Fill="#4361ee" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Zaxira qo'shish" Padding="6,8,20,8"
+                                                          Command="{Binding PlacementTarget.Tag.ShowStockInPanelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+                                                              Fill="#FF9800" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="O'chirish" Padding="6,8,20,8"
+                                                          Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                                              Fill="#f44336" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="16,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="110"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="90"/>
+                                                <ColumnDefinition Width="150"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="70"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Row Number -->
+                                            <Border Grid.Column="0" Background="#f0f4ff" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Converter={StaticResource IndexConverter}}"
+                                                           FontSize="12" FontWeight="SemiBold" Foreground="#4361ee"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Name -->
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                                       FontSize="13.5" FontWeight="SemiBold" Foreground="#1a1a2e"
+                                                       VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       ToolTip="{Binding Name}"/>
+
+                                            <!-- Category -->
+                                            <Border Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                <Border Background="#e8f0fe" CornerRadius="6" Padding="8,4">
+                                                    <TextBlock Text="{Binding Category.Name}"
+                                                               FontSize="11" Foreground="#4361ee" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               ToolTip="{Binding Category.Name}"/>
+                                                </Border>
+                                            </Border>
+
+                                            <!-- Price -->
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding UnitPrice, StringFormat={}{0:N0}}"
+                                                           FontSize="13" FontWeight="Bold" Foreground="#2e7d32"/>
+                                                <TextBlock Text=" sum" FontSize="11" Foreground="#888" VerticalAlignment="Bottom" Margin="2,0,0,1"/>
+                                            </StackPanel>
+
+                                            <!-- Unit Type -->
+                                            <TextBlock Grid.Column="4" Text="{Binding UnitType}"
+                                                       FontSize="12" Foreground="#666"
+                                                       VerticalAlignment="Center"/>
+
+                                            <!-- Stock -->
+                                            <Border Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                <Border CornerRadius="6" Padding="8,4">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="#e8f5e9"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding StockQuantity}" Value="0">
+                                                                    <Setter Property="Background" Value="#FFEBEE"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock FontSize="12" FontWeight="Bold">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="#2e7d32"/>
                                                                 <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="#f5f5f5"/>
-                                                                    </Trigger>
+                                                                    <DataTrigger Binding="{Binding StockQuantity}" Value="0">
+                                                                        <Setter Property="Foreground" Value="#e53935"/>
+                                                                    </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                    </Border>
-
-                    <!-- Add Button -->
-                    <Button Grid.Column="2"
-                            Command="{Binding ShowAddPanelCommand}"
-                            Style="{StaticResource SuccessButtonStyle}"
-                            Padding="20,12">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                                  Fill="White"
-                                  Width="16" Height="16"
-                                  Stretch="Uniform"
-                                  Margin="0,0,8,0"
-                                  VerticalAlignment="Center"/>
-                            <TextBlock Text="Yangi mahsulot" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </Border>
-
-            <!-- Success Message -->
-            <Border Grid.Row="1"
-                    Background="#E8F5E9"
-                    Padding="15"
-                    CornerRadius="8"
-                    Margin="0,0,0,15"
-                    Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Path Grid.Column="0"
-                          Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-                          Fill="#4CAF50"
-                          Width="20" Height="20"
-                          Stretch="Uniform"
-                          Margin="0,0,12,0"
-                          VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" Text="{Binding SuccessMessage}" Foreground="#2E7D32" FontSize="14" VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-
-            <!-- Products DataGrid -->
-            <Border Grid.Row="2" Background="White" CornerRadius="12">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <DataGrid x:Name="ProductsDataGrid"
-                              Grid.Row="0"
-                              ItemsSource="{Binding Products}"
-                              SelectedItem="{Binding SelectedProduct}"
-                              AutoGenerateColumns="False"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"
-                              SelectionUnit="FullRow"
-                              Background="White"
-                              GridLinesVisibility="All"
-                              VerticalGridLinesBrush="#e0e0e0"
-                              HorizontalGridLinesBrush="#f0f0f0"
-                              HeadersVisibility="All"
-                              BorderThickness="0"
-                              Margin="15"
-                              SelectionMode="Single"
-                              LoadingRow="ProductsDataGrid_LoadingRow"
-                              ClipboardCopyMode="ExcludeHeader">
-                        <DataGrid.ColumnHeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="#f8f9fa"/>
-                                <Setter Property="Padding" Value="12,12"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="Foreground" Value="#333"/>
-                                <Setter Property="BorderBrush" Value="#e0e0e0"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,2"/>
-                            </Style>
-                        </DataGrid.ColumnHeaderStyle>
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="White"/>
-                                <Setter Property="BorderBrush" Value="#f0f0f0"/>
-                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
-                                <Setter Property="ContextMenu">
-                                    <Setter.Value>
-                                        <ContextMenu>
-                                            <MenuItem Header="Shtrix kod"
-                                                      Command="{Binding PlacementTarget.Tag.ShowBarcodeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                <MenuItem.Icon>
-                                                    <Path Data="M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z"
-                                                          Fill="#333" Width="14" Height="14" Stretch="Uniform"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Tahrirlash"
-                                                      Command="{Binding PlacementTarget.Tag.EditProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                <MenuItem.Icon>
-                                                    <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                                                          Fill="#2196F3" Width="14" Height="14" Stretch="Uniform"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem Header="Zaxira qo'shish"
-                                                      Command="{Binding PlacementTarget.Tag.ShowStockInPanelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                <MenuItem.Icon>
-                                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                                                          Fill="#FF9800" Width="14" Height="14" Stretch="Uniform"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="O'chirish"
-                                                      Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                <MenuItem.Icon>
-                                                    <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                                          Fill="#f44336" Width="14" Height="14" Stretch="Uniform"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#f8f9fa"/>
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="#e3f2fd"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.RowStyle>
-                        <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="BorderBrush" Value="#e0e0e0"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,0"/>
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="DataGridCell">
-                                            <Border Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    Padding="12,10">
-                                                <ContentPresenter VerticalAlignment="Center"/>
+                                                        </TextBlock.Style>
+                                                        <Run Text="{Binding StockQuantity, StringFormat=0.##}"/>
+                                                    </TextBlock>
+                                                </Border>
                                             </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="#e3f2fd"/>
-                                        <Setter Property="Foreground" Value="#333"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.CellStyle>
-                        <DataGrid.RowHeaderStyle>
-                            <Style TargetType="DataGridRowHeader">
-                                <Setter Property="Width" Value="45"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="DataGridRowHeader">
-                                            <Border Background="#f8f9fa"
-                                                    BorderBrush="#e0e0e0"
-                                                    BorderThickness="0,0,1,0">
-                                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
+
+                                            <!-- Barcode -->
+                                            <DockPanel Grid.Column="6" VerticalAlignment="Center">
+                                                <Button DockPanel.Dock="Right"
+                                                        Click="CopyBarcode_Click"
+                                                        Tag="{Binding Barcode}"
+                                                        Cursor="Hand"
+                                                        ToolTip="Nusxalash"
+                                                        Margin="4,0,0,0">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="border" Background="Transparent" CornerRadius="6" Padding="6,4">
+                                                                <Path Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"
+                                                                      Fill="#aaa" Width="13" Height="13" Stretch="Uniform"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                                <TextBlock Text="{Binding Barcode}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding Barcode}"
+                                                           FontSize="12"
                                                            Foreground="#666"
-                                                           FontSize="13"
-                                                           HorizontalAlignment="Center"
                                                            VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </DataGrid.RowHeaderStyle>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Nomi" Binding="{Binding Name}" Width="*">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                                        <Setter Property="ToolTip" Value="{Binding Name}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Kategoriya" Binding="{Binding Category.Name}" Width="130">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                                        <Setter Property="ToolTip" Value="{Binding Category.Name}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Narxi" Width="120"
-                                                    ClipboardContentBinding="{Binding UnitPrice, StringFormat=N0}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock TextTrimming="CharacterEllipsis">
-                                            <Run Text="{Binding UnitPrice, StringFormat=N0}"/>
-                                            <Run Text=" so'm" Foreground="#888"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="O'lchov" Binding="{Binding UnitType}" Width="80">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Zaxira" Width="100"
-                                                    ClipboardContentBinding="{Binding StockQuantity, StringFormat=0.##}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontWeight="SemiBold">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Foreground" Value="#4CAF50"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding StockQuantity}" Value="0">
-                                                            <Setter Property="Foreground" Value="#f44336"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                            <Run Text="{Binding StockQuantity, StringFormat=0.##}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Shtrix kod" Width="160"
-                                                    ClipboardContentBinding="{Binding Barcode}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <DockPanel>
-                                            <Button DockPanel.Dock="Right"
-                                                    Click="CopyBarcode_Click"
-                                                    Tag="{Binding Barcode}"
-                                                    Cursor="Hand"
-                                                    ToolTip="Nusxalash"
-                                                    Width="24" Height="24"
-                                                    Margin="4,0,0,0"
-                                                    Background="Transparent"
-                                                    BorderThickness="0">
-                                                <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="#888"/>
-                                            </Button>
-                                            <TextBlock Text="{Binding Barcode}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       ToolTip="{Binding Barcode}"
-                                                       VerticalAlignment="Center"/>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Holat" Width="90"
-                                                    ClipboardContentBinding="{Binding IsActive}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Border CornerRadius="10" Padding="8,4" HorizontalAlignment="Left">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="Background" Value="#E8F5E9"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                            <Setter Property="Background" Value="#FFEBEE"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <TextBlock FontSize="12" FontWeight="SemiBold">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Text" Value="Faol"/>
-                                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                            </DockPanel>
+
+                                            <!-- Status -->
+                                            <Border Grid.Column="7" CornerRadius="10" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#e8f5e9"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                <Setter Property="Text" Value="Nofaol"/>
-                                                                <Setter Property="Foreground" Value="#f44336"/>
+                                                                <Setter Property="Background" Value="#FFEBEE"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Border>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Amallar" Width="70" CanUserResize="False" CanUserReorder="False">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button x:Name="ActionMenuButton"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Cursor="Hand"
-                                                Padding="6"
-                                                HorizontalAlignment="Center"
-                                                Click="ActionMenuButton_Click"
-                                                Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                ToolTip="Amallar">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border x:Name="btnBorder"
-                                                            Background="Transparent"
-                                                            CornerRadius="6"
-                                                            Padding="8,6">
-                                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <Ellipse Width="4" Height="4" Fill="#999" Margin="0,0,0,2"/>
-                                                            <Ellipse Width="4" Height="4" Fill="#999" Margin="0,0,0,2"/>
-                                                            <Ellipse Width="4" Height="4" Fill="#999"/>
-                                                        </StackPanel>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="btnBorder" Property="Background" Value="#f0f0f0"/>
-                                                        </Trigger>
-                                                        <Trigger Property="IsPressed" Value="True">
-                                                            <Setter TargetName="btnBorder" Property="Background" Value="#e0e0e0"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                                </Border.Style>
+                                                <TextBlock FontSize="11" FontWeight="SemiBold">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="Faol"/>
+                                                            <Setter Property="Foreground" Value="#4CAF50"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                    <Setter Property="Text" Value="Nofaol"/>
+                                                                    <Setter Property="Foreground" Value="#f44336"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
 
-                    <!-- Pagination Controls -->
-                    <Border Grid.Row="1" BorderBrush="#e0e0e0" BorderThickness="0,1,0,0" Padding="15,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                                            <!-- Actions Button -->
+                                            <Button Grid.Column="8"
+                                                    x:Name="ActionMenuButton"
+                                                    Click="ActionMenuButton_Click"
+                                                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    Cursor="Hand"
+                                                    ToolTip="Amallar"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="btnBorder"
+                                                                Background="Transparent"
+                                                                CornerRadius="10"
+                                                                Padding="14,8">
+                                                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <Ellipse Width="5" Height="5" Fill="#999" Margin="0,0,0,3"/>
+                                                                <Ellipse Width="5" Height="5" Fill="#999" Margin="0,0,0,3"/>
+                                                                <Ellipse Width="5" Height="5" Fill="#999"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="#f0f0f0"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="#e0e0e0"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#666" FontSize="13">
-                                <Run Text="Jami: "/>
-                                <Run Text="{Binding TotalCount}" FontWeight="SemiBold"/>
-                                <Run Text=" ta mahsulot"/>
-                            </TextBlock>
-
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Oldingi"
-                                        Command="{Binding PreviousPageCommand}"
-                                        Style="{StaticResource SecondaryButtonStyle}"
-                                        Padding="12,8"
-                                        Margin="0,0,10,0"/>
-
-                                <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="#333" Margin="5,0">
-                                    <Run Text="Sahifa "/>
-                                    <Run Text="{Binding CurrentPage}" FontWeight="SemiBold"/>
-                                    <Run Text=" / "/>
-                                    <Run Text="{Binding TotalPages}" FontWeight="SemiBold"/>
-                                </TextBlock>
-
-                                <Button Content="Keyingi"
-                                        Command="{Binding NextPageCommand}"
-                                        Style="{StaticResource SecondaryButtonStyle}"
-                                        Padding="12,8"
-                                        Margin="10,0,0,0"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Loading Indicator -->
-                    <Border Grid.RowSpan="2"
-                            Background="#E0FFFFFF"
-                            CornerRadius="12"
-                            Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-                            <TextBlock Text="Yuklanmoqda..." Margin="0,15,0,0" FontSize="14" Foreground="#666"/>
+                        <!-- Empty State -->
+                        <StackPanel Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Visibility="{Binding Products.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
+                            <Border Background="#f0f4ff" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center">
+                                <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M7,10L12,15L17,10H7Z"
+                                      Fill="#4361ee" Width="36" Height="36" Stretch="Uniform"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                            </Border>
+                            <TextBlock Text="Mahsulotlar topilmadi"
+                                       FontSize="16" FontWeight="SemiBold" Foreground="#555"
+                                       HorizontalAlignment="Center" Margin="0,16,0,0"/>
+                            <TextBlock Text="Yangi mahsulot qo'shish uchun yuqoridagi tugmani bosing"
+                                       FontSize="13" Foreground="#aaa"
+                                       HorizontalAlignment="Center" Margin="0,6,0,0"/>
                         </StackPanel>
-                    </Border>
+                    </Grid>
+                </Border>
 
-                    <!-- Error Message -->
-                    <Border Grid.RowSpan="2"
-                            Background="#FFEBEE"
-                            Padding="20"
-                            CornerRadius="8"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Stretch"
-                            Margin="15"
-                            Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
-                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828"/>
-                    </Border>
-                </Grid>
-            </Border>
-        </Grid>
+                <!-- Pagination -->
+                <Border Grid.Row="5" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-        <!-- Side Panel for Add/Edit/StockIn -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="#f0f4ff" CornerRadius="8" Padding="10,6">
+                                <TextBlock FontSize="12" Foreground="#4361ee" FontWeight="SemiBold">
+                                    <Run Text="Jami: "/>
+                                    <Run Text="{Binding TotalCount}" FontWeight="Bold"/>
+                                    <Run Text=" ta mahsulot"/>
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Command="{Binding PreviousPageCommand}"
+                                    Cursor="Hand"
+                                    Margin="0,0,8,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="18,10" BorderBrush="#e8e8e8" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                                                      Fill="#666" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Oldingi" FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Border Background="#f8f9fa" CornerRadius="10" Padding="18,10" VerticalAlignment="Center">
+                                <TextBlock FontSize="14" Foreground="#333">
+                                    <Run Text="{Binding CurrentPage}" FontWeight="Bold" Foreground="#4361ee"/>
+                                    <Run Text=" / "/>
+                                    <Run Text="{Binding TotalPages}" FontWeight="Bold"/>
+                                </TextBlock>
+                            </Border>
+
+                            <Button Command="{Binding NextPageCommand}"
+                                    Cursor="Hand"
+                                    Margin="8,0,0,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="18,10" BorderBrush="#e8e8e8" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Keyingi" FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                                                <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+                                                      Fill="#666" Width="14" Height="14" Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <Border Grid.RowSpan="6"
+                        Background="#E0FFFFFF"
+                        CornerRadius="16"
+                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,16">
+                            <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform x:Name="LoadingRotation"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Border>
+                        <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════ SIDE PANEL ═══════════════ -->
         <Border Grid.Column="1"
                 Width="400"
                 Background="White"
-                Margin="15,0,0,0"
-                CornerRadius="12"
+                Margin="12,0,0,0"
+                CornerRadius="16"
                 Visibility="{Binding IsPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.1" Direction="180"/>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="180"/>
             </Border.Effect>
             <Grid>
                 <Grid.RowDefinitions>
@@ -705,263 +654,501 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Panel Header -->
-                <Border Grid.Row="0" BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Padding="20,18">
-                    <Grid>
+                <!-- Panel Header with Gradient -->
+                <Border Grid.Row="0" CornerRadius="16,16,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                            <GradientStop Color="#4361ee" Offset="0"/>
+                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid Margin="24,18">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" FontSize="18" FontWeight="SemiBold" Foreground="#1a1a2e" VerticalAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Text" Value="Yangi mahsulot"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
-                                            <Setter Property="Text" Value="Mahsulotni tahrirlash"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsStockInPanelOpen}" Value="True">
-                                            <Setter Property="Text" Value="Zaxira qo'shish"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Panel Icon -->
+                            <Path Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Data" Value="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
+                                                <Setter Property="Data" Value="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsStockInPanelOpen}" Value="True">
+                                                <Setter Property="Data" Value="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M7,10L12,15L17,10H7Z"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+
+                            <TextBlock FontSize="17" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Yangi mahsulot"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
+                                                <Setter Property="Text" Value="Tahrirlash"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsStockInPanelOpen}" Value="True">
+                                                <Setter Property="Text" Value="Zaxira qo'shish"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+
                         <Button Grid.Column="1"
                                 Command="{Binding CancelPanelCommand}"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Cursor="Hand"
-                                Padding="8">
-                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                  Fill="#888"
-                                  Width="18" Height="18"
-                                  Stretch="Uniform"/>
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="#FFFFFF20" CornerRadius="8" Padding="8">
+                                        <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                              Fill="White"
+                                              Width="14" Height="14"
+                                              Stretch="Uniform"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#FFFFFF40"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
                     </Grid>
                 </Border>
 
                 <!-- Panel Content -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,20">
                     <StackPanel>
                         <!-- Add/Edit Form -->
                         <StackPanel Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
                             <!-- Product Name -->
-                            <TextBlock Text="Mahsulot nomi" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     Margin="0,0,0,20"/>
+                            <TextBlock Text="Mahsulot nomi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,12"
+                                         FontSize="14"/>
+                            </Border>
 
                             <!-- Category -->
-                            <TextBlock Text="Kategoriya" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <ComboBox ItemsSource="{Binding Categories}"
-                                      SelectedValue="{Binding FormCategoryId}"
-                                      SelectedValuePath="Id"
-                                      DisplayMemberPath="Name"
-                                      Style="{StaticResource FormComboBoxStyle}"
-                                      Margin="0,0,0,20"/>
+                            <TextBlock Text="Kategoriya" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                <ComboBox ItemsSource="{Binding Categories}"
+                                          SelectedValue="{Binding FormCategoryId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Name"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Padding="10,10"
+                                          FontSize="14"/>
+                            </Border>
 
                             <!-- Unit Price -->
-                            <TextBlock Text="Narxi (so'm)" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding FormUnitPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     Margin="0,0,0,20"/>
+                            <TextBlock Text="Narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                <TextBox Text="{Binding FormUnitPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,12"
+                                         FontSize="14"/>
+                            </Border>
 
                             <!-- Unit Type -->
-                            <TextBlock Text="O'lchov birligi" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <ComboBox ItemsSource="{Binding UnitTypes}"
-                                      SelectedItem="{Binding FormUnitType}"
-                                      Style="{StaticResource FormComboBoxStyle}"
-                                      Margin="0,0,0,20"/>
+                            <TextBlock Text="O'lchov birligi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                <ComboBox ItemsSource="{Binding UnitTypes}"
+                                          SelectedItem="{Binding FormUnitType}"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Padding="10,10"
+                                          FontSize="14"/>
+                            </Border>
 
                             <!-- Initial Stock (only for new products) -->
                             <StackPanel Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <TextBlock Text="Boshlang'ich zaxira" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                                <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
-                                         Style="{StaticResource FormInputStyle}"
-                                         Margin="0,0,0,20"/>
+                                <TextBlock Text="Boshlang'ich zaxira" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                                <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                    <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="14,12"
+                                             FontSize="14"/>
+                                </Border>
                             </StackPanel>
                         </StackPanel>
 
                         <!-- Stock In Form -->
                         <StackPanel Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <!-- Product Info -->
-                            <Border Background="#f8f9fa" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+                            <!-- Product Info Card -->
+                            <Border CornerRadius="12" Padding="18" Margin="0,0,0,20">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#e8f5e9" Offset="0"/>
+                                        <GradientStop Color="#c8e6c9" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
                                 <StackPanel>
                                     <TextBlock Text="{Binding SelectedProduct.Name}" FontSize="16" FontWeight="SemiBold" Foreground="#1a1a2e"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                        <TextBlock Text="Joriy zaxira: " Foreground="#666"/>
-                                        <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=0.##}" FontWeight="SemiBold" Foreground="#4CAF50"/>
-                                        <TextBlock Text="{Binding SelectedProduct.UnitType}" Foreground="#666" Margin="5,0,0,0"/>
-                                    </StackPanel>
+                                    <Grid Margin="0,12,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#FFFFFF90" CornerRadius="10" Padding="14,10" Margin="0,0,6,0">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="Joriy zaxira" FontSize="11" Foreground="#888" HorizontalAlignment="Center"/>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,3,0,0">
+                                                    <TextBlock Text="{Binding SelectedProduct.StockQuantity, StringFormat=0.##}" FontSize="18" FontWeight="Bold" Foreground="#2e7d32"/>
+                                                    <TextBlock Text="{Binding SelectedProduct.UnitType}" FontSize="12" Foreground="#666" Margin="5,0,0,4" VerticalAlignment="Bottom"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" Background="#FFFFFF90" CornerRadius="10" Padding="14,10" Margin="6,0,0,0">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="Narxi" FontSize="11" Foreground="#888" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="{Binding SelectedProduct.UnitPrice, StringFormat={}{0:N0} sum}" FontSize="16" FontWeight="Bold" Foreground="#1a1a2e" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
                                 </StackPanel>
                             </Border>
 
-                            <!-- Stock Quantity -->
-                            <TextBlock Text="Qo'shiladigan miqdor" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
-                                     Style="{StaticResource FormInputStyle}"
-                                     FontSize="18"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Foreground="#888" FontSize="12" Margin="0,0,0,20">
-                                <Run Text="Yangi zaxira: "/>
-                                <Run FontWeight="SemiBold" Foreground="#4CAF50">
-                                    <Run.Text>
-                                        <MultiBinding StringFormat="{}{0:0.##}">
-                                            <Binding Path="SelectedProduct.StockQuantity"/>
-                                        </MultiBinding>
-                                    </Run.Text>
-                                </Run>
-                                <Run Text=" + "/>
-                                <Run Text="{Binding StockInQuantity, StringFormat=0.##}" FontWeight="SemiBold"/>
-                            </TextBlock>
+                            <!-- Stock Quantity Input -->
+                            <TextBlock Text="Qo'shiladigan miqdor" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,10">
+                                <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,14"
+                                         FontSize="18"
+                                         FontWeight="SemiBold"/>
+                            </Border>
+                            <Border Background="#f0f4ff" CornerRadius="8" Padding="10,8" Margin="0,0,0,20">
+                                <TextBlock Foreground="#4361ee" FontSize="12" HorizontalAlignment="Center">
+                                    <Run Text="Yangi zaxira: "/>
+                                    <Run FontWeight="Bold">
+                                        <Run.Text>
+                                            <MultiBinding StringFormat="{}{0:0.##}">
+                                                <Binding Path="SelectedProduct.StockQuantity"/>
+                                            </MultiBinding>
+                                        </Run.Text>
+                                    </Run>
+                                    <Run Text=" + "/>
+                                    <Run Text="{Binding StockInQuantity, StringFormat=0.##}" FontWeight="Bold"/>
+                                </TextBlock>
+                            </Border>
                         </StackPanel>
 
                         <!-- Form Error -->
                         <Border Background="#FFEBEE"
-                                Padding="12"
-                                CornerRadius="6"
+                                Padding="14"
+                                CornerRadius="10"
                                 Margin="0,0,0,15"
                                 Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
-                            <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+                                      Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap" FontSize="13"/>
+                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
 
                 <!-- Panel Footer -->
-                <Border Grid.Row="2" BorderBrush="#e0e0e0" BorderThickness="0,1,0,0" Padding="20,15">
+                <Border Grid.Row="2" Padding="24,16">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
+                        <!-- Cancel Button -->
                         <Button Grid.Column="0"
-                                Content="Bekor qilish"
                                 Command="{Binding CancelPanelCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Margin="0,0,8,0"/>
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border"
+                                            Background="#f8f9fa"
+                                            CornerRadius="12"
+                                            Padding="0,16"
+                                            BorderBrush="#e8e8e8"
+                                            BorderThickness="1.5">
+                                        <TextBlock Text="Bekor qilish" Foreground="#666" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                         <!-- Save Button for Add -->
-                        <Button Grid.Column="1"
-                                Content="Saqlash"
+                        <Button Grid.Column="2"
                                 Command="{Binding SaveProductCommand}"
-                                Style="{StaticResource SuccessButtonStyle}"
-                                Margin="8,0,0,0"
                                 IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
-                                Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="12" Padding="0,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#4CAF50" Offset="0"/>
+                                                <GradientStop Color="#2e7d32" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Saqlash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                         <!-- Update Button for Edit -->
-                        <Button Grid.Column="1"
-                                Content="Yangilash"
+                        <Button Grid.Column="2"
                                 Command="{Binding UpdateProductCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                Margin="8,0,0,0"
                                 IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
-                                Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="12" Padding="0,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#4361ee" Offset="0"/>
+                                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Yangilash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                         <!-- Add Stock Button -->
-                        <Button Grid.Column="1"
-                                Content="Zaxiraga qo'shish"
+                        <Button Grid.Column="2"
                                 Command="{Binding AddStockCommand}"
-                                Style="{StaticResource WarningButtonStyle}"
-                                Margin="8,0,0,0"
                                 IsEnabled="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}"
-                                Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                Visibility="{Binding IsStockInPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="12" Padding="0,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                                <GradientStop Color="#FF9800" Offset="0"/>
+                                                <GradientStop Color="#e65100" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Qo'shish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </Grid>
                 </Border>
 
                 <!-- Saving Indicator -->
                 <Border Grid.RowSpan="3"
-                        Background="#80FFFFFF"
-                        CornerRadius="12"
+                        Background="#E0FFFFFF"
+                        CornerRadius="16"
                         Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <ProgressBar IsIndeterminate="True" Width="150" Height="4"/>
-                        <TextBlock Text="Saqlanmoqda..." Margin="0,12,0,0" FontSize="14" Foreground="#666"/>
+                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                            <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Border>
-        <!-- Barcode Image Dialog Overlay -->
+
+        <!-- ═══════════════ BARCODE DIALOG ═══════════════ -->
         <Border Grid.ColumnSpan="2"
                 Background="#80000000"
                 Visibility="{Binding IsBarcodeDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}"
                 MouseLeftButtonDown="BarcodeOverlay_MouseLeftButtonDown">
             <Border Background="White"
-                    CornerRadius="16"
-                    Padding="30"
+                    CornerRadius="20"
+                    Padding="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    MinWidth="380"
+                    MinWidth="400"
                     MouseLeftButtonDown="BarcodeDialog_MouseLeftButtonDown">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="30" ShadowDepth="5" Opacity="0.2" Direction="270"/>
+                    <DropShadowEffect BlurRadius="40" ShadowDepth="5" Opacity="0.2" Direction="270"/>
                 </Border.Effect>
-                <StackPanel>
-                    <!-- Header -->
-                    <Grid Margin="0,0,0,20">
-                        <TextBlock Text="Shtrix kod"
-                                   FontSize="20"
-                                   FontWeight="SemiBold"
-                                   Foreground="#1a1a2e"
-                                   VerticalAlignment="Center"/>
-                        <Button HorizontalAlignment="Right"
-                                Command="{Binding CloseBarcodeDialogCommand}"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Cursor="Hand"
-                                Padding="8">
-                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                  Fill="#888"
-                                  Width="16" Height="16"
-                                  Stretch="Uniform"/>
-                        </Button>
-                    </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                    <!-- Product Name -->
-                    <TextBlock Text="{Binding BarcodeDialogProductName}"
-                               FontSize="15"
-                               Foreground="#555"
-                               HorizontalAlignment="Center"
-                               Margin="0,0,0,15"/>
-
-                    <!-- Barcode Image -->
-                    <Border Background="#fafafa"
-                            CornerRadius="10"
-                            Padding="20"
-                            BorderBrush="#e8e8e8"
-                            BorderThickness="1"
-                            HorizontalAlignment="Center">
-                        <Image Source="{Binding BarcodeImage}"
-                               Stretch="None"
-                               RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    <!-- Dialog Header -->
+                    <Border Grid.Row="0" CornerRadius="20,20,0,0" Padding="28,22,28,16">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                <GradientStop Color="#4361ee" Offset="0"/>
+                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z"
+                                      Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9"/>
+                                <TextBlock Text="Shtrix kod" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button HorizontalAlignment="Right"
+                                    Command="{Binding CloseBarcodeDialogCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Backgz`round="#FFFFFF20" CornerRadius="8" Padding="8">
+                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                  Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#FFFFFF40"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
                     </Border>
 
-                    <!-- Buttons -->
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Margin="0,25,0,0">
-                        <Button Command="{Binding PrintBarcodeImageCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                Padding="24,12"
-                                Margin="0,0,10,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M18,3H6V7H18M19,12A1,1 0 0,1 18,13A1,1 0 0,1 17,12A1,1 0 0,1 18,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z"
-                                      Fill="White"
-                                      Width="14" Height="14"
-                                      Stretch="Uniform"
-                                      Margin="0,0,8,0"
-                                      VerticalAlignment="Center"/>
-                                <TextBlock Text="Chop etish" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Content="Yopish"
-                                Command="{Binding CloseBarcodeDialogCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Padding="24,12"/>
+                    <!-- Dialog Content -->
+                    <StackPanel Grid.Row="1" Margin="28,20,28,28">
+                        <!-- Product Name -->
+                        <TextBlock Text="{Binding BarcodeDialogProductName}"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="#555"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,18"/>
+
+                        <!-- Barcode Image -->
+                        <Border Background="#fafafa"
+                                CornerRadius="12"
+                                Padding="24"
+                                BorderBrush="#e8e8e8"
+                                BorderThickness="1"
+                                HorizontalAlignment="Center">
+                            <Image Source="{Binding BarcodeImage}"
+                                   Stretch="None"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        </Border>
+
+                        <!-- Buttons -->
+                        <Grid Margin="0,24,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0"
+                                    Command="{Binding CloseBarcodeDialogCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                Background="#f8f9fa"
+                                                CornerRadius="12"
+                                                Padding="0,14"
+                                                BorderBrush="#e8e8e8"
+                                                BorderThickness="1.5">
+                                            <TextBlock Text="Yopish" Foreground="#666" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Button Grid.Column="2"
+                                    Command="{Binding PrintBarcodeImageCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" CornerRadius="12" Padding="0,14">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#4361ee" Offset="0"/>
+                                                    <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Path Data="M18,3H6V7H18M19,12A1,1 0 0,1 18,13A1,1 0 0,1 17,12A1,1 0 0,1 18,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z"
+                                                      Fill="White" Width="15" Height="15" Stretch="Uniform" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Chop etish" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
                     </StackPanel>
-                </StackPanel>
+                </Grid>
             </Border>
         </Border>
     </Grid>
