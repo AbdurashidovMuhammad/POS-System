@@ -271,6 +271,26 @@ public partial class SalesViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void IncrementQuantity(CartItem item)
+    {
+        if (item.Quantity + 1 <= item.Product.StockQuantity)
+        {
+            item.Quantity++;
+            CalculateTotal();
+        }
+    }
+
+    [RelayCommand]
+    private void DecrementQuantity(CartItem item)
+    {
+        if (item.Quantity > 1)
+        {
+            item.Quantity--;
+            CalculateTotal();
+        }
+    }
+
+    [RelayCommand]
     private void RemoveItem(CartItem item)
     {
         CartItems.Remove(item);

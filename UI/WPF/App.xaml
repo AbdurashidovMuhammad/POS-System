@@ -13,6 +13,7 @@
         <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
         <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <converters:IndexConverter x:Key="IndexConverter"/>
 
         <!-- DataTemplates for View-ViewModel mapping -->
         <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
