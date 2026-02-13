@@ -70,10 +70,12 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     private void InitializeMenuItems()
     {
         var userRole = _authService.Role;
+        var isSuperAdmin = string.Equals(userRole, "SuperAdmin", StringComparison.OrdinalIgnoreCase);
+        var dashboardVmName = isSuperAdmin ? nameof(AdminDashboardViewModel) : nameof(DashboardViewModel);
 
         var allMenuItems = new List<MenuItemViewModel>
         {
-            new("Bosh sahifa", "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z", nameof(DashboardViewModel), true),
+            new("Bosh sahifa", "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z", dashboardVmName, true),
             new("Sotish", "M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z", nameof(SalesViewModel)),
             new("Mahsulotlar", "M12,3L2,12H5V20H19V12H22L12,3M12,8.75A2.25,2.25 0 0,1 14.25,11A2.25,2.25 0 0,1 12,13.25A2.25,2.25 0 0,1 9.75,11A2.25,2.25 0 0,1 12,8.75M12,15C13.5,15 16.5,15.75 16.5,17.25V18H7.5V17.25C7.5,15.75 10.5,15 12,15Z", nameof(ProductViewModel)),
             new("Kategoriyalar", "M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9", nameof(CategoryViewModel)),
@@ -113,6 +115,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
             viewModel = viewModelName switch
             {
                 nameof(DashboardViewModel) => _serviceProvider.GetService(typeof(DashboardViewModel)),
+                nameof(AdminDashboardViewModel) => _serviceProvider.GetService(typeof(AdminDashboardViewModel)),
                 nameof(SalesViewModel) => _serviceProvider.GetService(typeof(SalesViewModel)),
                 nameof(ProductViewModel) => _serviceProvider.GetService(typeof(ProductViewModel)),
                 nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
@@ -134,7 +137,9 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     [RelayCommand]
     private void NavigateToDashboard()
     {
-        var dashboardItem = MenuItems.FirstOrDefault(m => m.ViewModelName == nameof(DashboardViewModel));
+        var dashboardItem = MenuItems.FirstOrDefault(m =>
+            m.ViewModelName == nameof(DashboardViewModel) ||
+            m.ViewModelName == nameof(AdminDashboardViewModel));
         if (dashboardItem is not null)
         {
             SelectedMenuItem = dashboardItem;

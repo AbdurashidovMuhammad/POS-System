@@ -21,6 +21,9 @@
         <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
             <views:DashboardView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AdminDashboardViewModel}">
+            <views:AdminDashboardView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:ProductViewModel}">
             <views:ProductView/>
         </DataTemplate>

@@ -9,21 +9,16 @@ using WPF.Services;
 
 namespace WPF.ViewModels;
 
-public partial class DashboardViewModel : ViewModelBase
+public partial class AdminDashboardViewModel : ViewModelBase
 {
     private readonly INavigationService _navigationService;
     private readonly IAuthService _authService;
     private readonly IApiService _apiService;
 
     [ObservableProperty]
-    private ObservableCollection<AuditLogDto> _recentActivities = [];
-
-    [ObservableProperty]
-    private bool _hasActivities;
-
-    [ObservableProperty]
     private bool _isRefreshing;
 
+    // Umumiy statistika
     [ObservableProperty]
     private string _todaySalesAmount = "0 so'm";
 
@@ -42,41 +37,93 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty]
     private SolidColorBrush _salesChangeBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
 
-    public DashboardViewModel(INavigationService navigationService, IAuthService authService, IApiService apiService)
+    [ObservableProperty]
+    private string _ordersChangeText = "kechagidan";
+
+    [ObservableProperty]
+    private SolidColorBrush _ordersChangeBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
+
+    // Ro'yxatlar
+    [ObservableProperty]
+    private ObservableCollection<TopSellingProductDto> _topSellingProducts = [];
+
+    [ObservableProperty]
+    private ObservableCollection<CashierSalesDto> _cashierSales = [];
+
+    [ObservableProperty]
+    private ObservableCollection<LowStockProductDto> _lowStockProducts = [];
+
+    [ObservableProperty]
+    private ObservableCollection<AuditLogDto> _recentActivities = [];
+
+    [ObservableProperty]
+    private bool _hasTopProducts;
+
+    [ObservableProperty]
+    private bool _hasCashierSales;
+
+    [ObservableProperty]
+    private bool _hasLowStockProducts;
+
+    [ObservableProperty]
+    private bool _hasActivities;
+
+    [ObservableProperty]
+    private int _lowStockCount;
+
+    public AdminDashboardViewModel(
+        INavigationService navigationService,
+        IAuthService authService,
+        IApiService apiService)
     {
         _navigationService = navigationService;
         _authService = authService;
         _apiService = apiService;
 
-        _ = LoadDashboardDataAsync();
+        _ = LoadAllDataAsync();
     }
 
-    private async Task LoadDashboardDataAsync()
+    private async Task LoadAllDataAsync()
     {
         await Task.WhenAll(
-            LoadDashboardStatsAsync(),
+            LoadAdminStatsAsync(),
             LoadRecentActivitiesAsync()
         );
     }
 
-    private async Task LoadDashboardStatsAsync()
+    private async Task LoadAdminStatsAsync()
     {
         try
         {
-            var result = await _apiService.GetAsync<DashboardStatsDto>("api/dashboard/stats");
+            var result = await _apiService.GetAsync<AdminDashboardStatsDto>("api/dashboard/admin-stats");
             if (result?.Succeeded == true && result.Result != null)
             {
                 var stats = result.Result;
+
                 TodaySalesAmount = $"{stats.TodaySalesAmount:N0} so'm";
                 TodayOrdersCount = $"{stats.TodayOrdersCount} ta";
                 TotalProductsCount = $"{stats.TotalProductsCount} ta";
                 TotalCategoriesCount = $"{stats.TotalCategoriesCount} ta";
-                UpdateSalesChange(stats.TodaySalesAmount, stats.YesterdaySalesAmount);
+
+                UpdateChange(stats.TodaySalesAmount, stats.YesterdaySalesAmount,
+                    v => SalesChangeText = v, b => SalesChangeBrush = b);
+                UpdateChange(stats.TodayOrdersCount, stats.YesterdayOrdersCount,
+                    v => OrdersChangeText = v, b => OrdersChangeBrush = b);
+
+                TopSellingProducts = new ObservableCollection<TopSellingProductDto>(stats.TopSellingProducts);
+                HasTopProducts = TopSellingProducts.Count > 0;
+
+                CashierSales = new ObservableCollection<CashierSalesDto>(stats.CashierSales);
+                HasCashierSales = CashierSales.Count > 0;
+
+                LowStockProducts = new ObservableCollection<LowStockProductDto>(stats.LowStockProducts);
+                HasLowStockProducts = LowStockProducts.Count > 0;
+                LowStockCount = LowStockProducts.Count;
             }
         }
         catch
         {
-            // silently fail - dashboard should still work with default "0" values
+            // silently fail
         }
     }
 
@@ -84,7 +131,7 @@ public partial class DashboardViewModel : ViewModelBase
     {
         try
         {
-            var result = await _apiService.GetAsync<PagedResult<AuditLogDto>>("api/audit-logs/my?pageSize=10");
+            var result = await _apiService.GetAsync<PagedResult<AuditLogDto>>("api/audit-logs?pageSize=10");
             if (result?.Succeeded == true && result.Result?.Items != null)
             {
                 RecentActivities = new ObservableCollection<AuditLogDto>(result.Result.Items);
@@ -93,7 +140,7 @@ public partial class DashboardViewModel : ViewModelBase
         }
         catch
         {
-            // silently fail - dashboard should still work without activity
+            // silently fail
         }
     }
 
@@ -101,34 +148,19 @@ public partial class DashboardViewModel : ViewModelBase
     private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(0xF4, 0x43, 0x36));
     private static readonly SolidColorBrush GrayBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
 
-    private void UpdateSalesChange(decimal today, decimal yesterday)
+    private static void UpdateChange(decimal today, decimal yesterday,
+        Action<string> setText, Action<SolidColorBrush> setBrush)
     {
         if (yesterday == 0)
         {
-            if (today > 0)
-            {
-                SalesChangeText = "Kecha sotish bo'lmagan";
-                SalesChangeBrush = GreenBrush;
-            }
-            else
-            {
-                SalesChangeText = "Hali sotish yo'q";
-                SalesChangeBrush = GrayBrush;
-            }
+            setText(today > 0 ? "Kecha bo'lmagan" : "Hali yo'q");
+            setBrush(today > 0 ? GreenBrush : GrayBrush);
             return;
         }
 
         var change = (today - yesterday) / yesterday * 100;
-        if (change >= 0)
-        {
-            SalesChangeText = $"+{change:N0}% kechagidan";
-            SalesChangeBrush = GreenBrush;
-        }
-        else
-        {
-            SalesChangeText = $"{change:N0}% kechagidan";
-            SalesChangeBrush = RedBrush;
-        }
+        setText(change >= 0 ? $"+{change:N0}% kechagidan" : $"{change:N0}% kechagidan");
+        setBrush(change >= 0 ? GreenBrush : RedBrush);
     }
 
     [RelayCommand]
@@ -137,7 +169,7 @@ public partial class DashboardViewModel : ViewModelBase
         IsRefreshing = true;
         try
         {
-            await LoadDashboardDataAsync();
+            await LoadAllDataAsync();
         }
         finally
         {
@@ -161,6 +193,12 @@ public partial class DashboardViewModel : ViewModelBase
     private void NavigateToReports()
     {
         WeakReferenceMessenger.Default.Send(new NavigateToViewMessage(nameof(ReportViewModel)));
+    }
+
+    [RelayCommand]
+    private void NavigateToUsers()
+    {
+        WeakReferenceMessenger.Default.Send(new NavigateToViewMessage(nameof(UserViewModel)));
     }
 
     [RelayCommand]
