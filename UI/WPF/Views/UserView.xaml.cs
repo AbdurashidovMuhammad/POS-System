@@ -20,11 +20,6 @@ public partial class UserView : UserControl
         }
     }
 
-    private void UsersDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
-    {
-        e.Row.Header = (e.Row.GetIndex() + 1).ToString();
-    }
-
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
     {
         if (DataContext is UserViewModel viewModel && sender is PasswordBox passwordBox)
@@ -40,10 +35,10 @@ public partial class UserView : UserControl
         if (viewModel is null) return;
 
         // Select the row first
-        var row = FindParent<DataGridRow>(button);
-        if (row is not null)
+        var listViewItem = FindParent<ListViewItem>(button);
+        if (listViewItem is not null)
         {
-            UsersDataGrid.SelectedItem = row.DataContext;
+            UsersListView.SelectedItem = listViewItem.DataContext;
         }
 
         var menu = new ContextMenu();
@@ -51,7 +46,7 @@ public partial class UserView : UserControl
         var editItem = new MenuItem
         {
             Header = "Tahrirlash",
-            Icon = CreateIcon("M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z", "#2196F3")
+            Icon = CreateIcon("M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z", "#4361ee")
         };
         editItem.Click += (_, _) => viewModel.EditUserCommand.Execute(null);
         menu.Items.Add(editItem);
