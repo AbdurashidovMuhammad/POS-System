@@ -50,14 +50,14 @@ public partial class ProductView : UserControl
 
         var menu = new ContextMenu
         {
-            FontSize = 15
+            FontSize = 16
         };
 
         var barcodeItem = new MenuItem
         {
             Header = "Shtrix kod",
             Icon = CreateIcon("M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z", "#333"),
-            Padding = new Thickness(6, 8, 20, 8)
+            Padding = new Thickness(10, 12, 24, 12)
         };
         barcodeItem.Click += (_, _) => viewModel.ShowBarcodeCommand.Execute(null);
         menu.Items.Add(barcodeItem);
@@ -68,7 +68,7 @@ public partial class ProductView : UserControl
         {
             Header = "Tahrirlash",
             Icon = CreateIcon("M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z", "#4361ee"),
-            Padding = new Thickness(6, 8, 20, 8)
+            Padding = new Thickness(10, 12, 24, 12)
         };
         editItem.Click += (_, _) => viewModel.EditProductCommand.Execute(null);
         menu.Items.Add(editItem);
@@ -77,7 +77,7 @@ public partial class ProductView : UserControl
         {
             Header = "Zaxira qo'shish",
             Icon = CreateIcon("M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z", "#FF9800"),
-            Padding = new Thickness(6, 8, 20, 8)
+            Padding = new Thickness(10, 12, 24, 12)
         };
         stockItem.Click += (_, _) => viewModel.ShowStockInPanelCommand.Execute(null);
         menu.Items.Add(stockItem);
@@ -89,7 +89,7 @@ public partial class ProductView : UserControl
             Header = "O'chirish",
             Foreground = new SolidColorBrush(Color.FromRgb(0xf4, 0x43, 0x36)),
             Icon = CreateIcon("M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z", "#f44336"),
-            Padding = new Thickness(6, 8, 20, 8)
+            Padding = new Thickness(10, 12, 24, 12)
         };
         deleteItem.Click += (_, _) => viewModel.DeleteProductCommand.Execute(null);
         menu.Items.Add(deleteItem);
@@ -105,8 +105,8 @@ public partial class ProductView : UserControl
         {
             Data = System.Windows.Media.Geometry.Parse(data),
             Fill = new BrushConverter().ConvertFromString(color) as Brush,
-            Width = 18,
-            Height = 18,
+            Width = 15,
+            Height = 15,
             Stretch = System.Windows.Media.Stretch.Uniform
         };
     }

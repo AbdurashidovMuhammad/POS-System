@@ -10,22 +10,61 @@
              Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
+        <!-- DatePicker Style -->
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#e0e0e0"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="150"/>
+        </Style>
+
+        <!-- ComboBox Style -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#e0e0e0"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Padding" Value="12,10"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="BorderBrush" Value="#e8e8e8"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#2196F3"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Padding" Value="20,10"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="border" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                    <GradientStop Color="#4361ee" Offset="0"/>
+                                    <GradientStop Color="#3a0ca3" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1976D2"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.88"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Opacity" Value="0.5"/>
@@ -36,197 +75,369 @@
             </Setter>
         </Style>
 
-        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#f5f5f5"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#ddd"/>
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="Cursor" Value="Hand"/>
+        <!-- DataGrid Header Style -->
+        <Style x:Key="ModernColumnHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#f8f9fa"/>
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#666"/>
+            <Setter Property="BorderBrush" Value="#e8e8e8"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.5"/>
+        </Style>
+
+        <!-- DataGrid Row Style -->
+        <Style x:Key="ModernRow" TargetType="DataGridRow">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#f0f0f0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#f8f9fa"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#f0f4ff"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- DataGrid Cell Style -->
+        <Style x:Key="ModernCell" TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="14,10">
+                            <ContentPresenter VerticalAlignment="Center"/>
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#e8e8e8"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#f0f4ff"/>
+                    <Setter Property="Foreground" Value="#1a1a2e"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Filter Bar -->
-        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
-            </Border.Effect>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Text="Dan:" VerticalAlignment="Center" Foreground="#666" Margin="0,0,8,0"/>
-                <DatePicker Grid.Column="1" SelectedDate="{Binding StartDate}" Width="140" VerticalAlignment="Center" Margin="0,0,15,0"/>
-
-                <TextBlock Grid.Column="2" Text="Gacha:" VerticalAlignment="Center" Foreground="#666" Margin="0,0,8,0"/>
-                <DatePicker Grid.Column="3" SelectedDate="{Binding EndDate}" Width="140" VerticalAlignment="Center" Margin="0,0,15,0"/>
-
-                <TextBlock Grid.Column="4" Text="Foydalanuvchi:" VerticalAlignment="Center" Foreground="#666" Margin="0,0,8,0"/>
-                <ComboBox Grid.Column="5"
-                          ItemsSource="{Binding Users}"
-                          SelectedItem="{Binding SelectedUser}"
-                          DisplayMemberPath="Username"
-                          Width="150"
-                          VerticalAlignment="Center"
-                          Margin="0,0,15,0"
-                          IsEditable="False"/>
-
-                <TextBlock Grid.Column="6" Text="Harakat:" VerticalAlignment="Center" Foreground="#666" Margin="0,0,8,0"/>
-                <ComboBox Grid.Column="7"
-                          ItemsSource="{Binding ActionTypes}"
-                          SelectedItem="{Binding SelectedActionType}"
-                          DisplayMemberPath="Name"
-                          Width="180"
-                          VerticalAlignment="Center"
-                          Margin="0,0,15,0"/>
-
-                <Button Grid.Column="8"
-                        Command="{Binding SearchCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Padding="16,10">
-                    <StackPanel Orientation="Horizontal">
-                        <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                              Fill="White"
-                              Width="14" Height="14"
-                              Stretch="Uniform"
-                              Margin="0,0,8,0"
-                              VerticalAlignment="Center"/>
-                        <TextBlock Text="Qidirish" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-            </Grid>
-        </Border>
-
-        <!-- DataGrid -->
-        <Border Grid.Row="1" Background="White" CornerRadius="12">
+        <!-- Header Section -->
+        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="28,24" Margin="0,0,0,16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
             </Border.Effect>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Title -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,20">
+                    <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#4361ee" Offset="0"/>
+                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Path Data="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3"
+                              Fill="White"
+                              Width="20" Height="20"
+                              Stretch="Uniform"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Faoliyat jurnali"
+                                   FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1a1a2e"/>
+                        <TextBlock Text="Tizim harakatlari va o'zgarishlarni kuzating"
+                                   FontSize="12"
+                                   Foreground="#888"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Filter Row -->
+                <Border Grid.Row="1"
+                        Background="#f8f9fa"
+                        CornerRadius="10"
+                        Padding="18,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Date From -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                            <Path Data="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1"
+                                  Fill="#4361ee"
+                                  Width="16" Height="16"
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                            <TextBlock Text="Dan:"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="#555"/>
+                        </StackPanel>
+
+                        <DatePicker Grid.Column="1"
+                                    SelectedDate="{Binding StartDate}"
+                                    Style="{StaticResource ModernDatePicker}"
+                                    Margin="0,0,20,0"/>
+
+                        <!-- Date To -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                            <Path Data="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"
+                                  Fill="#4361ee"
+                                  Width="16" Height="16"
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                            <TextBlock Text="Gacha:"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="#555"/>
+                        </StackPanel>
+
+                        <DatePicker Grid.Column="3"
+                                    SelectedDate="{Binding EndDate}"
+                                    Style="{StaticResource ModernDatePicker}"
+                                    Margin="0,0,20,0"/>
+
+                        <!-- User Filter -->
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                  Fill="#4361ee"
+                                  Width="16" Height="16"
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                            <TextBlock Text="Foydalanuvchi:"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="#555"/>
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="5"
+                                  ItemsSource="{Binding Users}"
+                                  SelectedItem="{Binding SelectedUser}"
+                                  DisplayMemberPath="Username"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Width="150"
+                                  Margin="0,0,20,0"
+                                  IsEditable="False"/>
+
+                        <!-- Action Type Filter -->
+                        <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                            <Path Data="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M15.6,8.34C16.67,8.34 17.53,9.2 17.53,10.27C17.53,11.34 16.67,12.2 15.6,12.2A1.93,1.93 0 0,1 13.67,10.27C13.66,9.2 14.53,8.34 15.6,8.34M9.6,6.76C10.9,6.76 11.96,7.82 11.96,9.12C11.96,10.42 10.9,11.5 9.6,11.5C8.3,11.5 7.24,10.42 7.24,9.12C7.24,7.82 8.3,6.76 9.6,6.76M9.6,15.89V19.64C7.2,18.89 5.3,17.04 4.46,14.68C5.5,13.56 8.13,13 9.6,13C10.13,13 10.8,13.07 11.5,13.21C9.86,14.08 9.6,15.23 9.6,15.89M12,20C11.72,20 11.46,19.99 11.2,19.96V15.89C11.2,14.47 14.14,13.76 15.6,13.76C16.67,13.76 18.5,14.15 19.44,14.91C18.27,17.88 15.38,20 12,20Z"
+                                  Fill="#4361ee"
+                                  Width="16" Height="16"
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                            <TextBlock Text="Harakat:"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="#555"/>
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="7"
+                                  ItemsSource="{Binding ActionTypes}"
+                                  SelectedItem="{Binding SelectedActionType}"
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Width="180"
+                                  Margin="0,0,20,0"/>
+
+                        <!-- Search Button -->
+                        <Button Grid.Column="9"
+                                Command="{Binding SearchCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                                      Fill="White"
+                                      Width="14" Height="14"
+                                      Stretch="Uniform"
+                                      Margin="0,0,8,0"
+                                      VerticalAlignment="Center"/>
+                                <TextBlock Text="Qidirish" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Error Message -->
+        <Border Grid.Row="1"
+                Background="#FFEBEE"
+                Padding="16,12"
+                CornerRadius="10"
+                Margin="0,0,0,12"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Width="28" Height="28" CornerRadius="14"
+                        Background="#ffcdd2" Margin="0,0,12,0">
+                    <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+                          Fill="#c62828"
+                          Width="14" Height="14"
+                          Stretch="Uniform"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}"
+                           Foreground="#C62828" FontSize="13" FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Summary Card -->
+        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="24" Margin="0,0,0,16">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Jami yozuvlar"
+                               FontSize="13"
+                               Foreground="#888"/>
+                    <TextBlock Text="{Binding TotalCount, StringFormat={}{0} ta}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="#1a1a2e"
+                               Margin="0,8,0,0"/>
+                    <TextBlock Text="Tanlangan filtr bo'yicha"
+                               FontSize="11"
+                               Foreground="#aaa"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+                <Border Grid.Column="1"
+                        Width="50" Height="50"
+                        Background="#f0f4ff"
+                        CornerRadius="12">
+                    <Path Data="M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9"
+                          Fill="#4361ee"
+                          Width="24" Height="24"
+                          Stretch="Uniform"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- DataGrid Card -->
+        <Border Grid.Row="3" Background="White" CornerRadius="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <DataGrid Grid.Row="0"
+                <!-- Table Header -->
+                <Border Grid.Row="0" Padding="20,16" BorderBrush="#f0f0f0" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="28" Height="28" CornerRadius="7"
+                                Background="#f0f4ff" Margin="0,0,10,0">
+                            <Path Data="M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9"
+                                  Fill="#4361ee"
+                                  Width="14" Height="14"
+                                  Stretch="Uniform"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="Harakatlar ro'yxati"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1a1a2e"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <DataGrid Grid.Row="1"
                           ItemsSource="{Binding Logs}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           CanUserAddRows="False"
                           SelectionUnit="FullRow"
                           Background="White"
-                          GridLinesVisibility="All"
-                          VerticalGridLinesBrush="#e0e0e0"
-                          HorizontalGridLinesBrush="#f0f0f0"
+                          GridLinesVisibility="None"
                           HeadersVisibility="Column"
                           BorderThickness="0"
-                          Margin="15"
+                          Margin="8,0,8,8"
                           SelectionMode="Single"
-                          ClipboardCopyMode="ExcludeHeader">
-                    <DataGrid.ColumnHeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#f8f9fa"/>
-                            <Setter Property="Padding" Value="12,12"/>
-                            <Setter Property="FontWeight" Value="SemiBold"/>
-                            <Setter Property="Foreground" Value="#333"/>
-                            <Setter Property="BorderBrush" Value="#e0e0e0"/>
-                            <Setter Property="BorderThickness" Value="0,0,1,2"/>
-                        </Style>
-                    </DataGrid.ColumnHeaderStyle>
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="BorderBrush" Value="#f0f0f0"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#f8f9fa"/>
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#e3f2fd"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="BorderBrush" Value="#e0e0e0"/>
-                            <Setter Property="BorderThickness" Value="0,0,1,0"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="DataGridCell">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                Padding="12,10">
-                                            <ContentPresenter VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#e3f2fd"/>
-                                    <Setter Property="Foreground" Value="#333"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.CellStyle>
+                          ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                          RowStyle="{StaticResource ModernRow}"
+                          CellStyle="{StaticResource ModernCell}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Sana" Binding="{Binding Timestamp, StringFormat=dd.MM.yyyy HH:mm}" Width="160"/>
+                        <DataGridTextColumn Header="Sana" Binding="{Binding Timestamp, StringFormat=dd.MM.yyyy HH:mm}" Width="160">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#555"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="Foydalanuvchi" Binding="{Binding Username}" Width="150">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="#1a1a2e"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Header="Harakat turi" Width="180">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border CornerRadius="10" Padding="8,4" HorizontalAlignment="Left">
+                                    <Border CornerRadius="6" Padding="8,4" HorizontalAlignment="Left">
                                         <Border.Style>
                                             <Style TargetType="Border">
-                                                <Setter Property="Background" Value="#E3F2FD"/>
+                                                <Setter Property="Background" Value="#f0f4ff"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding ActionType}" Value="1">
-                                                        <Setter Property="Background" Value="#E8F5E9"/>
+                                                        <Setter Property="Background" Value="#e8f5e9"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding ActionType}" Value="2">
-                                                        <Setter Property="Background" Value="#FFF3E0"/>
+                                                        <Setter Property="Background" Value="#fff3e0"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding ActionType}" Value="12">
                                                         <Setter Property="Background" Value="#FFEBEE"/>
@@ -240,34 +451,29 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
-                                        <TextBlock FontSize="12" FontWeight="SemiBold">
+                                        <TextBlock Text="{Binding ActionTypeName}" FontSize="12" FontWeight="SemiBold">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
-                                                    <Setter Property="Foreground" Value="#1565C0"/>
+                                                    <Setter Property="Foreground" Value="#4361ee"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding ActionType}" Value="1">
-                                                            <Setter Property="Foreground" Value="#2E7D32"/>
+                                                            <Setter Property="Foreground" Value="#2e7d32"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ActionType}" Value="2">
-                                                            <Setter Property="Foreground" Value="#E65100"/>
+                                                            <Setter Property="Foreground" Value="#e65100"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ActionType}" Value="12">
-                                                            <Setter Property="Foreground" Value="#C62828"/>
+                                                            <Setter Property="Foreground" Value="#c62828"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ActionType}" Value="22">
-                                                            <Setter Property="Foreground" Value="#C62828"/>
+                                                            <Setter Property="Foreground" Value="#c62828"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ActionType}" Value="32">
-                                                            <Setter Property="Foreground" Value="#C62828"/>
+                                                            <Setter Property="Foreground" Value="#c62828"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
-                                            <TextBlock.Text>
-                                                <MultiBinding StringFormat="{}{0}">
-                                                    <Binding Path="ActionTypeName"/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
                                         </TextBlock>
                                     </Border>
                                 </DataTemplate>
@@ -278,75 +484,158 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding Description}"/>
+                                    <Setter Property="Foreground" Value="#555"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Ob'ekt" Binding="{Binding EntityType}" Width="100"/>
+                        <DataGridTemplateColumn Header="Ob'ekt" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="#f8f9fa" CornerRadius="6" Padding="8,4" HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding EntityType}"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#666"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- Footer: Pagination -->
-                <Border Grid.Row="1" BorderBrush="#e0e0e0" BorderThickness="0,1,0,0" Padding="15,12">
+                <!-- Empty State -->
+                <StackPanel Grid.Row="1"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding Logs.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
+                    <Border Width="64" Height="64" CornerRadius="32"
+                            Background="#f0f4ff"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,16">
+                        <Path Data="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3"
+                              Fill="#4361ee"
+                              Width="28" Height="28"
+                              Stretch="Uniform"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Jurnal ma'lumotlari yo'q"
+                               FontSize="15" FontWeight="SemiBold" Foreground="#1a1a2e"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Filtrlarni tanlab &quot;Qidirish&quot; tugmasini bosing"
+                               FontSize="12" Foreground="#aaa"
+                               HorizontalAlignment="Center"
+                               Margin="0,6,0,0"/>
+                </StackPanel>
+
+                <!-- Pagination Footer -->
+                <Border Grid.Row="2" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="#666" FontSize="13">
-                            <Run Text="Jami: "/>
-                            <Run Text="{Binding TotalCount, Mode=OneWay}" FontWeight="SemiBold"/>
-                            <Run Text=" ta yozuv"/>
-                        </TextBlock>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="#f0f4ff" CornerRadius="8" Padding="10,6">
+                                <TextBlock FontSize="12" Foreground="#4361ee" FontWeight="SemiBold">
+                                    <Run Text="Jami: "/>
+                                    <Run Text="{Binding TotalCount, Mode=OneWay}" FontWeight="Bold"/>
+                                    <Run Text=" ta yozuv"/>
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
 
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Command="{Binding PreviousPageCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Padding="10,6"
+                                    Cursor="Hand"
                                     Margin="0,0,8,0">
-                                <Path Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
-                                      Fill="#333" Width="12" Height="12" Stretch="Uniform"/>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="18,10" BorderBrush="#e8e8e8" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                                                      Fill="#666" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Oldingi" FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
                             </Button>
 
-                            <TextBlock VerticalAlignment="Center" FontSize="13" Foreground="#333" Margin="0,0,8,0">
-                                <Run Text="{Binding CurrentPage, Mode=OneWay}"/>
-                                <Run Text="/"/>
-                                <Run Text="{Binding TotalPages, Mode=OneWay}"/>
-                            </TextBlock>
+                            <Border Background="#f8f9fa" CornerRadius="10" Padding="18,10" VerticalAlignment="Center">
+                                <TextBlock FontSize="14" Foreground="#333">
+                                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="#4361ee"/>
+                                    <Run Text=" / "/>
+                                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold"/>
+                                </TextBlock>
+                            </Border>
 
                             <Button Command="{Binding NextPageCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Padding="10,6">
-                                <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
-                                      Fill="#333" Width="12" Height="12" Stretch="Uniform"/>
+                                    Cursor="Hand"
+                                    Margin="8,0,0,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="18,10" BorderBrush="#e8e8e8" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Keyingi" FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                                                <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+                                                      Fill="#666" Width="14" Height="14" Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
                             </Button>
                         </StackPanel>
                     </Grid>
                 </Border>
-
-                <!-- Loading Indicator -->
-                <Border Grid.RowSpan="2"
-                        Background="#E0FFFFFF"
-                        CornerRadius="12"
-                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-                        <TextBlock Text="Yuklanmoqda..." Margin="0,15,0,0" FontSize="14" Foreground="#666"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Error Message -->
-                <Border Grid.RowSpan="2"
-                        Background="#FFEBEE"
-                        Padding="20"
-                        CornerRadius="8"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Stretch"
-                        Margin="15"
-                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828"/>
-                </Border>
             </Grid>
+        </Border>
+
+        <!-- Loading Overlay -->
+        <Border Grid.RowSpan="4"
+                Background="#80FFFFFF"
+                CornerRadius="12"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border Background="White" CornerRadius="16" Padding="40,30"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    MinWidth="280">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="4" Opacity="0.12" Direction="270"/>
+                </Border.Effect>
+                <StackPanel HorizontalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                                 Foreground="#4361ee"/>
+                    <TextBlock Text="Yuklanmoqda..."
+                               Margin="0,16,0,0"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="#1a1a2e"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Iltimos kuting"
+                               Margin="0,4,0,0"
+                               FontSize="12"
+                               Foreground="#888"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
         </Border>
     </Grid>
 </UserControl>
