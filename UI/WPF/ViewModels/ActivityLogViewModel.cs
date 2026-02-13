@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WPF.Models;
@@ -66,6 +67,16 @@ public partial class ActivityLogViewModel : ViewModelBase
 
     private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
     private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IsLoading))
+        {
+            PreviousPageCommand.NotifyCanExecuteChanged();
+            NextPageCommand.NotifyCanExecuteChanged();
+        }
+    }
 
     [RelayCommand]
     private async Task LoadLogsAsync()

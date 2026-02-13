@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -136,6 +137,16 @@ public partial class ProductViewModel : ViewModelBase
     private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
     private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
     private bool HasSelectedProduct() => SelectedProduct is not null;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IsLoading))
+        {
+            PreviousPageCommand.NotifyCanExecuteChanged();
+            NextPageCommand.NotifyCanExecuteChanged();
+        }
+    }
 
     // Load products
     [RelayCommand]
