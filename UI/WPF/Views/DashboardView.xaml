@@ -67,7 +67,7 @@
                         <TextBlock Text="Bugungi sotish"
                                    FontSize="13"
                                    Foreground="#888"/>
-                        <TextBlock Text="0 so'm"
+                        <TextBlock Text="{Binding TodaySalesAmount}"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="#1a1a2e"
@@ -102,7 +102,7 @@
                         <TextBlock Text="Bugungi buyurtmalar"
                                    FontSize="13"
                                    Foreground="#888"/>
-                        <TextBlock Text="0 ta"
+                        <TextBlock Text="{Binding TodayOrdersCount}"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="#1a1a2e"
@@ -137,7 +137,7 @@
                         <TextBlock Text="Jami mahsulotlar"
                                    FontSize="13"
                                    Foreground="#888"/>
-                        <TextBlock Text="0 ta"
+                        <TextBlock Text="{Binding TotalProductsCount}"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="#1a1a2e"
@@ -172,7 +172,7 @@
                         <TextBlock Text="Kategoriyalar"
                                    FontSize="13"
                                    Foreground="#888"/>
-                        <TextBlock Text="0 ta"
+                        <TextBlock Text="{Binding TotalCategoriesCount}"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="#1a1a2e"
