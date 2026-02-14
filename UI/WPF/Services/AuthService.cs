@@ -115,7 +115,8 @@ public class AuthService : IAuthService
             }
 
             if (root.TryGetProperty("unique_name", out var usernameElement) ||
-                root.TryGetProperty("name", out usernameElement))
+                root.TryGetProperty("name", out usernameElement) ||
+                root.TryGetProperty("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", out usernameElement))
             {
                 Username = usernameElement.GetString();
             }

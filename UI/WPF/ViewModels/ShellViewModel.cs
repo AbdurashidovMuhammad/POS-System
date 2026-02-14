@@ -29,6 +29,10 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
 
         _apiService.OnForbidden = ShowToast;
 
+        Username = _authService.Username;
+        UserRole = _authService.Role;
+        UserInitial = string.IsNullOrEmpty(_authService.Username) ? "?" : _authService.Username[..1].ToUpper();
+
         WeakReferenceMessenger.Default.Register(this);
 
         InitializeMenuItems();
@@ -69,6 +73,15 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
 
     [ObservableProperty]
     private bool _isSidebarCollapsed;
+
+    [ObservableProperty]
+    private string? _username;
+
+    [ObservableProperty]
+    private string? _userRole;
+
+    [ObservableProperty]
+    private string _userInitial = "?";
 
     [ObservableProperty]
     private string? _toastMessage;
