@@ -58,6 +58,24 @@ public partial class ReportViewModel : ViewModelBase
 
     private static string FormatDateParam(DateTime date) => date.ToString("yyyy-MM-dd");
 
+    private static void AssignDateGroupColors<T>(IList<T> items, Func<T, DateTime> dateSelector, Action<T, bool> setAlternate)
+    {
+        DateTime? currentDate = null;
+        bool isAlternate = false;
+
+        foreach (var item in items)
+        {
+            var date = dateSelector(item).Date;
+            if (currentDate != date)
+            {
+                if (currentDate != null)
+                    isAlternate = !isAlternate;
+                currentDate = date;
+            }
+            setAlternate(item, isAlternate);
+        }
+    }
+
     [RelayCommand]
     private async Task LoadReportAsync()
     {
@@ -81,6 +99,7 @@ public partial class ReportViewModel : ViewModelBase
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
+                    AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     SalesItems = new ObservableCollection<SalesReportItemDto>(result.Result.Items);
                     TotalSalesAmount = result.Result.TotalAmount;
                     SalesItemCount = result.Result.Items.Count;
@@ -96,6 +115,7 @@ public partial class ReportViewModel : ViewModelBase
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
+                    AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     StockInItems = new ObservableCollection<StockInReportItemDto>(result.Result.Items);
                     TotalStockInQuantity = result.Result.TotalQuantity;
                     StockInItemCount = result.Result.Items.Count;

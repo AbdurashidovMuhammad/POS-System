@@ -19,6 +19,7 @@ public class SalesReportItemDto
     public decimal TotalPrice { get; set; }
     public string PaymentTypeName { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
+    public bool DateGroupIsAlternate { get; set; }
 }
 
 public class StockInReportDto
@@ -37,4 +38,5 @@ public class StockInReportItemDto
     public string FormattedQuantity => Quantity.ToString("0.##");
     public string UnitTypeName { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
+    public bool DateGroupIsAlternate { get; set; }
 }

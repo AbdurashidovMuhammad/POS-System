@@ -157,8 +157,11 @@
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="FontSize" Value="13"/>
             <Style.Triggers>
+                <DataTrigger Binding="{Binding DateGroupIsAlternate}" Value="True">
+                    <Setter Property="Background" Value="#f3f4f6"/>
+                </DataTrigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#f8f9fa"/>
+                    <Setter Property="Background" Value="#e8eaed"/>
                 </Trigger>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="#f0f4ff"/>
