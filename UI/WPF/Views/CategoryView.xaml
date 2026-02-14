@@ -485,129 +485,405 @@
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="180"/>
             </Border.Effect>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <!-- ══════ ADD/EDIT FORM PANEL ══════ -->
+                <Grid Visibility="{Binding IsProductsPanelOpen, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Panel Header with Gradient -->
-                <Border Grid.Row="0" CornerRadius="16,16,0,0">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                            <GradientStop Color="#4361ee" Offset="0"/>
-                            <GradientStop Color="#3a0ca3" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Grid Margin="24,18">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <!-- Panel Icon -->
-                            <Path Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9">
-                                <Path.Style>
-                                    <Style TargetType="Path">
-                                        <Setter Property="Data" Value="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
-                                                <Setter Property="Data" Value="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Path.Style>
-                            </Path>
+                    <!-- Panel Header with Gradient -->
+                    <Border Grid.Row="0" CornerRadius="16,16,0,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                <GradientStop Color="#4361ee" Offset="0"/>
+                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid Margin="24,18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Data" Value="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
+                                                    <Setter Property="Data" Value="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
 
-                            <TextBlock FontSize="17" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="Yangi kategoriya"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
-                                                <Setter Property="Text" Value="Tahrirlash"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <Button Grid.Column="1"
-                                Command="{Binding CancelPanelCommand}"
-                                Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
-                                        <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                              Fill="White"
-                                              Width="14" Height="14"
-                                              Stretch="Uniform"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#c62828"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
-                </Border>
-
-                <!-- Panel Content -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,20">
-                    <StackPanel>
-                        <!-- Category Name -->
-                        <TextBlock Text="Kategoriya nomi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
-                        <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
-                            <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Padding="14,12"
-                                     FontSize="14"/>
-                        </Border>
-
-                        <!-- IsActive (only for edit) -->
-                        <StackPanel Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
-                                    Margin="0,0,0,18">
-                            <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
-                            <CheckBox IsChecked="{Binding FormIsActive}" Content="Faol" FontSize="14"/>
-                        </StackPanel>
-
-                        <!-- Form Error -->
-                        <Border Background="#FFEBEE"
-                                Padding="14"
-                                CornerRadius="10"
-                                Margin="0,0,0,15"
-                                Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                                      Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap" FontSize="13"/>
+                                <TextBlock FontSize="17" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Yangi kategoriya"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditPanelOpen}" Value="True">
+                                                    <Setter Property="Text" Value="Tahrirlash"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Command="{Binding CancelPanelCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
+                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                  Fill="White"
+                                                  Width="14" Height="14"
+                                                  Stretch="Uniform"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#c62828"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Panel Content -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,20">
+                        <StackPanel>
+                            <TextBlock Text="Kategoriya nomi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                                <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,12"
+                                         FontSize="14"/>
+                            </Border>
+
+                            <StackPanel Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Margin="0,0,0,18">
+                                <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                                <CheckBox IsChecked="{Binding FormIsActive}" Content="Faol" FontSize="14"/>
+                            </StackPanel>
+
+                            <Border Background="#FFEBEE"
+                                    Padding="14"
+                                    CornerRadius="10"
+                                    Margin="0,0,0,15"
+                                    Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+                                          Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Panel Footer -->
+                    <Border Grid.Row="2" Padding="24,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0"
+                                    Command="{Binding CancelPanelCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                CornerRadius="12"
+                                                Padding="0,16">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#ef5350" Offset="0"/>
+                                                    <GradientStop Color="#c62828" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                      Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Bekor qilish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Button Grid.Column="2"
+                                    Command="{Binding SaveCategoryCommand}"
+                                    Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" CornerRadius="12" Padding="0,16">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#4CAF50" Offset="0"/>
+                                                    <GradientStop Color="#2e7d32" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                                                      Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Saqlash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Button Grid.Column="2"
+                                    Command="{Binding UpdateCategoryCommand}"
+                                    Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" CornerRadius="12" Padding="0,16">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#4361ee" Offset="0"/>
+                                                    <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                                                      Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Yangilash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Saving Indicator -->
+                    <Border Grid.RowSpan="3"
+                            Background="#E0FFFFFF"
+                            CornerRadius="16"
+                            Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+                                      Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ══════ PRODUCTS PANEL ══════ -->
+                <Grid Visibility="{Binding IsProductsPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Products Panel Header -->
+                    <Border Grid.Row="0" CornerRadius="16,16,0,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                <GradientStop Color="#7c3aed" Offset="0"/>
+                                <GradientStop Color="#4f46e5" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid Margin="24,18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"
+                                          Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9"/>
+                                    <TextBlock Text="Mahsulotlar" FontSize="17" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding SelectedCategory.Name}" FontSize="12" Foreground="#FFFFFFCC" Margin="32,4,0,0"/>
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Command="{Binding CloseProductsPanelCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
+                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                  Fill="White"
+                                                  Width="14" Height="14"
+                                                  Stretch="Uniform"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#c62828"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Products Count Badge -->
+                    <Border Grid.Row="1" Padding="20,12,20,8">
+                        <Border Background="#f0f4ff" CornerRadius="10" Padding="14,10">
+                            <TextBlock FontSize="13" Foreground="#4361ee" FontWeight="SemiBold">
+                                <Run Text="Jami: "/>
+                                <Run Text="{Binding CategoryProducts.Count, Mode=OneWay}" FontWeight="Bold"/>
+                                <Run Text=" ta mahsulot"/>
+                            </TextBlock>
                         </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                    </Border>
 
-                <!-- Panel Footer -->
-                <Border Grid.Row="2" Padding="24,16">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="12"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- Products List -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="12,0,12,0">
+                        <Grid>
+                            <ItemsControl ItemsSource="{Binding CategoryProducts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#fafbfc" CornerRadius="12" Padding="16,12" Margin="0,0,0,8"
+                                                BorderBrush="#eef0f4" BorderThickness="1">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#f0f4ff"/>
+                                                            <Setter Property="BorderBrush" Value="#c8d4f0"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
 
-                        <!-- Cancel Button -->
-                        <Button Grid.Column="0"
-                                Command="{Binding CancelPanelCommand}"
-                                Cursor="Hand">
+                                                <!-- Product Name & Status -->
+                                                <Grid Grid.Row="0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{Binding Name}"
+                                                               FontSize="14" FontWeight="SemiBold" Foreground="#1a1a2e"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               ToolTip="{Binding Name}"/>
+                                                    <Border Grid.Column="1" CornerRadius="8" Padding="6,2">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="#e8f5e9"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                        <Setter Property="Background" Value="#FFEBEE"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock FontSize="10" FontWeight="SemiBold">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Text" Value="Faol"/>
+                                                                    <Setter Property="Foreground" Value="#4CAF50"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                            <Setter Property="Text" Value="Nofaol"/>
+                                                                            <Setter Property="Foreground" Value="#f44336"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Border>
+                                                </Grid>
+
+                                                <!-- Product Details -->
+                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <Border Background="#e3f2fd" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                                        <TextBlock FontSize="11" Foreground="#1565c0" FontWeight="SemiBold">
+                                                            <Run Text="{Binding UnitPrice, StringFormat={}{0:N0}}"/>
+                                                            <Run Text=" sum"/>
+                                                        </TextBlock>
+                                                    </Border>
+                                                    <Border Background="#fff3e0" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                                        <TextBlock FontSize="11" Foreground="#e65100" FontWeight="SemiBold">
+                                                            <Run Text="Zaxira: "/>
+                                                            <Run Text="{Binding StockQuantity, StringFormat={}{0:N0}}"/>
+                                                        </TextBlock>
+                                                    </Border>
+                                                    <Border Background="#f3e5f5" CornerRadius="6" Padding="8,4">
+                                                        <TextBlock Text="{Binding UnitType, Converter={StaticResource EnumToStringConverter}}"
+                                                                   FontSize="11" Foreground="#7b1fa2" FontWeight="SemiBold"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Empty State -->
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,40,0,0"
+                                        Visibility="{Binding CategoryProducts.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
+                                <Border Background="#f5f0ff" CornerRadius="20" Width="64" Height="64" HorizontalAlignment="Center">
+                                    <Path Data="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"
+                                          Fill="#7c3aed" Width="28" Height="28" Stretch="Uniform"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                                </Border>
+                                <TextBlock Text="Mahsulot topilmadi"
+                                           FontSize="14" FontWeight="SemiBold" Foreground="#555"
+                                           HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                                <TextBlock Text="Bu kategoriyada mahsulot yo'q"
+                                           FontSize="12" Foreground="#aaa"
+                                           HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+
+                    <!-- Products Panel Footer -->
+                    <Border Grid.Row="3" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
+                        <Button Command="{Binding CloseProductsPanelCommand}" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border"
-                                            CornerRadius="12"
-                                            Padding="0,16">
+                                    <Border x:Name="border" CornerRadius="12" Padding="0,14">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                                 <GradientStop Color="#ef5350" Offset="0"/>
@@ -616,8 +892,8 @@
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Bekor qilish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                                  Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Yopish" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -628,87 +904,23 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
+                    </Border>
 
-                        <!-- Save Button for Add -->
-                        <Button Grid.Column="2"
-                                Command="{Binding SaveCategoryCommand}"
-                                Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
-                                Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" CornerRadius="12" Padding="0,16">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4CAF50" Offset="0"/>
-                                                <GradientStop Color="#2e7d32" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
-                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Saqlash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-
-                        <!-- Update Button for Edit -->
-                        <Button Grid.Column="2"
-                                Command="{Binding UpdateCategoryCommand}"
-                                Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
-                                Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" CornerRadius="12" Padding="0,16">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4361ee" Offset="0"/>
-                                                <GradientStop Color="#3a0ca3" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
-                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Yangilash" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
-                </Border>
-
-                <!-- Saving Indicator -->
-                <Border Grid.RowSpan="3"
-                        Background="#E0FFFFFF"
-                        CornerRadius="16"
-                        Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
-                            <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
-                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Border>
+                    <!-- Loading Products Indicator -->
+                    <Border Grid.RowSpan="4"
+                            Background="#E0FFFFFF"
+                            CornerRadius="16"
+                            Visibility="{Binding IsLoadingProducts, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Background="#f5f0ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+                                      Fill="#7c3aed" Width="24" Height="24" Stretch="Uniform"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

@@ -312,6 +312,17 @@ public class ProductService : IProductService
         catch { }
     }
 
+    public async Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId)
+    {
+        var products = await _context.Products
+            .Include(p => p.Category)
+            .Where(p => p.CategoryId == categoryId && p.IsActive)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+
+        return products.Select(MapToDto).ToList();
+    }
+
     // Private helper method to map Product to ProductDto
     private static ProductDto MapToDto(Product product)
     {

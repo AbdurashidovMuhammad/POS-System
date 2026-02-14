@@ -28,6 +28,17 @@ public partial class CategoryViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(ToggleActiveCommand))]
     private CategoryDto? _selectedCategory;
 
+    // Category products
+    [ObservableProperty]
+    private ObservableCollection<ProductDto> _categoryProducts = [];
+
+    [ObservableProperty]
+    private bool _isLoadingProducts;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isProductsPanelOpen;
+
     // Search
     [ObservableProperty]
     private string _searchText = string.Empty;
@@ -38,6 +49,19 @@ public partial class CategoryViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isSuggestionsOpen;
+
+    partial void OnSelectedCategoryChanged(CategoryDto? value)
+    {
+        if (value is not null && !IsAddPanelOpen && !IsEditPanelOpen)
+        {
+            _ = LoadCategoryProductsAsync(value.Id);
+        }
+        else
+        {
+            IsProductsPanelOpen = false;
+            CategoryProducts.Clear();
+        }
+    }
 
     partial void OnSearchTextChanged(string value)
     {
@@ -53,7 +77,7 @@ public partial class CategoryViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
     private bool _isEditPanelOpen;
 
-    public bool IsPanelOpen => IsAddPanelOpen || IsEditPanelOpen;
+    public bool IsPanelOpen => IsAddPanelOpen || IsEditPanelOpen || IsProductsPanelOpen;
 
     // Form fields
     [ObservableProperty]
@@ -383,11 +407,51 @@ public partial class CategoryViewModel : ViewModelBase
         _navigationService.GoBack();
     }
 
+    // Close products panel
+    [RelayCommand]
+    private void CloseProductsPanel()
+    {
+        IsProductsPanelOpen = false;
+        CategoryProducts.Clear();
+        SelectedCategory = null;
+    }
+
+    // Load products for selected category
+    private async Task LoadCategoryProductsAsync(int categoryId)
+    {
+        IsLoadingProducts = true;
+        IsProductsPanelOpen = true;
+
+        try
+        {
+            var result = await _apiService.GetAsync<List<ProductDto>>($"api/products/by-category/{categoryId}");
+
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                CategoryProducts = new ObservableCollection<ProductDto>(result.Result);
+            }
+            else
+            {
+                CategoryProducts.Clear();
+            }
+        }
+        catch
+        {
+            CategoryProducts.Clear();
+        }
+        finally
+        {
+            IsLoadingProducts = false;
+        }
+    }
+
     // Helper methods
     private void CloseAllPanels()
     {
         IsAddPanelOpen = false;
         IsEditPanelOpen = false;
+        IsProductsPanelOpen = false;
+        CategoryProducts.Clear();
     }
 
     private void ClearForm()

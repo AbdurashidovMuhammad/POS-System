@@ -244,6 +244,23 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
+    /// Get products by category ID
+    /// </summary>
+    [HttpGet("by-category/{categoryId:int}")]
+    public async Task<IActionResult> GetByCategory(int categoryId)
+    {
+        try
+        {
+            var products = await _productService.GetProductsByCategoryAsync(categoryId);
+            return Ok(ApiResult<List<ProductDto>>.Success(products));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<List<ProductDto>>.Failure([ex.Message]));
+        }
+    }
+
+    /// <summary>
     /// Get barcode image for product (PNG with name, barcode, price)
     /// </summary>
     [HttpGet("{id:int}/barcode-image")]

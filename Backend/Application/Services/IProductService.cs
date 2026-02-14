@@ -49,4 +49,9 @@ public interface IProductService
     /// Deactivate product (soft delete)
     /// </summary>
     Task DeactivateProductAsync(int id, int userId);
+
+    /// <summary>
+    /// Get products by category ID
+    /// </summary>
+    Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId);
 }
