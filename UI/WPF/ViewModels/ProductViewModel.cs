@@ -629,6 +629,12 @@ public partial class ProductViewModel : ViewModelBase
             return false;
         }
 
+        if (FormName.Trim().Length < 2)
+        {
+            FormError = "Mahsulot nomi kamida 2 ta belgidan iborat bo'lishi kerak";
+            return false;
+        }
+
         if (FormCategoryId is null || FormCategoryId <= 0)
         {
             FormError = "Kategoriyani tanlang";
