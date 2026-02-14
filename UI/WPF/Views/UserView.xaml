@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Main Content -->
-        <Border Grid.Column="0" Background="White" CornerRadius="16">
+        <Border Grid.Column="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="270"/>
             </Border.Effect>
@@ -34,8 +34,8 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                            <GradientStop Color="#4361ee" Offset="0"/>
-                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid Margin="24,18">
@@ -48,7 +48,7 @@
                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
                                   Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
                             <TextBlock Text="Adminlar boshqaruvi" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="#FFFFFF90" BorderThickness="1.5">
+                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="{StaticResource CountBadgeBorderBrush}" BorderThickness="1.5">
                                 <TextBlock Text="{Binding Users.Count, StringFormat={}{0} ta}" FontSize="12" Foreground="White" FontWeight="Bold"/>
                             </Border>
                         </StackPanel>
@@ -59,13 +59,8 @@
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" CornerRadius="12" Padding="22,12">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4CAF50" Offset="0"/>
-                                                <GradientStop Color="#2e7d32" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
+                                    <Border x:Name="border" CornerRadius="12" Padding="22,12"
+                                            Background="#33FFFFFF" BorderBrush="#55FFFFFF" BorderThickness="1">
                                         <StackPanel Orientation="Horizontal">
                                             <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
                                                   Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
@@ -74,7 +69,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                            <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -86,28 +81,28 @@
                 <!-- Success Message -->
                 <Border Grid.Row="1"
                         Margin="20,16,20,0"
-                        Background="#e8f5e9"
+                        Background="{StaticResource SuccessBackgroundBrush}"
                         Padding="14"
                         CornerRadius="10"
                         Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
-                              Fill="#4CAF50" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#2E7D32" FontSize="13" VerticalAlignment="Center"/>
+                              Fill="{StaticResource SuccessBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="{StaticResource SuccessDarkBrush}" FontSize="13" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Error Message -->
                 <Border Grid.Row="2"
                         Margin="20,8,20,0"
-                        Background="#FFEBEE"
+                        Background="{StaticResource ErrorBackgroundBrush}"
                         Padding="14"
                         CornerRadius="10"
                         Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                              Fill="#e53935" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828" FontSize="13" TextWrapping="Wrap"/>
+                              Fill="{StaticResource ErrorBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource ErrorTextBrush}" FontSize="13" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
@@ -120,7 +115,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Table Header -->
-                        <Border Grid.Row="0" Background="#f8f9fa" CornerRadius="10" Padding="16,12" Margin="0,16,0,4">
+                        <Border Grid.Row="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="16,12" Margin="0,16,0,4">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50"/>
@@ -131,13 +126,13 @@
                                     <ColumnDefinition Width="160"/>
                                     <ColumnDefinition Width="140"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="1" Text="Foydalanuvchi nomi" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="2" Text="Parol" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="3" Text="Rol" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="4" Text="Holat" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="5" Text="Yaratilgan sana" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="6" Text="Amallar" FontSize="12" Foreground="#666" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="Foydalanuvchi nomi" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="2" Text="Parol" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="3" Text="Rol" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="4" Text="Holat" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="5" Text="Yaratilgan sana" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="6" Text="Amallar" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold" HorizontalAlignment="Center"/>
                             </Grid>
                         </Border>
 
@@ -163,10 +158,10 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#f8f9fa"/>
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
                                                     </Trigger>
                                                     <Trigger Property="IsSelected" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#e8f0fe"/>
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLighterBrush}"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -179,7 +174,7 @@
                                                           Command="{Binding PlacementTarget.Tag.EditUserCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                                                              Fill="#4361ee" Width="18" Height="18" Stretch="Uniform"/>
+                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <Separator/>
@@ -197,7 +192,7 @@
                                                     </MenuItem.Style>
                                                     <MenuItem.Icon>
                                                         <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z"
-                                                              Fill="#FF9800" Width="18" Height="18" Stretch="Uniform"/>
+                                                              Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
@@ -221,15 +216,15 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Row Number -->
-                                            <Border Grid.Column="0" Background="#f0f4ff" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                            <Border Grid.Column="0" Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                 <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Converter={StaticResource IndexConverter}}"
-                                                           FontSize="12" FontWeight="SemiBold" Foreground="#4361ee"
+                                                           FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
 
                                             <!-- Username -->
                                             <TextBlock Grid.Column="1" Text="{Binding Username}"
-                                                       FontSize="13.5" FontWeight="SemiBold" Foreground="#1a1a2e"
+                                                       FontSize="13.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"
                                                        VerticalAlignment="Center"
                                                        TextTrimming="CharacterEllipsis"
                                                        ToolTip="{Binding Username}"/>
@@ -240,13 +235,13 @@
                                                            Text="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;"
                                                            VerticalAlignment="Center"
                                                            FontSize="14"
-                                                           Foreground="#666"
+                                                           Foreground="{StaticResource TextTertiaryBrush}"
                                                            Visibility="Visible"/>
                                                 <TextBlock x:Name="PasswordText"
                                                            Text="{Binding Password}"
                                                            VerticalAlignment="Center"
                                                            FontSize="13"
-                                                           Foreground="#333"
+                                                           Foreground="{StaticResource TextDarkBrush}"
                                                            Visibility="Collapsed"/>
                                                 <ToggleButton x:Name="TogglePasswordBtn"
                                                               Background="Transparent"
@@ -263,19 +258,19 @@
                                                                     Padding="6,4">
                                                                 <Path x:Name="EyeIcon"
                                                                       Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"
-                                                                      Fill="#999"
+                                                                      Fill="{StaticResource TextFaintBrush}"
                                                                       Width="16" Height="16"
                                                                       Stretch="Uniform"/>
                                                             </Border>
                                                             <ControlTemplate.Triggers>
                                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter TargetName="eyeBorder" Property="Background" Value="#f0f0f0"/>
+                                                                    <Setter TargetName="eyeBorder" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                                                 </Trigger>
                                                                 <Trigger Property="IsChecked" Value="True">
                                                                     <Setter TargetName="EyeIcon"
                                                                             Property="Data"
                                                                             Value="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z"/>
-                                                                    <Setter TargetName="EyeIcon" Property="Fill" Value="#4361ee"/>
+                                                                    <Setter TargetName="EyeIcon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
                                                                 </Trigger>
                                                             </ControlTemplate.Triggers>
                                                         </ControlTemplate>
@@ -285,9 +280,9 @@
 
                                             <!-- Role -->
                                             <Border Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                                <Border Background="#e8f0fe" CornerRadius="6" Padding="8,4">
+                                                <Border Background="{StaticResource PrimaryLighterBrush}" CornerRadius="6" Padding="8,4">
                                                     <TextBlock Text="{Binding Role}"
-                                                               FontSize="11" Foreground="#4361ee" FontWeight="SemiBold"/>
+                                                               FontSize="11" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
                                                 </Border>
                                             </Border>
 
@@ -296,10 +291,10 @@
                                                     HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
-                                                        <Setter Property="Background" Value="#e8f5e9"/>
+                                                        <Setter Property="Background" Value="{StaticResource SuccessBackgroundBrush}"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                <Setter Property="Background" Value="#FFEBEE"/>
+                                                                <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -308,11 +303,11 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Text" Value="Faol"/>
-                                                            <Setter Property="Foreground" Value="#4CAF50"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                     <Setter Property="Text" Value="Nofaol"/>
-                                                                    <Setter Property="Foreground" Value="#f44336"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource StatusInactiveBrush}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -323,7 +318,7 @@
                                             <!-- Created Date -->
                                             <TextBlock Grid.Column="5"
                                                        Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy HH:mm}"
-                                                       FontSize="12" Foreground="#666"
+                                                       FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
                                                        VerticalAlignment="Center"/>
 
                                             <!-- Actions Button -->
@@ -337,24 +332,24 @@
                                                 <Button.Template>
                                                     <ControlTemplate TargetType="Button">
                                                         <Border x:Name="btnBorder"
-                                                                Background="#f0f4ff"
+                                                                Background="{StaticResource PrimaryLightBrush}"
                                                                 CornerRadius="12"
                                                                 Padding="18,10"
-                                                                BorderBrush="#e0e8f8"
+                                                                BorderBrush="{StaticResource ActionButtonBorderBrush}"
                                                                 BorderThickness="1.5">
                                                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee" Margin="0,0,0,4"/>
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee" Margin="0,0,0,4"/>
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,0,4"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,0,4"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}"/>
                                                             </StackPanel>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="btnBorder" Property="Background" Value="#e0e8f8"/>
-                                                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="#c0d0f0"/>
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource ActionButtonHoverBrush}"/>
+                                                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="{StaticResource ActionButtonHoverBorderBrush}"/>
                                                             </Trigger>
                                                             <Trigger Property="IsPressed" Value="True">
-                                                                <Setter TargetName="btnBorder" Property="Background" Value="#d0dffc"/>
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource ActionButtonPressedBrush}"/>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -377,26 +372,26 @@
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center"
                                     Visibility="{Binding Users.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
-                            <Border Background="#f0f4ff" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center">
+                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center">
                                 <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-                                      Fill="#4361ee" Width="36" Height="36" Stretch="Uniform"
+                                      Fill="{StaticResource PrimaryBrush}" Width="36" Height="36" Stretch="Uniform"
                                       HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
                             </Border>
                             <TextBlock Text="Adminlar topilmadi"
-                                       FontSize="16" FontWeight="SemiBold" Foreground="#555"
+                                       FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"
                                        HorizontalAlignment="Center" Margin="0,16,0,0"/>
                             <TextBlock Text="Yangi admin qo'shish uchun yuqoridagi tugmani bosing"
-                                       FontSize="13" Foreground="#aaa"
+                                       FontSize="13" Foreground="{StaticResource TextFaintBrush}"
                                        HorizontalAlignment="Center" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- Footer -->
-                <Border Grid.Row="5" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
+                <Border Grid.Row="5" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0" Padding="20,14">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="8" Padding="10,6">
-                            <TextBlock FontSize="12" Foreground="#4361ee" FontWeight="SemiBold">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,6">
+                            <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
                                 <Run Text="Jami: "/>
                                 <Run Text="{Binding Users.Count, Mode=OneWay}" FontWeight="Bold"/>
                                 <Run Text=" ta foydalanuvchi"/>
@@ -407,13 +402,13 @@
 
                 <!-- Loading Indicator -->
                 <Border Grid.RowSpan="6"
-                        Background="#E0FFFFFF"
+                        Background="{StaticResource OverlayLoadingBrush}"
                         CornerRadius="16"
                         Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,16">
                             <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                  Fill="{StaticResource PrimaryBrush}" Width="24" Height="24" Stretch="Uniform"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   RenderTransformOrigin="0.5,0.5">
                                 <Path.RenderTransform>
@@ -421,7 +416,7 @@
                                 </Path.RenderTransform>
                             </Path>
                         </Border>
-                        <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                        <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -430,7 +425,7 @@
         <!-- Side Panel for Add/Edit -->
         <Border Grid.Column="1"
                 Width="400"
-                Background="White"
+                Background="{StaticResource BackgroundCardBrush}"
                 Margin="12,0,0,0"
                 CornerRadius="16"
                 Visibility="{Binding IsPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -448,8 +443,8 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                            <GradientStop Color="#4361ee" Offset="0"/>
-                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid Margin="24,18">
@@ -491,7 +486,7 @@
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
+                                    <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Padding="8">
                                         <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                               Fill="White"
                                               Width="14" Height="14"
@@ -499,7 +494,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#c62828"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource ErrorTextBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -512,8 +507,8 @@
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,20">
                     <StackPanel>
                         <!-- Username -->
-                        <TextBlock Text="Foydalanuvchi nomi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
-                        <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                        <TextBlock Text="Foydalanuvchi nomi" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
+                        <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
                             <TextBox Text="{Binding FormUsername, UpdateSourceTrigger=PropertyChanged}"
                                      Background="Transparent"
                                      BorderThickness="0"
@@ -522,7 +517,7 @@
                         </Border>
 
                         <!-- Password -->
-                        <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8">
+                        <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Text" Value="Parol"/>
@@ -534,7 +529,7 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                        <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
                             <PasswordBox x:Name="PasswordBox"
                                          Background="Transparent"
                                          BorderThickness="0"
@@ -546,20 +541,20 @@
                         <!-- IsActive (only for edit) -->
                         <StackPanel Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
                                     Margin="0,0,0,18">
-                            <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                            <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
                             <CheckBox IsChecked="{Binding FormIsActive}" Content="Faol" FontSize="14"/>
                         </StackPanel>
 
                         <!-- Form Error -->
-                        <Border Background="#FFEBEE"
+                        <Border Background="{StaticResource ErrorBackgroundBrush}"
                                 Padding="14"
                                 CornerRadius="10"
                                 Margin="0,0,0,15"
                                 Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
                             <StackPanel Orientation="Horizontal">
                                 <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                                      Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap" FontSize="13"/>
+                                      Fill="{StaticResource ErrorBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding FormError}" Foreground="{StaticResource ErrorTextBrush}" TextWrapping="Wrap" FontSize="13"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -585,8 +580,8 @@
                                             Padding="0,16">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#ef5350" Offset="0"/>
-                                                <GradientStop Color="#c62828" Offset="1"/>
+                                                <GradientStop Color="{StaticResource ErrorLightColor}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource ErrorTextColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -614,8 +609,8 @@
                                     <Border x:Name="border" CornerRadius="12" Padding="0,16">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4CAF50" Offset="0"/>
-                                                <GradientStop Color="#2e7d32" Offset="1"/>
+                                                <GradientStop Color="{StaticResource SuccessColor}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource SuccessDarkColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -646,8 +641,8 @@
                                     <Border x:Name="border" CornerRadius="12" Padding="0,16">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4361ee" Offset="0"/>
-                                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -672,16 +667,16 @@
 
                 <!-- Saving Indicator -->
                 <Border Grid.RowSpan="3"
-                        Background="#E0FFFFFF"
+                        Background="{StaticResource OverlayLoadingBrush}"
                         CornerRadius="16"
                         Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
                             <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                  Fill="{StaticResource PrimaryBrush}" Width="24" Height="24" Stretch="Uniform"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                        <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>

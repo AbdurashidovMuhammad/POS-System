@@ -6,6 +6,11 @@
              xmlns:views="clr-namespace:WPF.Views"
              xmlns:viewmodels="clr-namespace:WPF.ViewModels">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
         <!-- Converters -->
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
@@ -46,5 +51,6 @@
         <DataTemplate DataType="{x:Type viewmodels:ActivityLogViewModel}">
             <views:ActivityLogView/>
         </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

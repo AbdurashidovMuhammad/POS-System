@@ -1,0 +1,176 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══════════════ COLOR VALUES (for GradientStops) ═══════════════ -->
+
+    <!-- Primary / Brand -->
+    <Color x:Key="PrimaryColor">#4361ee</Color>
+    <Color x:Key="PrimaryDarkColor">#3a0ca3</Color>
+    <Color x:Key="PrimaryLightColor">#f0f4ff</Color>
+    <Color x:Key="PrimaryLighterColor">#e8f0fe</Color>
+
+    <!-- Success / Green -->
+    <Color x:Key="SuccessColor">#4CAF50</Color>
+    <Color x:Key="SuccessDarkColor">#2e7d32</Color>
+    <Color x:Key="SuccessBackgroundColor">#e8f5e9</Color>
+    <Color x:Key="SuccessLightColor">#c8e6c9</Color>
+
+    <!-- Error / Red -->
+    <Color x:Key="ErrorColor">#e53935</Color>
+    <Color x:Key="ErrorTextColor">#c62828</Color>
+    <Color x:Key="ErrorBackgroundColor">#FFEBEE</Color>
+    <Color x:Key="ErrorLightColor">#ef5350</Color>
+
+    <!-- Warning / Orange -->
+    <Color x:Key="WarningColor">#FF9800</Color>
+    <Color x:Key="WarningDarkColor">#e65100</Color>
+    <Color x:Key="WarningBackgroundColor">#fff3e0</Color>
+    <Color x:Key="WarningLightColor">#ffe0b2</Color>
+
+    <!-- Info / Blue -->
+    <Color x:Key="InfoColor">#2196F3</Color>
+    <Color x:Key="InfoBackgroundColor">#e3f2fd</Color>
+    <Color x:Key="InfoDarkColor">#bbdefb</Color>
+
+    <!-- Activity / Purple -->
+    <Color x:Key="ActivityColor">#7c3aed</Color>
+    <Color x:Key="ActivityBackgroundColor">#ede9fe</Color>
+    <Color x:Key="ActivityLightColor">#f5f3ff</Color>
+    <Color x:Key="ActivityDarkColor">#ddd6fe</Color>
+    <Color x:Key="ActivityDeepColor">#4f46e5</Color>
+
+    <!-- Category / Pink -->
+    <Color x:Key="CategoryColor">#e91e63</Color>
+    <Color x:Key="CategoryBackgroundColor">#fce4ec</Color>
+    <Color x:Key="CategoryLightColor">#f8bbd0</Color>
+
+    <!-- Sidebar -->
+    <Color x:Key="SidebarBgColor">#1a1a2e</Color>
+    <Color x:Key="SidebarHoverColor">#16213e</Color>
+    <Color x:Key="SidebarSelectedColor">#0f3460</Color>
+
+    <!-- Backgrounds -->
+    <Color x:Key="BackgroundPageColor">#f0f2f5</Color>
+    <Color x:Key="BackgroundInputColor">#f8f9fa</Color>
+
+    <!-- Login / Auth Theme -->
+    <Color x:Key="LoginBgDarkColor">#1a237e</Color>
+    <Color x:Key="LoginBgMediumColor">#283593</Color>
+    <Color x:Key="LoginBgColor">#3949ab</Color>
+    <Color x:Key="LoginBgLightColor">#5c6bc0</Color>
+    <Color x:Key="LoginAccentDarkColor">#0D47A1</Color>
+    <Color x:Key="LoginAccentColor">#1565C0</Color>
+    <Color x:Key="LoginAccentMediumColor">#1976D2</Color>
+    <Color x:Key="LoginAccentLightColor">#1E88E5</Color>
+    <Color x:Key="LoginDisabledColor">#B0BEC5</Color>
+
+    <!-- ═══════════════ BRUSH RESOURCES ═══════════════ -->
+
+    <!-- Primary / Brand -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+    <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
+    <SolidColorBrush x:Key="PrimaryLighterBrush" Color="{StaticResource PrimaryLighterColor}"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1a1a2e"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#555555"/>
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#666666"/>
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#888888"/>
+    <SolidColorBrush x:Key="TextFaintBrush" Color="#aaaaaa"/>
+    <SolidColorBrush x:Key="TextSeparatorBrush" Color="#cccccc"/>
+    <SolidColorBrush x:Key="TextDarkBrush" Color="#333333"/>
+
+    <!-- Backgrounds -->
+    <SolidColorBrush x:Key="BackgroundPageBrush" Color="{StaticResource BackgroundPageColor}"/>
+    <SolidColorBrush x:Key="BackgroundCardBrush" Color="White"/>
+    <SolidColorBrush x:Key="BackgroundInputBrush" Color="{StaticResource BackgroundInputColor}"/>
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="BorderDefaultBrush" Color="#e8e8e8"/>
+    <SolidColorBrush x:Key="BorderLightBrush" Color="#f0f0f0"/>
+    <SolidColorBrush x:Key="BorderSeparatorBrush" Color="#eeeeee"/>
+    <SolidColorBrush x:Key="BorderPopupBrush" Color="#e0e0e0"/>
+
+    <!-- Success / Green -->
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="SuccessDarkBrush" Color="{StaticResource SuccessDarkColor}"/>
+    <SolidColorBrush x:Key="SuccessBackgroundBrush" Color="{StaticResource SuccessBackgroundColor}"/>
+    <SolidColorBrush x:Key="SuccessLightBrush" Color="{StaticResource SuccessLightColor}"/>
+
+    <!-- Error / Red -->
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}"/>
+    <SolidColorBrush x:Key="ErrorTextBrush" Color="{StaticResource ErrorTextColor}"/>
+    <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="{StaticResource ErrorBackgroundColor}"/>
+    <SolidColorBrush x:Key="ErrorLightBrush" Color="{StaticResource ErrorLightColor}"/>
+    <SolidColorBrush x:Key="StatusInactiveBrush" Color="#f44336"/>
+    <SolidColorBrush x:Key="ToastErrorBrush" Color="#D32F2F"/>
+
+    <!-- Warning / Orange -->
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="WarningDarkBrush" Color="{StaticResource WarningDarkColor}"/>
+    <SolidColorBrush x:Key="WarningBackgroundBrush" Color="{StaticResource WarningBackgroundColor}"/>
+    <SolidColorBrush x:Key="WarningLightBrush" Color="{StaticResource WarningLightColor}"/>
+    <SolidColorBrush x:Key="WarningHoverBrush" Color="#fff0e0"/>
+
+    <!-- Info / Blue -->
+    <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}"/>
+    <SolidColorBrush x:Key="InfoBackgroundBrush" Color="{StaticResource InfoBackgroundColor}"/>
+
+    <!-- Activity / Purple -->
+    <SolidColorBrush x:Key="ActivityBrush" Color="{StaticResource ActivityColor}"/>
+    <SolidColorBrush x:Key="ActivityBackgroundBrush" Color="{StaticResource ActivityBackgroundColor}"/>
+    <SolidColorBrush x:Key="ActivityLightBrush" Color="{StaticResource ActivityLightColor}"/>
+
+    <!-- Category / Pink -->
+    <SolidColorBrush x:Key="CategoryBrush" Color="{StaticResource CategoryColor}"/>
+    <SolidColorBrush x:Key="CategoryBackgroundBrush" Color="{StaticResource CategoryBackgroundColor}"/>
+
+    <!-- Sidebar -->
+    <SolidColorBrush x:Key="SidebarBgBrush" Color="{StaticResource SidebarBgColor}"/>
+    <SolidColorBrush x:Key="SidebarHoverBrush" Color="{StaticResource SidebarHoverColor}"/>
+    <SolidColorBrush x:Key="SidebarSelectedBrush" Color="{StaticResource SidebarSelectedColor}"/>
+    <SolidColorBrush x:Key="SidebarAccentBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="SidebarLogoutBrush" Color="#2a2a3e"/>
+    <SolidColorBrush x:Key="SidebarLogoutHoverBrush" Color="#3a3a4e"/>
+    <SolidColorBrush x:Key="SidebarTextPrimaryBrush" Color="#ffffff"/>
+    <SolidColorBrush x:Key="SidebarTextSecondaryBrush" Color="#a0a0a0"/>
+    <SolidColorBrush x:Key="SidebarSeparatorBrush" Color="#333333"/>
+
+    <!-- Overlays -->
+    <SolidColorBrush x:Key="OverlayModalBrush" Color="#80000000"/>
+    <SolidColorBrush x:Key="OverlayLoadingBrush" Color="#E0FFFFFF"/>
+
+    <!-- Action Button (3-dots menu) -->
+    <SolidColorBrush x:Key="ActionButtonBorderBrush" Color="#e0e8f8"/>
+    <SolidColorBrush x:Key="ActionButtonHoverBrush" Color="#e0e8f8"/>
+    <SolidColorBrush x:Key="ActionButtonHoverBorderBrush" Color="#c0d0f0"/>
+    <SolidColorBrush x:Key="ActionButtonPressedBrush" Color="#d0dffc"/>
+
+    <!-- Login / Auth -->
+    <SolidColorBrush x:Key="LoginLabelBrush" Color="#546E7A"/>
+    <SolidColorBrush x:Key="LoginIconBrush" Color="#90A4AE"/>
+    <SolidColorBrush x:Key="LoginSubtitleBrush" Color="#B3FFFFFF"/>
+    <SolidColorBrush x:Key="LoginAccentBrush" Color="{StaticResource LoginAccentMediumColor}"/>
+    <SolidColorBrush x:Key="LoginDisabledBrush" Color="{StaticResource LoginDisabledColor}"/>
+
+    <!-- Glass / Overlay on Gradient Headers -->
+    <SolidColorBrush x:Key="GlassButtonBgBrush" Color="#26FFFFFF"/>
+    <SolidColorBrush x:Key="GlassButtonBorderBrush" Color="#4DFFFFFF"/>
+    <SolidColorBrush x:Key="GlassButtonHoverBrush" Color="#40FFFFFF"/>
+    <SolidColorBrush x:Key="HeaderSubtitleBrush" Color="#B0B8FF"/>
+    <SolidColorBrush x:Key="HeaderSubtitleLightBrush" Color="#FFFFFFCC"/>
+
+    <!-- DataGrid -->
+    <SolidColorBrush x:Key="DataGridAlternateBrush" Color="#f3f4f6"/>
+    <SolidColorBrush x:Key="DataGridHoverBrush" Color="#e8eaed"/>
+
+    <!-- Special -->
+    <SolidColorBrush x:Key="CountBadgeBorderBrush" Color="#FFFFFF90"/>
+    <SolidColorBrush x:Key="SemiTransparentWhiteBrush" Color="#FFFFFF90"/>
+    <SolidColorBrush x:Key="PrimaryHoverLightBrush" Color="#dde4ff"/>
+    <SolidColorBrush x:Key="UnitTypePurpleBrush" Color="#7b1fa2"/>
+    <SolidColorBrush x:Key="UnitTypePurpleBackgroundBrush" Color="#f3e5f5"/>
+    <SolidColorBrush x:Key="PriceBlueBrush" Color="#1565c0"/>
+
+</ResourceDictionary>

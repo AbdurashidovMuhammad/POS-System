@@ -10,27 +10,12 @@
              d:DesignHeight="700" d:DesignWidth="1200">
 
     <UserControl.Resources>
-        <!-- Sidebar Colors -->
-        <Color x:Key="SidebarBgColor">#1a1a2e</Color>
-        <Color x:Key="SidebarHoverColor">#16213e</Color>
-        <Color x:Key="SidebarSelectedColor">#0f3460</Color>
-        <Color x:Key="AccentColor">#e94560</Color>
-        <Color x:Key="TextPrimaryColor">#ffffff</Color>
-        <Color x:Key="TextSecondaryColor">#a0a0a0</Color>
-
-        <SolidColorBrush x:Key="SidebarBgBrush" Color="{StaticResource SidebarBgColor}"/>
-        <SolidColorBrush x:Key="SidebarHoverBrush" Color="{StaticResource SidebarHoverColor}"/>
-        <SolidColorBrush x:Key="SidebarSelectedBrush" Color="{StaticResource SidebarSelectedColor}"/>
-        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
-        <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
-
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
 
         <!-- Menu Item Style - Expanded -->
         <Style x:Key="MenuItemButtonStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource SidebarTextSecondaryBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Height" Value="50"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -46,7 +31,7 @@
                                 <Border x:Name="indicator"
                                         Width="4"
                                         HorizontalAlignment="Left"
-                                        Background="{StaticResource AccentBrush}"
+                                        Background="{StaticResource SidebarAccentBrush}"
                                         CornerRadius="0,2,2,0"
                                         Visibility="Collapsed"/>
 
@@ -57,7 +42,7 @@
                                     <!-- Icon -->
                                     <Path x:Name="icon"
                                           Data="{Binding IconPath}"
-                                          Fill="{StaticResource TextSecondaryBrush}"
+                                          Fill="{StaticResource SidebarTextSecondaryBrush}"
                                           Width="22"
                                           Height="22"
                                           Stretch="Uniform"/>
@@ -65,7 +50,7 @@
                                     <!-- Title -->
                                     <TextBlock x:Name="title"
                                                Text="{Binding Title}"
-                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Foreground="{StaticResource SidebarTextSecondaryBrush}"
                                                FontSize="14"
                                                VerticalAlignment="Center"
                                                Margin="15,0,0,0"/>
@@ -75,14 +60,14 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarHoverBrush}"/>
-                                <Setter TargetName="icon" Property="Fill" Value="{StaticResource TextPrimaryBrush}"/>
-                                <Setter TargetName="title" Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                <Setter TargetName="icon" Property="Fill" Value="{StaticResource SidebarTextPrimaryBrush}"/>
+                                <Setter TargetName="title" Property="Foreground" Value="{StaticResource SidebarTextPrimaryBrush}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarSelectedBrush}"/>
                                 <Setter TargetName="indicator" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="icon" Property="Fill" Value="{StaticResource AccentBrush}"/>
-                                <Setter TargetName="title" Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                <Setter TargetName="icon" Property="Fill" Value="{StaticResource SidebarAccentBrush}"/>
+                                <Setter TargetName="title" Property="Foreground" Value="{StaticResource SidebarTextPrimaryBrush}"/>
                             </Trigger>
                             <DataTrigger Binding="{Binding DataContext.IsSidebarCollapsed, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                                 <Setter TargetName="title" Property="Visibility" Value="Collapsed"/>
@@ -110,7 +95,7 @@
                                 CornerRadius="8"
                                 Padding="8">
                             <Path Data="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"
-                                  Fill="{StaticResource TextSecondaryBrush}"
+                                  Fill="{StaticResource SidebarTextSecondaryBrush}"
                                   Width="20" Height="20"
                                   Stretch="Uniform"
                                   HorizontalAlignment="Center"
@@ -194,18 +179,18 @@
                                     VerticalAlignment="Center"
                                     Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}">
                             <TextBlock Text="POS Tizimi"
-                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       Foreground="{StaticResource SidebarTextPrimaryBrush}"
                                        FontSize="18"
                                        FontWeight="SemiBold"/>
                             <TextBlock Text="Savdo boshqaruvi"
-                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Foreground="{StaticResource SidebarTextSecondaryBrush}"
                                        FontSize="11"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- Separator -->
-                <Border Grid.Row="0" VerticalAlignment="Bottom" Height="1" Background="#333" Margin="10,0"/>
+                <Border Grid.Row="0" VerticalAlignment="Bottom" Height="1" Background="{StaticResource SidebarSeparatorBrush}" Margin="10,0"/>
 
                 <!-- Navigation Menu -->
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding MenuItems}" Margin="0,20,0,0">
@@ -237,18 +222,18 @@
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border"
-                                        Background="#2a2a3e"
+                                        Background="{StaticResource SidebarLogoutBrush}"
                                         CornerRadius="8"
                                         Padding="10,12">
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center">
                                         <Path Data="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
-                                              Fill="{StaticResource AccentBrush}"
+                                              Fill="{StaticResource SidebarAccentBrush}"
                                               Width="18"
                                               Height="18"
                                               Stretch="Uniform"/>
                                         <TextBlock Text="Chiqish"
-                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   Foreground="{StaticResource SidebarTextPrimaryBrush}"
                                                    FontSize="13"
                                                    VerticalAlignment="Center"
                                                    Margin="12,0,0,0"
@@ -257,7 +242,7 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="#3a3a4e"/>
+                                        <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarLogoutHoverBrush}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -268,14 +253,14 @@
         </Border>
 
         <!-- Main Content Area -->
-        <Grid Grid.Column="1" Background="#f0f2f5">
+        <Grid Grid.Column="1" Background="{StaticResource BackgroundPageBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Border Grid.Row="0" Background="White">
+            <Border Grid.Row="0" Background="{StaticResource BackgroundCardBrush}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="1" Opacity="0.08" Direction="270"/>
                 </Border.Effect>
@@ -284,23 +269,23 @@
                         <TextBlock Text="{Binding PageTitle}"
                                    FontSize="22"
                                    FontWeight="SemiBold"
-                                   Foreground="#1a1a2e"/>
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
                     </StackPanel>
 
                     <!-- Right side - Time/Date -->
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <Border Background="#f0f2f5" CornerRadius="8" Padding="15,8">
+                        <Border Background="{StaticResource BackgroundPageBrush}" CornerRadius="8" Padding="15,8">
                             <StackPanel Orientation="Horizontal">
                                 <Path Data="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"
-                                      Fill="#666"
+                                      Fill="{StaticResource TextTertiaryBrush}"
                                       Width="16"
                                       Height="16"
                                       Stretch="Uniform"/>
                                 <TextBlock x:Name="dateTimeText"
                                            Text="{Binding Source={x:Static System:DateTime.Now}, StringFormat='{}{0:dd.MM.yyyy}'}"
-                                           Foreground="#666"
+                                           Foreground="{StaticResource TextTertiaryBrush}"
                                            FontSize="13"
                                            VerticalAlignment="Center"
                                            Margin="8,0,0,0"
@@ -325,7 +310,7 @@
                     Padding="24,14"
                     Visibility="{Binding IsToastVisible, Converter={StaticResource BoolToVisibility}}">
                 <Border.Background>
-                    <SolidColorBrush Color="#D32F2F"/>
+                    <StaticResource ResourceKey="ToastErrorBrush"/>
                 </Border.Background>
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="3" Opacity="0.3" Direction="270"/>

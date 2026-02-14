@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
-        <Border Grid.Column="0" Background="White" CornerRadius="16">
+        <Border Grid.Column="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="270"/>
             </Border.Effect>
@@ -34,8 +34,8 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                            <GradientStop Color="#4361ee" Offset="0"/>
-                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid Margin="24,18">
@@ -48,7 +48,7 @@
                             <Path Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"
                                   Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
                             <TextBlock Text="Kategoriyalar" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="#FFFFFF90" BorderThickness="1.5">
+                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="{StaticResource CountBadgeBorderBrush}" BorderThickness="1.5">
                                 <TextBlock Text="{Binding Categories.Count, StringFormat={}{0} ta}" FontSize="12" Foreground="White" FontWeight="Bold"/>
                             </Border>
                         </StackPanel>
@@ -59,13 +59,8 @@
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" CornerRadius="12" Padding="22,12">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4CAF50" Offset="0"/>
-                                                <GradientStop Color="#2e7d32" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
+                                    <Border x:Name="border" CornerRadius="12" Padding="22,12"
+                                            Background="#33FFFFFF" BorderBrush="#55FFFFFF" BorderThickness="1">
                                         <StackPanel Orientation="Horizontal">
                                             <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
                                                   Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
@@ -74,7 +69,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                                            <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -91,14 +86,14 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border x:Name="SearchBorder" Grid.Column="0" Background="#f8f9fa" CornerRadius="12" BorderBrush="#e8e8e8" BorderThickness="1">
+                        <Border x:Name="SearchBorder" Grid.Column="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Background="#4361ee" CornerRadius="12,0,0,12" Padding="14,0">
+                                <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}" CornerRadius="12,0,0,12" Padding="14,0">
                                     <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
                                           Fill="White"
                                           Width="18" Height="18"
@@ -128,8 +123,8 @@
                                             <Border x:Name="border" CornerRadius="10" Padding="22,12">
                                                 <Border.Background>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                        <GradientStop Color="#4361ee" Offset="0"/>
-                                                        <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                        <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                        <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </Border.Background>
                                                 <TextBlock Text="Qidirish" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
@@ -152,8 +147,8 @@
                                        StaysOpen="False"
                                        AllowsTransparency="True"
                                        PopupAnimation="Slide">
-                                    <Border Background="White"
-                                            BorderBrush="#e0e0e0"
+                                    <Border Background="{StaticResource BackgroundCardBrush}"
+                                            BorderBrush="{StaticResource BorderPopupBrush}"
                                             BorderThickness="1"
                                             CornerRadius="12"
                                             Margin="0,4,0,0"
@@ -168,7 +163,7 @@
                                                         <Border Padding="14,10"
                                                                 Cursor="Hand"
                                                                 Background="Transparent"
-                                                                BorderBrush="#f0f0f0"
+                                                                BorderBrush="{StaticResource BorderLightBrush}"
                                                                 BorderThickness="0,0,0,1">
                                                             <Border.InputBindings>
                                                                 <MouseBinding MouseAction="LeftClick"
@@ -178,12 +173,12 @@
                                                             <TextBlock Text="{Binding Name}"
                                                                        FontSize="14"
                                                                        FontWeight="SemiBold"
-                                                                       Foreground="#1a1a2e"/>
+                                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
                                                                     <Style.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter Property="Background" Value="#f8f9fa"/>
+                                                                            <Setter Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
                                                                         </Trigger>
                                                                     </Style.Triggers>
                                                                 </Style>
@@ -203,28 +198,28 @@
                 <!-- Success Message -->
                 <Border Grid.Row="2"
                         Margin="20,0,20,8"
-                        Background="#e8f5e9"
+                        Background="{StaticResource SuccessBackgroundBrush}"
                         Padding="14"
                         CornerRadius="10"
                         Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
-                              Fill="#4CAF50" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#2E7D32" FontSize="13" VerticalAlignment="Center"/>
+                              Fill="{StaticResource SuccessBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="{StaticResource SuccessDarkBrush}" FontSize="13" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Error Message -->
                 <Border Grid.Row="3"
                         Margin="20,0,20,8"
-                        Background="#FFEBEE"
+                        Background="{StaticResource ErrorBackgroundBrush}"
                         Padding="14"
                         CornerRadius="10"
                         Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                              Fill="#e53935" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#C62828" FontSize="13" TextWrapping="Wrap"/>
+                              Fill="{StaticResource ErrorBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource ErrorTextBrush}" FontSize="13" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
@@ -237,7 +232,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Table Header -->
-                        <Border Grid.Row="0" Background="#f8f9fa" CornerRadius="10" Padding="16,12" Margin="0,0,0,4">
+                        <Border Grid.Row="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="16,12" Margin="0,0,0,4">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50"/>
@@ -245,10 +240,10 @@
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="70"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="1" Text="Nomi" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="2" Text="Holat" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                                <TextBlock Grid.Column="3" Text="Amallar" FontSize="12" Foreground="#666" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="Nomi" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="2" Text="Holat" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="3" Text="Amallar" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold" HorizontalAlignment="Center"/>
                             </Grid>
                         </Border>
 
@@ -274,10 +269,10 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#f8f9fa"/>
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
                                                     </Trigger>
                                                     <Trigger Property="IsSelected" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#e8f0fe"/>
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLighterBrush}"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -290,7 +285,7 @@
                                                           Command="{Binding PlacementTarget.Tag.EditCategoryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                                                              Fill="#4361ee" Width="18" Height="18" Stretch="Uniform"/>
+                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <MenuItem Padding="6,8,20,8"
@@ -307,7 +302,7 @@
                                                     </MenuItem.Style>
                                                     <MenuItem.Icon>
                                                         <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z"
-                                                              Fill="#FF9800" Width="18" Height="18" Stretch="Uniform"/>
+                                                              Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <Separator/>
@@ -315,7 +310,7 @@
                                                           Command="{Binding PlacementTarget.Tag.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                                              Fill="#f44336" Width="18" Height="18" Stretch="Uniform"/>
+                                                              Fill="{StaticResource StatusInactiveBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
@@ -336,16 +331,16 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Row Number Badge -->
-                                            <Border Grid.Column="0" Background="#f0f4ff" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                            <Border Grid.Column="0" Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                 <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Converter={StaticResource IndexConverter}}"
-                                                           FontSize="12" FontWeight="SemiBold" Foreground="#4361ee"
+                                                           FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
 
                                             <!-- Name -->
                                             <TextBlock Grid.Column="1"
                                                        Text="{Binding Name}"
-                                                       FontSize="13.5" FontWeight="SemiBold" Foreground="#1a1a2e"
+                                                       FontSize="13.5" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"
                                                        VerticalAlignment="Center"
                                                        TextTrimming="CharacterEllipsis"
                                                        ToolTip="{Binding Name}"/>
@@ -355,10 +350,10 @@
                                                     HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
-                                                        <Setter Property="Background" Value="#e8f5e9"/>
+                                                        <Setter Property="Background" Value="{StaticResource SuccessBackgroundBrush}"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                <Setter Property="Background" Value="#FFEBEE"/>
+                                                                <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -367,11 +362,11 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Text" Value="Faol"/>
-                                                            <Setter Property="Foreground" Value="#4CAF50"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                     <Setter Property="Text" Value="Nofaol"/>
-                                                                    <Setter Property="Foreground" Value="#f44336"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource StatusInactiveBrush}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -390,24 +385,24 @@
                                                 <Button.Template>
                                                     <ControlTemplate TargetType="Button">
                                                         <Border x:Name="btnBorder"
-                                                                Background="#f0f4ff"
+                                                                Background="{StaticResource PrimaryLightBrush}"
                                                                 CornerRadius="12"
                                                                 Padding="18,10"
-                                                                BorderBrush="#e0e8f8"
+                                                                BorderBrush="{StaticResource ActionButtonBorderBrush}"
                                                                 BorderThickness="1.5">
                                                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee" Margin="0,0,0,4"/>
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee" Margin="0,0,0,4"/>
-                                                                <Ellipse Width="6" Height="6" Fill="#4361ee"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,0,4"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}" Margin="0,0,0,4"/>
+                                                                <Ellipse Width="6" Height="6" Fill="{StaticResource PrimaryBrush}"/>
                                                             </StackPanel>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="btnBorder" Property="Background" Value="#e0e8f8"/>
-                                                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="#c0d0f0"/>
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource ActionButtonHoverBrush}"/>
+                                                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="{StaticResource ActionButtonHoverBorderBrush}"/>
                                                             </Trigger>
                                                             <Trigger Property="IsPressed" Value="True">
-                                                                <Setter TargetName="btnBorder" Property="Background" Value="#d0dffc"/>
+                                                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource ActionButtonPressedBrush}"/>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -424,26 +419,26 @@
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center"
                                     Visibility="{Binding Categories.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
-                            <Border Background="#f0f4ff" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center">
+                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center">
                                 <Path Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"
-                                      Fill="#4361ee" Width="36" Height="36" Stretch="Uniform"
+                                      Fill="{StaticResource PrimaryBrush}" Width="36" Height="36" Stretch="Uniform"
                                       HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
                             </Border>
                             <TextBlock Text="Kategoriyalar topilmadi"
-                                       FontSize="16" FontWeight="SemiBold" Foreground="#555"
+                                       FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"
                                        HorizontalAlignment="Center" Margin="0,16,0,0"/>
                             <TextBlock Text="Yangi kategoriya qo'shish uchun yuqoridagi tugmani bosing"
-                                       FontSize="13" Foreground="#aaa"
+                                       FontSize="13" Foreground="{StaticResource TextFaintBrush}"
                                        HorizontalAlignment="Center" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- Footer -->
-                <Border Grid.Row="5" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
+                <Border Grid.Row="5" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0" Padding="20,14">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="8" Padding="10,6">
-                            <TextBlock FontSize="12" Foreground="#4361ee" FontWeight="SemiBold">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,6">
+                            <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
                                 <Run Text="Jami: "/>
                                 <Run Text="{Binding Categories.Count, Mode=OneWay}" FontWeight="Bold"/>
                                 <Run Text=" ta kategoriya"/>
@@ -454,13 +449,13 @@
 
                 <!-- Loading Indicator -->
                 <Border Grid.RowSpan="6"
-                        Background="#E0FFFFFF"
+                        Background="{StaticResource OverlayLoadingBrush}"
                         CornerRadius="16"
                         Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,16">
                             <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                  Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                  Fill="{StaticResource PrimaryBrush}" Width="24" Height="24" Stretch="Uniform"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   RenderTransformOrigin="0.5,0.5">
                                 <Path.RenderTransform>
@@ -468,7 +463,7 @@
                                 </Path.RenderTransform>
                             </Path>
                         </Border>
-                        <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                        <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -477,7 +472,7 @@
         <!-- ═══════════════ SIDE PANEL ═══════════════ -->
         <Border Grid.Column="1"
                 Width="400"
-                Background="White"
+                Background="{StaticResource BackgroundCardBrush}"
                 Margin="12,0,0,0"
                 CornerRadius="16"
                 Visibility="{Binding IsPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -497,8 +492,8 @@
                     <Border Grid.Row="0" CornerRadius="16,16,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                                <GradientStop Color="#4361ee" Offset="0"/>
-                                <GradientStop Color="#3a0ca3" Offset="1"/>
+                                <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid Margin="24,18">
@@ -539,7 +534,7 @@
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
+                                        <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Padding="8">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                                   Fill="White"
                                                   Width="14" Height="14"
@@ -547,7 +542,7 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#c62828"/>
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource ErrorTextBrush}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -559,8 +554,8 @@
                     <!-- Panel Content -->
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,20">
                         <StackPanel>
-                            <TextBlock Text="Kategoriya nomi" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
-                            <Border Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1" Margin="0,0,0,18">
+                            <TextBlock Text="Kategoriya nomi" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
                                 <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"
                                          Background="Transparent"
                                          BorderThickness="0"
@@ -570,19 +565,19 @@
 
                             <StackPanel Visibility="{Binding IsEditPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}"
                                         Margin="0,0,0,18">
-                                <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,8"/>
+                                <TextBlock Text="Holat" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
                                 <CheckBox IsChecked="{Binding FormIsActive}" Content="Faol" FontSize="14"/>
                             </StackPanel>
 
-                            <Border Background="#FFEBEE"
+                            <Border Background="{StaticResource ErrorBackgroundBrush}"
                                     Padding="14"
                                     CornerRadius="10"
                                     Margin="0,0,0,15"
                                     Visibility="{Binding FormError, Converter={StaticResource NullToVisibilityConverter}}">
                                 <StackPanel Orientation="Horizontal">
                                     <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                                          Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding FormError}" Foreground="#C62828" TextWrapping="Wrap" FontSize="13"/>
+                                          Fill="{StaticResource ErrorBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FormError}" Foreground="{StaticResource ErrorTextBrush}" TextWrapping="Wrap" FontSize="13"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -607,8 +602,8 @@
                                                 Padding="0,16">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#ef5350" Offset="0"/>
-                                                    <GradientStop Color="#c62828" Offset="1"/>
+                                                    <GradientStop Color="{StaticResource ErrorLightColor}" Offset="0"/>
+                                                    <GradientStop Color="{StaticResource ErrorTextColor}" Offset="1"/>
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -635,8 +630,8 @@
                                         <Border x:Name="border" CornerRadius="12" Padding="0,16">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#4CAF50" Offset="0"/>
-                                                    <GradientStop Color="#2e7d32" Offset="1"/>
+                                                    <GradientStop Color="{StaticResource SuccessColor}" Offset="0"/>
+                                                    <GradientStop Color="{StaticResource SuccessDarkColor}" Offset="1"/>
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -666,8 +661,8 @@
                                         <Border x:Name="border" CornerRadius="12" Padding="0,16">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#4361ee" Offset="0"/>
-                                                    <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -692,16 +687,16 @@
 
                     <!-- Saving Indicator -->
                     <Border Grid.RowSpan="3"
-                            Background="#E0FFFFFF"
+                            Background="{StaticResource OverlayLoadingBrush}"
                             CornerRadius="16"
                             Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Border Background="#f0f4ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
                                 <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                      Fill="#4361ee" Width="24" Height="24" Stretch="Uniform"
+                                      Fill="{StaticResource PrimaryBrush}" Width="24" Height="24" Stretch="Uniform"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                            <TextBlock Text="Saqlanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -719,8 +714,8 @@
                     <Border Grid.Row="0" CornerRadius="16,16,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                                <GradientStop Color="#7c3aed" Offset="0"/>
-                                <GradientStop Color="#4f46e5" Offset="1"/>
+                                <GradientStop Color="{StaticResource ActivityColor}" Offset="0"/>
+                                <GradientStop Color="{StaticResource ActivityDeepColor}" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid Margin="24,18">
@@ -734,7 +729,7 @@
                                           Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9"/>
                                     <TextBlock Text="Mahsulotlar" FontSize="17" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding SelectedCategory.Name}" FontSize="12" Foreground="#FFFFFFCC" Margin="32,4,0,0"/>
+                                <TextBlock Text="{Binding SelectedCategory.Name}" FontSize="12" Foreground="{StaticResource HeaderSubtitleLightBrush}" Margin="32,4,0,0"/>
                             </StackPanel>
 
                             <Button Grid.Column="1"
@@ -742,7 +737,7 @@
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="#e53935" CornerRadius="8" Padding="8">
+                                        <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Padding="8">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                                   Fill="White"
                                                   Width="14" Height="14"
@@ -750,7 +745,7 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#c62828"/>
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource ErrorTextBrush}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -761,8 +756,8 @@
 
                     <!-- Products Count Badge -->
                     <Border Grid.Row="1" Padding="20,12,20,8">
-                        <Border Background="#f0f4ff" CornerRadius="10" Padding="14,10">
-                            <TextBlock FontSize="13" Foreground="#4361ee" FontWeight="SemiBold">
+                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="10" Padding="14,10">
+                            <TextBlock FontSize="13" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
                                 <Run Text="Jami: "/>
                                 <Run Text="{Binding CategoryProducts.Count, Mode=OneWay}" FontWeight="Bold"/>
                                 <Run Text=" ta mahsulot"/>
@@ -776,14 +771,14 @@
                             <ItemsControl ItemsSource="{Binding CategoryProducts}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Background="#fafbfc" CornerRadius="12" Padding="16,12" Margin="0,0,0,8"
-                                                BorderBrush="#eef0f4" BorderThickness="1">
+                                        <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="12" Padding="16,12" Margin="0,0,0,8"
+                                                BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
                                             <Border.Style>
                                                 <Style TargetType="Border">
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#f0f4ff"/>
-                                                            <Setter Property="BorderBrush" Value="#c8d4f0"/>
+                                                            <Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                                            <Setter Property="BorderBrush" Value="{StaticResource ActionButtonHoverBorderBrush}"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -802,16 +797,16 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Grid.Column="0"
                                                                Text="{Binding Name}"
-                                                               FontSize="14" FontWeight="SemiBold" Foreground="#1a1a2e"
+                                                               FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"
                                                                TextTrimming="CharacterEllipsis"
                                                                ToolTip="{Binding Name}"/>
                                                     <Border Grid.Column="1" CornerRadius="8" Padding="6,2">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
-                                                                <Setter Property="Background" Value="#e8f5e9"/>
+                                                                <Setter Property="Background" Value="{StaticResource SuccessBackgroundBrush}"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                        <Setter Property="Background" Value="#FFEBEE"/>
+                                                                        <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -820,11 +815,11 @@
                                                             <TextBlock.Style>
                                                                 <Style TargetType="TextBlock">
                                                                     <Setter Property="Text" Value="Faol"/>
-                                                                    <Setter Property="Foreground" Value="#4CAF50"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                             <Setter Property="Text" Value="Nofaol"/>
-                                                                            <Setter Property="Foreground" Value="#f44336"/>
+                                                                            <Setter Property="Foreground" Value="{StaticResource StatusInactiveBrush}"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
@@ -835,21 +830,21 @@
 
                                                 <!-- Product Details -->
                                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                                                    <Border Background="#e3f2fd" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
-                                                        <TextBlock FontSize="11" Foreground="#1565c0" FontWeight="SemiBold">
+                                                    <Border Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                                        <TextBlock FontSize="11" Foreground="{StaticResource PriceBlueBrush}" FontWeight="SemiBold">
                                                             <Run Text="{Binding UnitPrice, StringFormat={}{0:N0}}"/>
                                                             <Run Text=" sum"/>
                                                         </TextBlock>
                                                     </Border>
-                                                    <Border Background="#fff3e0" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
-                                                        <TextBlock FontSize="11" Foreground="#e65100" FontWeight="SemiBold">
+                                                    <Border Background="{StaticResource WarningBackgroundBrush}" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                                        <TextBlock FontSize="11" Foreground="{StaticResource WarningDarkBrush}" FontWeight="SemiBold">
                                                             <Run Text="Zaxira: "/>
                                                             <Run Text="{Binding StockQuantity, StringFormat={}{0:N0}}"/>
                                                         </TextBlock>
                                                     </Border>
-                                                    <Border Background="#f3e5f5" CornerRadius="6" Padding="8,4">
+                                                    <Border Background="{StaticResource UnitTypePurpleBackgroundBrush}" CornerRadius="6" Padding="8,4">
                                                         <TextBlock Text="{Binding UnitType, Converter={StaticResource EnumToStringConverter}}"
-                                                                   FontSize="11" Foreground="#7b1fa2" FontWeight="SemiBold"/>
+                                                                   FontSize="11" Foreground="{StaticResource UnitTypePurpleBrush}" FontWeight="SemiBold"/>
                                                     </Border>
                                                 </StackPanel>
                                             </Grid>
@@ -863,31 +858,31 @@
                                         HorizontalAlignment="Center"
                                         Margin="0,40,0,0"
                                         Visibility="{Binding CategoryProducts.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
-                                <Border Background="#f5f0ff" CornerRadius="20" Width="64" Height="64" HorizontalAlignment="Center">
+                                <Border Background="{StaticResource ActivityLightBrush}" CornerRadius="20" Width="64" Height="64" HorizontalAlignment="Center">
                                     <Path Data="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"
-                                          Fill="#7c3aed" Width="28" Height="28" Stretch="Uniform"
+                                          Fill="{StaticResource ActivityBrush}" Width="28" Height="28" Stretch="Uniform"
                                           HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
                                 </Border>
                                 <TextBlock Text="Mahsulot topilmadi"
-                                           FontSize="14" FontWeight="SemiBold" Foreground="#555"
+                                           FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"
                                            HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                 <TextBlock Text="Bu kategoriyada mahsulot yo'q"
-                                           FontSize="12" Foreground="#aaa"
+                                           FontSize="12" Foreground="{StaticResource TextFaintBrush}"
                                            HorizontalAlignment="Center" Margin="0,4,0,0"/>
                             </StackPanel>
                         </Grid>
                     </ScrollViewer>
 
                     <!-- Products Panel Footer -->
-                    <Border Grid.Row="3" BorderBrush="#f0f0f0" BorderThickness="0,1,0,0" Padding="20,14">
+                    <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0" Padding="20,14">
                         <Button Command="{Binding CloseProductsPanelCommand}" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="border" CornerRadius="12" Padding="0,14">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#ef5350" Offset="0"/>
-                                                <GradientStop Color="#c62828" Offset="1"/>
+                                                <GradientStop Color="{StaticResource ErrorLightColor}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource ErrorTextColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -908,16 +903,16 @@
 
                     <!-- Loading Products Indicator -->
                     <Border Grid.RowSpan="4"
-                            Background="#E0FFFFFF"
+                            Background="{StaticResource OverlayLoadingBrush}"
                             CornerRadius="16"
                             Visibility="{Binding IsLoadingProducts, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Border Background="#f5f0ff" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
+                            <Border Background="{StaticResource ActivityLightBrush}" CornerRadius="20" Width="60" Height="60" HorizontalAlignment="Center" Margin="0,0,0,12">
                                 <Path Data="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-                                      Fill="#7c3aed" Width="24" Height="24" Stretch="Uniform"
+                                      Fill="{StaticResource ActivityBrush}" Width="24" Height="24" Stretch="Uniform"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="#666" FontWeight="SemiBold"/>
+                            <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Border>
                 </Grid>

@@ -12,10 +12,10 @@
         <!-- Background with gradient -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#1a237e" Offset="0"/>
-                <GradientStop Color="#283593" Offset="0.3"/>
-                <GradientStop Color="#3949ab" Offset="0.7"/>
-                <GradientStop Color="#5c6bc0" Offset="1"/>
+                <GradientStop Color="{StaticResource LoginBgDarkColor}" Offset="0"/>
+                <GradientStop Color="{StaticResource LoginBgMediumColor}" Offset="0.3"/>
+                <GradientStop Color="{StaticResource LoginBgColor}" Offset="0.7"/>
+                <GradientStop Color="{StaticResource LoginBgLightColor}" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -61,9 +61,9 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0" Padding="40,35,40,30">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#1565C0" Offset="0"/>
-                            <GradientStop Color="#1976D2" Offset="0.5"/>
-                            <GradientStop Color="#2196F3" Offset="1"/>
+                            <GradientStop Color="{StaticResource LoginAccentColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource LoginAccentMediumColor}" Offset="0.5"/>
+                            <GradientStop Color="{StaticResource InfoColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <StackPanel>
@@ -80,7 +80,7 @@
                                 <Canvas Width="24" Height="24">
                                     <!-- Store/POS icon -->
                                     <Path Data="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-7-1h2v-4h4V9h-4V5h-2v4H9v2h4v4z"
-                                          Fill="#1976D2"/>
+                                          Fill="{StaticResource LoginAccentBrush}"/>
                                 </Canvas>
                             </Viewbox>
                         </Border>
@@ -92,7 +92,7 @@
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="Tizimga kirish"
                                    FontSize="14"
-                                   Foreground="#B3FFFFFF"
+                                   Foreground="{StaticResource LoginSubtitleBrush}"
                                    HorizontalAlignment="Center"
                                    Margin="0,6,0,0"/>
                     </StackPanel>
@@ -105,10 +105,10 @@
                     <TextBlock Text="Foydalanuvchi nomi"
                                FontSize="13"
                                FontWeight="Medium"
-                               Foreground="#546E7A"
+                               Foreground="{StaticResource LoginLabelBrush}"
                                Margin="2,0,0,8"/>
-                    <Border BorderBrush="#E0E0E0" BorderThickness="1.5" CornerRadius="10"
-                            Background="#FAFAFA"
+                    <Border BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1.5" CornerRadius="10"
+                            Background="{StaticResource BackgroundInputBrush}"
                             x:Name="UsernameBorder">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -119,7 +119,7 @@
                             <Viewbox Width="18" Height="18" Grid.Column="0" Margin="14,0,0,0">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                                          Fill="#90A4AE"/>
+                                          Fill="{StaticResource LoginIconBrush}"/>
                                 </Canvas>
                             </Viewbox>
                             <TextBox Grid.Column="1"
@@ -131,7 +131,7 @@
                                      Background="Transparent">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
-                                        <Setter Property="CaretBrush" Value="#1976D2"/>
+                                        <Setter Property="CaretBrush" Value="{StaticResource LoginAccentBrush}"/>
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
@@ -142,10 +142,10 @@
                     <TextBlock Text="Parol"
                                FontSize="13"
                                FontWeight="Medium"
-                               Foreground="#546E7A"
+                               Foreground="{StaticResource LoginLabelBrush}"
                                Margin="2,20,0,8"/>
-                    <Border BorderBrush="#E0E0E0" BorderThickness="1.5" CornerRadius="10"
-                            Background="#FAFAFA"
+                    <Border BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1.5" CornerRadius="10"
+                            Background="{StaticResource BackgroundInputBrush}"
                             x:Name="PasswordBorder">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -157,7 +157,7 @@
                             <Viewbox Width="18" Height="18" Grid.Column="0" Margin="14,0,0,0">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
-                                          Fill="#90A4AE"/>
+                                          Fill="{StaticResource LoginIconBrush}"/>
                                 </Canvas>
                             </Viewbox>
 
@@ -184,7 +184,7 @@
                                      Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
-                                        <Setter Property="CaretBrush" Value="#1976D2"/>
+                                        <Setter Property="CaretBrush" Value="{StaticResource LoginAccentBrush}"/>
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
@@ -211,7 +211,7 @@
                                              Visibility="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                                                  Fill="#90A4AE"/>
+                                                  Fill="{StaticResource LoginIconBrush}"/>
                                         </Canvas>
                                     </Viewbox>
                                     <!-- Eye closed icon (password visible - click to hide) -->
@@ -219,7 +219,7 @@
                                              Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-                                                  Fill="#1976D2"/>
+                                                  Fill="{StaticResource LoginAccentBrush}"/>
                                         </Canvas>
                                     </Viewbox>
                                 </Grid>
@@ -228,7 +228,7 @@
                     </Border>
 
                     <!-- Error message -->
-                    <Border Background="#FFF3E0" CornerRadius="8" Padding="12,10" Margin="0,18,0,0"
+                    <Border Background="{StaticResource WarningBackgroundBrush}" CornerRadius="8" Padding="12,10" Margin="0,18,0,0"
                             Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -238,12 +238,12 @@
                             <Viewbox Width="16" Height="16" Margin="0,0,8,0">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
-                                          Fill="#E65100"/>
+                                          Fill="{StaticResource WarningDarkBrush}"/>
                                 </Canvas>
                             </Viewbox>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding ErrorMessage}"
-                                       Foreground="#E65100"
+                                       Foreground="{StaticResource WarningDarkBrush}"
                                        FontSize="13"
                                        TextWrapping="Wrap"
                                        VerticalAlignment="Center"/>
@@ -265,12 +265,12 @@
                                                     Padding="20,0">
                                                 <Border.Background>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                        <GradientStop Color="#1565C0" Offset="0"/>
-                                                        <GradientStop Color="#1E88E5" Offset="1"/>
+                                                        <GradientStop Color="{StaticResource LoginAccentColor}" Offset="0"/>
+                                                        <GradientStop Color="{StaticResource LoginAccentLightColor}" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </Border.Background>
                                                 <Border.Effect>
-                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="#1565C0"/>
+                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="{StaticResource LoginAccentColor}"/>
                                                 </Border.Effect>
                                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                                     <Grid.ColumnDefinitions>
@@ -297,8 +297,8 @@
                                                     <Setter TargetName="ButtonBorder" Property="Background">
                                                         <Setter.Value>
                                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                                <GradientStop Color="#0D47A1" Offset="0"/>
-                                                                <GradientStop Color="#1565C0" Offset="1"/>
+                                                                <GradientStop Color="{StaticResource LoginAccentDarkColor}" Offset="0"/>
+                                                                <GradientStop Color="{StaticResource LoginAccentColor}" Offset="1"/>
                                                             </LinearGradientBrush>
                                                         </Setter.Value>
                                                     </Setter>
@@ -306,7 +306,7 @@
                                                 <Trigger Property="IsEnabled" Value="False">
                                                     <Setter TargetName="ButtonBorder" Property="Background">
                                                         <Setter.Value>
-                                                            <SolidColorBrush Color="#B0BEC5"/>
+                                                            <SolidColorBrush Color="{StaticResource LoginDisabledColor}"/>
                                                         </Setter.Value>
                                                     </Setter>
                                                     <Setter TargetName="ButtonBorder" Property="Effect" Value="{x:Null}"/>
@@ -322,8 +322,8 @@
                     <!-- Loading indicator -->
                     <Grid Margin="0,16,0,0"
                           Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Border CornerRadius="3" Background="#E3F2FD" Height="4" ClipToBounds="True">
-                            <Border x:Name="ProgressIndicator" CornerRadius="3" Background="#1976D2" Width="100" HorizontalAlignment="Left" Margin="-100,0,0,0">
+                        <Border CornerRadius="3" Background="{StaticResource InfoBackgroundBrush}" Height="4" ClipToBounds="True">
+                            <Border x:Name="ProgressIndicator" CornerRadius="3" Background="{StaticResource LoginAccentBrush}" Width="100" HorizontalAlignment="Left" Margin="-100,0,0,0">
                                 <Border.Triggers>
                                     <EventTrigger RoutedEvent="Loaded">
                                         <BeginStoryboard>

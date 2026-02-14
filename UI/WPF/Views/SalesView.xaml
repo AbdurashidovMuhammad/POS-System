@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════ LEFT: Cart Panel ═══════════════ -->
-        <Border Grid.Column="0" Background="White" CornerRadius="16" Margin="0,0,12,0">
+        <Border Grid.Column="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="16" Margin="0,0,12,0">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="270"/>
             </Border.Effect>
@@ -31,8 +31,8 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                            <GradientStop Color="#4361ee" Offset="0"/>
-                            <GradientStop Color="#3a0ca3" Offset="1"/>
+                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Grid Margin="24,18">
@@ -40,7 +40,7 @@
                             <Path Data="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z"
                                   Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
                             <TextBlock Text="Savat" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="#FFFFFF90" BorderThickness="1.5">
+                            <Border Background="Transparent" CornerRadius="12" Padding="10,4" Margin="12,0,0,0" VerticalAlignment="Center" BorderBrush="{StaticResource CountBadgeBorderBrush}" BorderThickness="1.5">
                                 <TextBlock Text="{Binding CartItems.Count, StringFormat={}{0} ta}" FontSize="12" Foreground="White" FontWeight="Bold"/>
                             </Border>
                         </StackPanel>
@@ -56,13 +56,13 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Background="#f8f9fa" CornerRadius="10" BorderBrush="#e8e8e8" BorderThickness="1">
+                        <Border Grid.Column="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Background="#4361ee" CornerRadius="10,0,0,10" Padding="14,0">
+                                <Border Grid.Column="0" Background="{StaticResource PrimaryBrush}" CornerRadius="10,0,0,10" Padding="14,0">
                                     <Path Data="M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z"
                                           Fill="White"
                                           Width="18" Height="18"
@@ -93,20 +93,20 @@
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="border"
-                                            Background="#f0f4ff"
+                                            Background="{StaticResource PrimaryLightBrush}"
                                             CornerRadius="10"
                                             Padding="14"
-                                            BorderBrush="#d0d8f0"
+                                            BorderBrush="{StaticResource ActionButtonBorderBrush}"
                                             BorderThickness="1">
                                         <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                              Fill="#4361ee"
+                                              Fill="{StaticResource PrimaryBrush}"
                                               Width="18" Height="18"
                                               Stretch="Uniform"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#e0e8ff"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4361ee"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -123,8 +123,8 @@
                                     <Border x:Name="border" CornerRadius="10" Padding="20,13">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4CAF50" Offset="0"/>
-                                                <GradientStop Color="#2e7d32" Offset="1"/>
+                                                <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <StackPanel Orientation="Horizontal">
@@ -147,7 +147,7 @@
                 <!-- Column headers -->
                 <Border Grid.Row="2" Padding="20,0,20,0"
                         Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}}">
-                    <Border Background="#f8f9fa" CornerRadius="8" Padding="12,10" Margin="0,4,0,0">
+                    <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="8" Padding="12,10" Margin="0,4,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="36"/>
@@ -156,10 +156,10 @@
                                 <ColumnDefinition Width="110"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                            <TextBlock Grid.Column="1" Text="Mahsulot" FontSize="12" Foreground="#666" FontWeight="Bold"/>
-                            <TextBlock Grid.Column="2" Text="Miqdor" FontSize="12" Foreground="#666" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="3" Text="Summa" FontSize="12" Foreground="#666" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="0" Text="#" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Text="Mahsulot" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="2" Text="Miqdor" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="3" Text="Summa" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="Bold" HorizontalAlignment="Right"/>
                         </Grid>
                     </Border>
                 </Border>
@@ -184,7 +184,7 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#f8f9fa"/>
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -205,9 +205,9 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Row number -->
-                                    <Border Grid.Column="0" Background="#f0f4ff" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                    <Border Grid.Column="0" Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Left">
                                         <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Converter={StaticResource IndexConverter}}"
-                                                   FontSize="12" FontWeight="SemiBold" Foreground="#4361ee"
+                                                   FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
 
@@ -216,20 +216,20 @@
                                         <TextBlock Text="{Binding Product.Name}"
                                                    FontSize="13.5"
                                                    FontWeight="SemiBold"
-                                                   Foreground="#1a1a2e"/>
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
                                         <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                             <TextBlock Text="{Binding Product.UnitPrice, StringFormat={}{0:N0} sum}"
                                                        FontSize="12"
-                                                       Foreground="#888"/>
-                                            <TextBlock Text="  ·  " FontSize="12" Foreground="#ccc"/>
+                                                       Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="  ·  " FontSize="12" Foreground="{StaticResource TextSeparatorBrush}"/>
                                             <TextBlock Text="{Binding Product.StockQuantity, StringFormat=Ombor: {0:N0}}"
                                                        FontSize="11"
-                                                       Foreground="#FF9800"/>
+                                                       Foreground="{StaticResource WarningBrush}"/>
                                         </StackPanel>
                                     </StackPanel>
 
                                     <!-- Quantity stepper -->
-                                    <Border Grid.Column="2" Background="#f5f5f5" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Border Grid.Column="2" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
@@ -245,11 +245,11 @@
                                                 <Button.Template>
                                                     <ControlTemplate TargetType="Button">
                                                         <Border x:Name="border" Background="Transparent" CornerRadius="10,0,0,10" Padding="10,8">
-                                                            <Path Data="M19,13H5V11H19V13Z" Fill="#666" Width="12" Height="12" Stretch="Uniform"/>
+                                                            <Path Data="M19,13H5V11H19V13Z" Fill="{StaticResource TextTertiaryBrush}" Width="12" Height="12" Stretch="Uniform"/>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="border" Property="Background" Value="#e8e8e8"/>
+                                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BorderDefaultBrush}"/>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -259,7 +259,7 @@
                                             <!-- Quantity display -->
                                             <TextBox Grid.Column="1"
                                                      Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
-                                                     Background="White"
+                                                     Background="{StaticResource BackgroundCardBrush}"
                                                      BorderThickness="0"
                                                      TextAlignment="Center"
                                                      FontSize="14"
@@ -276,11 +276,11 @@
                                                 <Button.Template>
                                                     <ControlTemplate TargetType="Button">
                                                         <Border x:Name="border" Background="Transparent" CornerRadius="0,10,10,0" Padding="10,8">
-                                                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="#4CAF50" Width="12" Height="12" Stretch="Uniform"/>
+                                                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{StaticResource PrimaryBrush}" Width="12" Height="12" Stretch="Uniform"/>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
+                                                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -294,7 +294,7 @@
                                                Text="{Binding Subtotal, StringFormat={}{0:N0}}"
                                                FontSize="14"
                                                FontWeight="Bold"
-                                               Foreground="#2e7d32"
+                                               Foreground="{StaticResource PrimaryDarkBrush}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"/>
 
@@ -311,13 +311,13 @@
                                                         CornerRadius="8"
                                                         Padding="8,6">
                                                     <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                                          Fill="#ccc"
+                                                          Fill="{StaticResource TextSeparatorBrush}"
                                                           Width="12" Height="12"
                                                           Stretch="Uniform"/>
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#ffebee"/>
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -334,9 +334,9 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">
-                    <Border Background="#f0f4ff" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center" Padding="0">
+                    <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="24" Width="80" Height="80" HorizontalAlignment="Center" Padding="0">
                         <Path Data="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z"
-                              Fill="#4361ee"
+                              Fill="{StaticResource PrimaryBrush}"
                               Width="36" Height="36"
                               Stretch="Uniform"
                               HorizontalAlignment="Center"
@@ -346,12 +346,12 @@
                     <TextBlock Text="Savat hali bo'sh"
                                FontSize="16"
                                FontWeight="SemiBold"
-                               Foreground="#555"
+                               Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Center"
                                Margin="0,16,0,0"/>
                     <TextBlock Text="Shtrix kodni skanerlang yoki qidiruvdan foydalaning"
                                FontSize="13"
-                               Foreground="#aaa"
+                               Foreground="{StaticResource TextFaintBrush}"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0"/>
                 </StackPanel>
@@ -359,7 +359,7 @@
         </Border>
 
         <!-- ═══════════════ RIGHT: Summary Panel ═══════════════ -->
-        <Border Grid.Column="1" Background="White" CornerRadius="16">
+        <Border Grid.Column="1" Background="{StaticResource BackgroundCardBrush}" CornerRadius="16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.06" Direction="270"/>
             </Border.Effect>
@@ -374,20 +374,20 @@
                 <Border Grid.Row="0" CornerRadius="16,16,0,0" Padding="24,28">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#e8f5e9" Offset="0"/>
-                            <GradientStop Color="#c8e6c9" Offset="1"/>
+                            <GradientStop Color="{StaticResource PrimaryLightColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryLighterColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <StackPanel>
-                        <TextBlock Text="Jami summa" FontSize="13" Foreground="#666" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Jami summa" FontSize="13" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
                             <TextBlock Text="{Binding TotalAmount, StringFormat={}{0:N0}}"
                                        FontSize="40"
                                        FontWeight="Bold"
-                                       Foreground="#2e7d32"/>
+                                       Foreground="{StaticResource PrimaryDarkBrush}"/>
                             <TextBlock Text=" sum"
                                        FontSize="18"
-                                       Foreground="#4CAF50"
+                                       Foreground="{StaticResource PrimaryBrush}"
                                        VerticalAlignment="Bottom"
                                        Margin="4,0,0,8"/>
                         </StackPanel>
@@ -400,17 +400,17 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0" Background="#FFFFFF90" CornerRadius="10" Padding="14,10">
+                            <Border Grid.Column="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="10" Padding="14,10">
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="Turlar" FontSize="11" Foreground="#888" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="{Binding CartItems.Count, StringFormat={}{0} ta}" FontSize="16" FontWeight="Bold" Foreground="#1a1a2e" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                    <TextBlock Text="Turlar" FontSize="11" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
+                                    <TextBlock Text="{Binding CartItems.Count, StringFormat={}{0} ta}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryDarkBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
 
-                            <Border Grid.Column="2" Background="#FFFFFF90" CornerRadius="10" Padding="14,10">
+                            <Border Grid.Column="2" Background="{StaticResource BackgroundCardBrush}" CornerRadius="10" Padding="14,10">
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="Miqdor" FontSize="11" Foreground="#888" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="{Binding TotalQuantity, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" Foreground="#1a1a2e" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                    <TextBlock Text="Miqdor" FontSize="11" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
+                                    <TextBlock Text="{Binding TotalQuantity, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryDarkBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -419,30 +419,30 @@
 
                 <!-- Payment type selection -->
                 <StackPanel Grid.Row="1" Margin="20,20,20,0">
-                    <TextBlock Text="To'lov usuli" FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="4,0,0,10"/>
+                    <TextBlock Text="To'lov usuli" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,10"/>
 
                     <UniformGrid Columns="3" Margin="0,0,0,4">
                         <!-- Naqd -->
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="1" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Cash/money icon -->
                                             <Path x:Name="icon" Data="M3,6H21V18H3V6M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M7,8A2,2 0 0,1 5,10V14A2,2 0 0,1 7,16H17A2,2 0 0,1 19,14V10A2,2 0 0,1 17,8H7Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Naqd" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Naqd" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="1">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -453,23 +453,23 @@
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="2" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Credit card icon -->
                                             <Path x:Name="icon" Data="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Karta" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Karta" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="2">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -480,23 +480,23 @@
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="3" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Smartphone/mobile payment icon -->
                                             <Path x:Name="icon" Data="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Payme" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Payme" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="3">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -509,23 +509,23 @@
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="4" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Smartphone/mobile payment icon -->
                                             <Path x:Name="icon" Data="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Click" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Click" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="4">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -536,23 +536,23 @@
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="5" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Smartphone/mobile payment icon -->
                                             <Path x:Name="icon" Data="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Paynet" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Paynet" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="5">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -563,23 +563,23 @@
                         <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="6" Margin="3" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,12" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                    <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                         <StackPanel HorizontalAlignment="Center">
                                             <!-- Smartphone/mobile payment icon -->
                                             <Path x:Name="icon" Data="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z"
-                                                  Fill="#888" Width="20" Height="20" Stretch="Uniform"/>
-                                            <TextBlock x:Name="txt" Text="Uzum" FontSize="11" FontWeight="SemiBold" Foreground="#666" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                                            <TextBlock x:Name="txt" Text="Uzum" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPaymentType}" Value="6">
-                                            <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                            <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                            <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                            <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter TargetName="txt" Property="Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
                                         </DataTrigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -591,23 +591,23 @@
                     <Button Command="{Binding SelectPaymentTypeCommand}" CommandParameter="7" Margin="3,0,3,0" Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border x:Name="border" Background="#f8f9fa" CornerRadius="10" Padding="10,10" BorderBrush="#e8e8e8" BorderThickness="1.5">
+                                <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="10,10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <!-- Other app icon -->
                                         <Path x:Name="icon" Data="M6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2M12,4A6,6 0 0,0 6,10C6,13.31 8.69,16 12,16A6,6 0 0,0 18,10A6,6 0 0,0 12,4M12,6A4,4 0 0,1 16,10A4,4 0 0,1 12,14A4,4 0 0,1 8,10A4,4 0 0,1 12,6M12,19A1,1 0 0,0 11,20A1,1 0 0,0 12,21A1,1 0 0,0 13,20A1,1 0 0,0 12,19Z"
-                                              Fill="#888" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
-                                        <TextBlock x:Name="txt" Text="Boshqa ilova" FontSize="11" FontWeight="SemiBold" Foreground="#666" VerticalAlignment="Center"/>
+                                              Fill="{StaticResource TextMutedBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                        <TextBlock x:Name="txt" Text="Boshqa ilova" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <DataTrigger Binding="{Binding SelectedPaymentType}" Value="7">
-                                        <Setter TargetName="border" Property="Background" Value="#e8f5e9"/>
-                                        <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
-                                        <Setter TargetName="icon" Property="Fill" Value="#4CAF50"/>
-                                        <Setter TargetName="txt" Property="Foreground" Value="#2e7d32"/>
+                                        <Setter TargetName="border" Property="Background" Value="{StaticResource SuccessBackgroundBrush}"/>
+                                        <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource SuccessBrush}"/>
+                                        <Setter TargetName="icon" Property="Fill" Value="{StaticResource SuccessBrush}"/>
+                                        <Setter TargetName="txt" Property="Foreground" Value="{StaticResource SuccessDarkBrush}"/>
                                     </DataTrigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                        <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -618,16 +618,16 @@
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Margin="20,0,20,20">
                     <!-- Error Message -->
-                    <Border Background="#FFEBEE"
+                    <Border Background="{StaticResource ErrorBackgroundBrush}"
                             Padding="14"
                             CornerRadius="10"
                             Margin="0,0,0,12"
                             Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                                  Fill="#e53935" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                  Fill="{StaticResource ErrorBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding ErrorMessage}"
-                                       Foreground="#C62828"
+                                       Foreground="{StaticResource ErrorTextBrush}"
                                        TextWrapping="Wrap"
                                        FontSize="12.5"
                                        VerticalAlignment="Center"/>
@@ -635,16 +635,16 @@
                     </Border>
 
                     <!-- Success Message -->
-                    <Border Background="#e8f5e9"
+                    <Border Background="{StaticResource SuccessBackgroundBrush}"
                             Padding="14"
                             CornerRadius="10"
                             Margin="0,0,0,12"
                             Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
-                                  Fill="#4CAF50" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                  Fill="{StaticResource SuccessBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding SuccessMessage}"
-                                       Foreground="#2e7d32"
+                                       Foreground="{StaticResource SuccessDarkBrush}"
                                        TextWrapping="Wrap"
                                        FontSize="12.5"
                                        VerticalAlignment="Center"/>
@@ -656,20 +656,20 @@
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border"
-                                        Background="#fff8f0"
+                                        Background="{StaticResource BackgroundInputBrush}"
                                         CornerRadius="12"
                                         Padding="0,14"
-                                        BorderBrush="#ffe0b2"
+                                        BorderBrush="{StaticResource BorderDefaultBrush}"
                                         BorderThickness="1.5">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                              Fill="#e65100" Width="15" Height="15" Stretch="Uniform" Margin="0,0,8,0"/>
-                                        <TextBlock Text="Tozalash" Foreground="#e65100" FontSize="14" FontWeight="SemiBold"/>
+                                              Fill="{StaticResource TextMutedBrush}" Width="15" Height="15" Stretch="Uniform" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Tozalash" Foreground="{StaticResource TextSecondaryBrush}" FontSize="14" FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="#fff0e0"/>
+                                        <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -683,12 +683,12 @@
                                 <Border x:Name="border" CornerRadius="12" Padding="0,16">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
-                                            <GradientStop Color="#4CAF50" Offset="0"/>
-                                            <GradientStop Color="#2e7d32" Offset="1"/>
+                                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                         </LinearGradientBrush>
                                     </Border.Background>
                                     <Border.Effect>
-                                        <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.2" Color="#4CAF50" Direction="270"/>
+                                        <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.2" Color="{StaticResource PrimaryColor}" Direction="270"/>
                                     </Border.Effect>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
@@ -710,11 +710,11 @@
 
         <!-- ═══════════════ Search Dialog Overlay ═══════════════ -->
         <Border Grid.ColumnSpan="2"
-                Background="#80000000"
+                Background="{StaticResource OverlayModalBrush}"
                 Visibility="{Binding IsSearchDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}"
                 MouseLeftButtonDown="SearchOverlay_MouseLeftButtonDown">
 
-            <Border Background="White"
+            <Border Background="{StaticResource BackgroundCardBrush}"
                     CornerRadius="20"
                     Width="560"
                     MinHeight="420"
@@ -739,14 +739,14 @@
                     <Border Grid.Row="0" Padding="28,22,28,16">
                         <Grid>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Border Background="#f0f4ff" CornerRadius="10" Padding="8">
+                                <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="10" Padding="8">
                                     <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                          Fill="#4361ee" Width="18" Height="18" Stretch="Uniform"/>
+                                          Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                 </Border>
                                 <TextBlock Text="Mahsulot qidirish"
                                            FontSize="18"
                                            FontWeight="SemiBold"
-                                           Foreground="#1a1a2e"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
                                            Margin="12,0,0,0"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
@@ -755,13 +755,13 @@
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="#f5f5f5" CornerRadius="8" Padding="8">
+                                        <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="8" Padding="8">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                                  Fill="#999" Width="14" Height="14" Stretch="Uniform"/>
+                                                  Fill="{StaticResource TextMutedBrush}" Width="14" Height="14" Stretch="Uniform"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#e8e8e8"/>
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BorderDefaultBrush}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -771,7 +771,7 @@
                     </Border>
 
                     <!-- Search Input -->
-                    <Border Grid.Row="1" Margin="28,0,28,12" Background="#f8f9fa" CornerRadius="12" BorderBrush="#e8e8e8" BorderThickness="1">
+                    <Border Grid.Row="1" Margin="28,0,28,12" Background="{StaticResource BackgroundInputBrush}" CornerRadius="12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -780,7 +780,7 @@
                             </Grid.ColumnDefinitions>
                             <Path Grid.Column="0"
                                   Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                  Fill="#aaa"
+                                  Fill="{StaticResource TextFaintBrush}"
                                   Width="18" Height="18"
                                   Stretch="Uniform"
                                   Margin="16,0,8,0"
@@ -806,8 +806,8 @@
                                         <Border x:Name="border" CornerRadius="8" Padding="18,10">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#4361ee" Offset="0"/>
-                                                    <GradientStop Color="#3a0ca3" Offset="1"/>
+                                                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                             <TextBlock Text="Qidirish" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
@@ -844,10 +844,10 @@
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="border" Property="Background" Value="#f8f9fa"/>
+                                                    <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
                                                 </Trigger>
                                                 <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="border" Property="Background" Value="#e8f0fe"/>
+                                                    <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLighterBrush}"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -865,22 +865,22 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="#1a1a2e"/>
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                                <Border Background="#e8f0fe" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                <Border Background="{StaticResource PrimaryLighterBrush}" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
                                                     <TextBlock Text="{Binding UnitType, Converter={StaticResource EnumToStringConverter}}"
-                                                               FontSize="10" Foreground="#4361ee" FontWeight="SemiBold"/>
+                                                               FontSize="10" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
                                                 </Border>
-                                                <TextBlock Text="{Binding Barcode}" FontSize="11" Foreground="#aaa" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Barcode}" FontSize="11" Foreground="{StaticResource TextFaintBrush}" VerticalAlignment="Center"/>
                                             </StackPanel>
                                         </StackPanel>
-                                        <Border Grid.Column="1" Background="#fff8f0" CornerRadius="6" Padding="8,4" VerticalAlignment="Center" Margin="10,0">
+                                        <Border Grid.Column="1" Background="{StaticResource WarningBackgroundBrush}" CornerRadius="6" Padding="8,4" VerticalAlignment="Center" Margin="10,0">
                                             <TextBlock Text="{Binding StockQuantity, StringFormat=Ombor: {0:0.##}}"
-                                                       FontSize="11" Foreground="#FF9800" FontWeight="SemiBold"/>
+                                                       FontSize="11" Foreground="{StaticResource WarningBrush}" FontWeight="SemiBold"/>
                                         </Border>
                                         <TextBlock Grid.Column="2"
                                                    Text="{Binding UnitPrice, StringFormat={}{0:N0} sum}"
-                                                   FontSize="14" FontWeight="Bold" Foreground="#2e7d32"
+                                                   FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryDarkBrush}"
                                                    VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
@@ -891,7 +891,7 @@
                     <!-- Selected Product - Quantity Input -->
                     <Border Grid.Row="3"
                             Margin="28,8"
-                            Background="#f8f9fa"
+                            Background="{StaticResource BackgroundInputBrush}"
                             CornerRadius="12"
                             Padding="18"
                             Visibility="{Binding SelectedSearchProduct, Converter={StaticResource NullToVisibilityConverter}}">
@@ -901,14 +901,14 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock FontSize="13" Foreground="#666">
+                                <TextBlock FontSize="13" Foreground="{StaticResource TextTertiaryBrush}">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Miqdor ({0}):">
                                             <Binding Path="SelectedSearchProduct.UnitType" Converter="{StaticResource EnumToStringConverter}"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <Border Background="White" CornerRadius="8" Margin="0,6,0,0" BorderBrush="#e0e0e0" BorderThickness="1">
+                                <Border Background="{StaticResource BackgroundCardBrush}" CornerRadius="8" Margin="0,6,0,0" BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1">
                                     <TextBox x:Name="ManualQuantityTextBox"
                                              Text="{Binding ManualQuantityText, UpdateSourceTrigger=PropertyChanged}"
                                              Background="Transparent"
@@ -933,8 +933,8 @@
                                         <Border x:Name="border" CornerRadius="10" Padding="24,14">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="#4CAF50" Offset="0"/>
-                                                    <GradientStop Color="#2e7d32" Offset="1"/>
+                                                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                             <StackPanel Orientation="Horizontal">
@@ -959,12 +959,12 @@
                             Margin="28,0,28,20"
                             Padding="12"
                             CornerRadius="10"
-                            Background="#FFEBEE"
+                            Background="{StaticResource ErrorBackgroundBrush}"
                             Visibility="{Binding SearchError, Converter={StaticResource NullToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-                                  Fill="#e53935" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding SearchError}" Foreground="#C62828" FontSize="13" TextWrapping="Wrap"/>
+                                  Fill="{StaticResource ErrorBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding SearchError}" Foreground="{StaticResource ErrorTextBrush}" FontSize="13" TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
                 </Grid>
