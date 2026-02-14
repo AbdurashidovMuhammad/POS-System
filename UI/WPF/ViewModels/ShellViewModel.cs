@@ -32,7 +32,18 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         WeakReferenceMessenger.Default.Register(this);
 
         InitializeMenuItems();
-        NavigateToDashboard();
+
+        if (string.Equals(_authService.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            IsSidebarCollapsed = true;
+            var salesItem = MenuItems.FirstOrDefault(m => m.ViewModelName == nameof(SalesViewModel));
+            if (salesItem is not null)
+                SelectedMenuItem = salesItem;
+        }
+        else
+        {
+            NavigateToDashboard();
+        }
     }
 
     public void Receive(NavigateToViewMessage message)
