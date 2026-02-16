@@ -320,57 +320,57 @@
                             </StackPanel>
 
                             <!-- Top products list -->
-                            <ItemsControl Grid.Row="1"
-                                          ItemsSource="{Binding TopSellingProducts}"
-                                          Margin="0,4,0,4"
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="320"
                                           Visibility="{Binding HasTopProducts, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Padding="24,12" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
+                                <ItemsControl ItemsSource="{Binding TopSellingProducts}" Margin="0,4,0,4">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="24,12" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                                <Border Grid.Column="0" Width="36" Height="36"
-                                                        CornerRadius="8" Margin="0,0,14,0"
-                                                        Background="{StaticResource SuccessBackgroundBrush}">
-                                                    <Path Data="M12,3L2,12H5V20H19V12H22L12,3M12,8.75A2.25,2.25 0 0,1 14.25,11A2.25,2.25 0 0,1 12,13.25A2.25,2.25 0 0,1 9.75,11A2.25,2.25 0 0,1 12,8.75Z"
-                                                          Fill="{StaticResource SuccessDarkBrush}" Width="18" Height="18"
-                                                          Stretch="Uniform"
-                                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
+                                                    <Border Grid.Column="0" Width="36" Height="36"
+                                                            CornerRadius="8" Margin="0,0,14,0"
+                                                            Background="{StaticResource SuccessBackgroundBrush}">
+                                                        <Path Data="M12,3L2,12H5V20H19V12H22L12,3M12,8.75A2.25,2.25 0 0,1 14.25,11A2.25,2.25 0 0,1 12,13.25A2.25,2.25 0 0,1 9.75,11A2.25,2.25 0 0,1 12,8.75Z"
+                                                              Fill="{StaticResource SuccessDarkBrush}" Width="18" Height="18"
+                                                              Stretch="Uniform"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
 
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding ProductName}"
-                                                           FontSize="14" Foreground="{StaticResource TextPrimaryBrush}"
-                                                           VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding ProductName}"
+                                                               FontSize="14" Foreground="{StaticResource TextPrimaryBrush}"
+                                                               VerticalAlignment="Center"/>
 
-                                                <Border Grid.Column="2" Background="{StaticResource SuccessBackgroundBrush}" CornerRadius="6"
-                                                        Padding="8,3" Margin="12,0" VerticalAlignment="Center">
-                                                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SuccessDarkBrush}">
-                                                        <Run Text="{Binding QuantitySold, StringFormat={}{0:N0}, Mode=OneWay}"/>
-                                                        <Run Text=" dona" FontWeight="Normal" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <Border Grid.Column="2" Background="{StaticResource SuccessBackgroundBrush}" CornerRadius="6"
+                                                            Padding="8,3" Margin="12,0" VerticalAlignment="Center">
+                                                        <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SuccessDarkBrush}">
+                                                            <Run Text="{Binding QuantitySold, StringFormat={}{0:N0}, Mode=OneWay}"/>
+                                                            <Run Text=" dona" FontWeight="Normal" Foreground="{StaticResource TextMutedBrush}"/>
+                                                        </TextBlock>
+                                                    </Border>
+
+                                                    <TextBlock Grid.Column="3"
+                                                               FontSize="14" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0:N0} sum">
+                                                                <Binding Path="TotalRevenue"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
                                                     </TextBlock>
-                                                </Border>
-
-                                                <TextBlock Grid.Column="3"
-                                                           FontSize="14" FontWeight="SemiBold"
-                                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0:N0} sum">
-                                                            <Binding Path="TotalRevenue"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
 
@@ -417,64 +417,64 @@
                             </StackPanel>
 
                             <!-- Cashier list -->
-                            <ItemsControl Grid.Row="1"
-                                          ItemsSource="{Binding CashierSales}"
-                                          Margin="0,4,0,4"
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="320"
                                           Visibility="{Binding HasCashierSales, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Padding="24,14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
+                                <ItemsControl ItemsSource="{Binding CashierSales}" Margin="0,4,0,4">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="24,14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                                <!-- Avatar -->
-                                                <Border Grid.Column="0" Width="40" Height="40"
-                                                        CornerRadius="20" Margin="0,0,14,0">
-                                                    <Border.Background>
-                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="{StaticResource InfoBackgroundColor}" Offset="0"/>
-                                                            <GradientStop Color="{StaticResource InfoDarkColor}" Offset="1"/>
-                                                        </LinearGradientBrush>
-                                                    </Border.Background>
-                                                    <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-                                                          Fill="{StaticResource InfoBrush}" Width="20" Height="20"
-                                                          Stretch="Uniform"
-                                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
+                                                    <!-- Avatar -->
+                                                    <Border Grid.Column="0" Width="40" Height="40"
+                                                            CornerRadius="20" Margin="0,0,14,0">
+                                                        <Border.Background>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                <GradientStop Color="{StaticResource InfoBackgroundColor}" Offset="0"/>
+                                                                <GradientStop Color="{StaticResource InfoDarkColor}" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Border.Background>
+                                                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                                              Fill="{StaticResource InfoBrush}" Width="20" Height="20"
+                                                              Stretch="Uniform"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
 
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding Username}"
-                                                           FontSize="14" FontWeight="SemiBold"
-                                                           Foreground="{StaticResource TextPrimaryBrush}"
-                                                           VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Username}"
+                                                               FontSize="14" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                                               VerticalAlignment="Center"/>
 
-                                                <Border Grid.Column="2" Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6"
-                                                        Padding="8,3" Margin="15,0" VerticalAlignment="Center">
-                                                    <TextBlock FontSize="12" Foreground="{StaticResource InfoBrush}">
-                                                        <Run Text="{Binding TodayOrdersCount, Mode=OneWay}"/>
-                                                        <Run Text=" buyurtma" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                                    <Border Grid.Column="2" Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6"
+                                                            Padding="8,3" Margin="15,0" VerticalAlignment="Center">
+                                                        <TextBlock FontSize="12" Foreground="{StaticResource InfoBrush}">
+                                                            <Run Text="{Binding TodayOrdersCount, Mode=OneWay}"/>
+                                                            <Run Text=" buyurtma" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                                        </TextBlock>
+                                                    </Border>
+
+                                                    <TextBlock Grid.Column="3"
+                                                               FontSize="14" FontWeight="Bold"
+                                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0:N0} sum">
+                                                                <Binding Path="TodaySalesAmount"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
                                                     </TextBlock>
-                                                </Border>
-
-                                                <TextBlock Grid.Column="3"
-                                                           FontSize="14" FontWeight="Bold"
-                                                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0:N0} sum">
-                                                            <Binding Path="TodaySalesAmount"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
                 </StackPanel>
@@ -541,54 +541,54 @@
                             </StackPanel>
 
                             <!-- Low stock list -->
-                            <ItemsControl Grid.Row="1"
-                                          ItemsSource="{Binding LowStockProducts}"
-                                          Margin="0,4,0,4"
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="500"
                                           Visibility="{Binding HasLowStockProducts, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Padding="20,12" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
+                                <ItemsControl ItemsSource="{Binding LowStockProducts}" Margin="0,4,0,4">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="20,12" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                                <Border Grid.Column="0" Width="32" Height="32"
-                                                        Background="{StaticResource WarningBackgroundBrush}" CornerRadius="8"
-                                                        Margin="0,0,12,0">
-                                                    <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"
-                                                          Fill="{StaticResource WarningBrush}" Width="16" Height="16"
-                                                          Stretch="Uniform"
-                                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
+                                                    <Border Grid.Column="0" Width="32" Height="32"
+                                                            Background="{StaticResource WarningBackgroundBrush}" CornerRadius="8"
+                                                            Margin="0,0,12,0">
+                                                        <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"
+                                                              Fill="{StaticResource WarningBrush}" Width="16" Height="16"
+                                                              Stretch="Uniform"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
 
-                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding ProductName}"
-                                                               FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
-                                                               TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Text="{Binding CategoryName}"
-                                                               FontSize="11" Foreground="{StaticResource TextMutedBrush}"
-                                                               Margin="0,2,0,0"/>
-                                                </StackPanel>
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding ProductName}"
+                                                                   FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding CategoryName}"
+                                                                   FontSize="11" Foreground="{StaticResource TextMutedBrush}"
+                                                                   Margin="0,2,0,0"/>
+                                                    </StackPanel>
 
-                                                <Border Grid.Column="2" VerticalAlignment="Center"
-                                                        Background="{StaticResource CategoryBackgroundBrush}" CornerRadius="6" Padding="8,3">
-                                                    <TextBlock FontSize="12" FontWeight="SemiBold"
-                                                               Foreground="{StaticResource CategoryBrush}">
-                                                        <TextBlock.Text>
-                                                            <MultiBinding StringFormat="{}{0:N0} ta">
-                                                                <Binding Path="StockQuantity"/>
-                                                            </MultiBinding>
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                                    <Border Grid.Column="2" VerticalAlignment="Center"
+                                                            Background="{StaticResource CategoryBackgroundBrush}" CornerRadius="6" Padding="8,3">
+                                                        <TextBlock FontSize="12" FontWeight="SemiBold"
+                                                                   Foreground="{StaticResource CategoryBrush}">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0:N0} ta">
+                                                                    <Binding Path="StockQuantity"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
                 </StackPanel>
