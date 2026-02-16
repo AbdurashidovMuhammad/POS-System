@@ -122,6 +122,9 @@ public partial class ProductViewModel : ViewModelBase
     private decimal _formStockQuantity;
 
     [ObservableProperty]
+    private string _formBarcode = string.Empty;
+
+    [ObservableProperty]
     private decimal _stockInQuantity;
 
     [ObservableProperty]
@@ -361,7 +364,8 @@ public partial class ProductViewModel : ViewModelBase
                 CategoryId = FormCategoryId!.Value,
                 UnitPrice = FormUnitPrice,
                 UnitType = FormUnitType,
-                StockQuantity = FormStockQuantity
+                StockQuantity = FormStockQuantity,
+                Barcode = string.IsNullOrWhiteSpace(FormBarcode) ? null : FormBarcode.Trim()
             };
 
             var result = await _apiService.PostAsync<int>("api/products", dto);
@@ -617,6 +621,7 @@ public partial class ProductViewModel : ViewModelBase
         FormUnitPrice = 0;
         FormUnitType = UnitType.Dona;
         FormStockQuantity = 0;
+        FormBarcode = string.Empty;
         StockInQuantity = 0;
         FormError = null;
     }

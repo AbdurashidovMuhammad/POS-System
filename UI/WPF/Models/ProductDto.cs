@@ -23,6 +23,7 @@ public class CreateProductDto
     public decimal UnitPrice { get; set; }
     public UnitType UnitType { get; set; }
     public decimal StockQuantity { get; set; }
+    public string? Barcode { get; set; }
 }
 
 public class UpdateProductDto

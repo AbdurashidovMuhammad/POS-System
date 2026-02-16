@@ -159,8 +159,24 @@ public class ProductService : IProductService
             throw new ArgumentException("Invalid unit type", nameof(dto.UnitType));
         }
 
-        // Generate unique barcode
-        var barcode = await _barcodeService.GenerateBarcodeAsync();
+        // Use provided barcode or generate a new one
+        string barcode;
+        if (!string.IsNullOrWhiteSpace(dto.Barcode))
+        {
+            var isValid = await _barcodeService.ValidateBarcodeAsync(dto.Barcode.Trim());
+            if (!isValid)
+                throw new ArgumentException("Barcode formati noto'g'ri");
+
+            var isUnique = await _barcodeService.IsBarcodeUniqueAsync(dto.Barcode.Trim());
+            if (!isUnique)
+                throw new DuplicateException($"'{dto.Barcode.Trim()}' barcodi allaqachon mavjud");
+
+            barcode = dto.Barcode.Trim();
+        }
+        else
+        {
+            barcode = await _barcodeService.GenerateBarcodeAsync();
+        }
 
         // Create product
         var product = new Product

@@ -21,4 +21,7 @@ public class CreateProductDto
 
     [Range(0, double.MaxValue, ErrorMessage = "Stock quantity cannot be negative")]
     public decimal StockQuantity { get; set; } = 0;
+
+    [StringLength(80, ErrorMessage = "Barcode cannot exceed 80 characters")]
+    public string? Barcode { get; set; }
 }

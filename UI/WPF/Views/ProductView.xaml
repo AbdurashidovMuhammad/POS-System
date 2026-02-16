@@ -771,7 +771,7 @@
                                           FontSize="14"/>
                             </Border>
 
-                            <!-- Initial Stock (only for new products) -->
+                            <!-- Initial Stock and Barcode (only for new products) -->
                             <StackPanel Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Text="Boshlang'ich zaxira" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
                                 <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
@@ -781,6 +781,23 @@
                                              Padding="14,12"
                                              FontSize="14"/>
                                 </Border>
+
+                                <!-- Custom Barcode (ixtiyoriy) -->
+                                <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8">
+                                    <Run Text="Barcode"/>
+                                    <Run Text=" (ixtiyoriy)" Foreground="{StaticResource TextMutedBrush}" FontWeight="Normal" FontSize="12"/>
+                                </TextBlock>
+                                <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,6">
+                                    <TextBox Text="{Binding FormBarcode, UpdateSourceTrigger=PropertyChanged}"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="14,12"
+                                             FontSize="14"
+                                             FontFamily="Consolas"/>
+                                </Border>
+                                <TextBlock Text="Bo'sh qoldirilsa, barcode avtomatik generatsiya qilinadi"
+                                           FontSize="11" Foreground="{StaticResource TextMutedBrush}"
+                                           Margin="4,0,0,18"/>
                             </StackPanel>
                         </StackPanel>
 
