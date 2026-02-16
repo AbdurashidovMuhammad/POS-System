@@ -373,10 +373,13 @@ public partial class ProductViewModel : ViewModelBase
             if (result?.Succeeded == true)
             {
                 var productId = result.Result;
+                var hasCustomBarcode = !string.IsNullOrWhiteSpace(FormBarcode);
+                var productName = FormName.Trim();
                 CloseAllPanels();
                 SuccessMessage = "Mahsulot muvaffaqiyatli qo'shildi";
                 await LoadProductsAsync();
-                await ShowBarcodeImageAsync(productId, FormName.Trim());
+                if (!hasCustomBarcode)
+                    await ShowBarcodeImageAsync(productId, productName);
             }
             else
             {
@@ -462,12 +465,9 @@ public partial class ProductViewModel : ViewModelBase
 
             if (result?.Succeeded == true)
             {
-                var productId = SelectedProduct.Id;
-                var productName = SelectedProduct.Name;
                 CloseAllPanels();
                 SuccessMessage = $"{StockInQuantity:N2} {SelectedProduct.UnitType} zaxiraga qo'shildi";
                 await LoadProductsAsync();
-                await ShowBarcodeImageAsync(productId, productName);
             }
             else
             {
