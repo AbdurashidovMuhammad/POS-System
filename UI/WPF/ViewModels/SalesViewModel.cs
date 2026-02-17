@@ -62,6 +62,37 @@ public partial class SalesViewModel : ViewModelBase
     [ObservableProperty]
     private string _manualQuantityText = "1";
 
+    // Gramm uchun kg + gramm split input
+    [ObservableProperty]
+    private int _manualKg;
+
+    [ObservableProperty]
+    private int _manualGramm;
+
+    public bool IsManualGramm => SelectedSearchProduct?.UnitType == UnitType.Gramm;
+
+    partial void OnSelectedSearchProductChanged(ProductDto? value)
+    {
+        OnPropertyChanged(nameof(IsManualGramm));
+        if (value?.UnitType == UnitType.Gramm)
+        {
+            ManualKg = 1;
+            ManualGramm = 0;
+        }
+        else if (value is not null)
+        {
+            ManualQuantityText = value.UnitType == UnitType.Dona
+                || value.UnitType == UnitType.Quti
+                || value.UnitType == UnitType.Paket
+                || value.UnitType == UnitType.Shisha
+                || value.UnitType == UnitType.Oram
+                || value.UnitType == UnitType.Juft
+                ? "1"
+                : "";
+        }
+        SearchError = null;
+    }
+
     [ObservableProperty]
     private string? _searchError;
 
@@ -178,6 +209,8 @@ public partial class SalesViewModel : ViewModelBase
         SearchResults.Clear();
         SelectedSearchProduct = null;
         ManualQuantityText = "1";
+        ManualKg = 0;
+        ManualGramm = 0;
         SearchError = null;
         IsSearchDialogOpen = true;
     }
@@ -226,32 +259,34 @@ public partial class SalesViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SelectSearchProduct(ProductDto product)
-    {
-        SelectedSearchProduct = product;
-        // Set default quantity based on unit type
-        ManualQuantityText = product.UnitType == UnitType.Dona
-            || product.UnitType == UnitType.Quti
-            || product.UnitType == UnitType.Paket
-            || product.UnitType == UnitType.Shisha
-            || product.UnitType == UnitType.Oram
-            || product.UnitType == UnitType.Juft
-            || product.UnitType == UnitType.Gramm
-            ? "1"
-            : "";
-        SearchError = null;
-    }
-
-    [RelayCommand]
     private void AddManualProduct()
     {
         if (SelectedSearchProduct is null) return;
 
-        var qtyText = ManualQuantityText.Trim().Replace(',', '.');
-        if (!decimal.TryParse(qtyText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var qty) || qty <= 0)
+        decimal qty;
+
+        if (SelectedSearchProduct.UnitType == UnitType.Gramm)
         {
-            SearchError = "Miqdorni to'g'ri kiriting";
-            return;
+            if (ManualKg < 0 || ManualGramm < 0 || ManualGramm >= 1000)
+            {
+                SearchError = "Gramm qiymati 0 dan 999 gacha bo'lishi kerak";
+                return;
+            }
+            qty = ManualKg * 1000m + ManualGramm;
+            if (qty <= 0)
+            {
+                SearchError = "Miqdorni to'g'ri kiriting";
+                return;
+            }
+        }
+        else
+        {
+            var qtyText = ManualQuantityText.Trim().Replace(',', '.');
+            if (!decimal.TryParse(qtyText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out qty) || qty <= 0)
+            {
+                SearchError = "Miqdorni to'g'ri kiriting";
+                return;
+            }
         }
 
         var product = SelectedSearchProduct;

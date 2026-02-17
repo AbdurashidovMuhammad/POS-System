@@ -908,7 +908,10 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <Border Background="{StaticResource BackgroundCardBrush}" CornerRadius="8" Margin="0,6,0,0" BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1">
+
+                                <!-- Normal input (boshqa o'lchov birliklari uchun) -->
+                                <Border Background="{StaticResource BackgroundCardBrush}" CornerRadius="8" Margin="0,6,0,0" BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1"
+                                        Visibility="{Binding IsManualGramm, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
                                     <TextBox x:Name="ManualQuantityTextBox"
                                              Text="{Binding ManualQuantityText, UpdateSourceTrigger=PropertyChanged}"
                                              Background="Transparent"
@@ -922,6 +925,57 @@
                                         </TextBox.InputBindings>
                                     </TextBox>
                                 </Border>
+
+                                <!-- Gramm uchun kg + gramm split input -->
+                                <Grid Margin="0,6,0,0"
+                                      Visibility="{Binding IsManualGramm, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="8" BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1">
+                                        <TextBox x:Name="ManualKgTextBox"
+                                                 Text="{Binding ManualKg, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Padding="14,10"
+                                                 FontSize="16"
+                                                 FontWeight="SemiBold"
+                                                 HorizontalContentAlignment="Center"
+                                                 VerticalContentAlignment="Center">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Enter" Command="{Binding AddManualProductCommand}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="kg" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"
+                                               VerticalAlignment="Center" Margin="8,0,14,0"/>
+
+                                    <Border Grid.Column="2" Background="{StaticResource BackgroundCardBrush}" CornerRadius="8" BorderBrush="{StaticResource BorderPopupBrush}" BorderThickness="1">
+                                        <TextBox x:Name="ManualGrammTextBox"
+                                                 Text="{Binding ManualGramm, StringFormat=000}"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Padding="14,10"
+                                                 FontSize="16"
+                                                 FontWeight="SemiBold"
+                                                 HorizontalContentAlignment="Center"
+                                                 VerticalContentAlignment="Center"
+                                                 MaxLength="3"
+                                                 GotFocus="GrammTextBox_GotFocus"
+                                                 PreviewTextInput="GrammTextBox_PreviewTextInput"
+                                                 LostFocus="GrammTextBox_LostFocus">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Enter" Command="{Binding AddManualProductCommand}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </Border>
+                                    <TextBlock Grid.Column="3" Text="gr" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"
+                                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </Grid>
                             </StackPanel>
                             <Button Grid.Column="1"
                                     Command="{Binding AddManualProductCommand}"

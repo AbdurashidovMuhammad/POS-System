@@ -44,8 +44,16 @@ public partial class SalesView : UserControl
         {
             Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                ManualQuantityTextBox.Focus();
-                ManualQuantityTextBox.SelectAll();
+                if (vm2.IsManualGramm)
+                {
+                    ManualKgTextBox.Focus();
+                    ManualKgTextBox.SelectAll();
+                }
+                else
+                {
+                    ManualQuantityTextBox.Focus();
+                    ManualQuantityTextBox.SelectAll();
+                }
             }), System.Windows.Threading.DispatcherPriority.Render);
         }
     }
@@ -65,5 +73,34 @@ public partial class SalesView : UserControl
     private void SearchDialog_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         e.Handled = true;
+    }
+
+    private void GrammTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            textBox.SelectAll();
+        }
+    }
+
+    private void GrammTextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = !int.TryParse(e.Text, out _);
+    }
+
+    private void GrammTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            if (int.TryParse(textBox.Text, out var value))
+            {
+                value = Math.Clamp(value, 0, 999);
+                textBox.Text = value.ToString("000");
+            }
+            else
+            {
+                textBox.Text = "000";
+            }
+        }
     }
 }
