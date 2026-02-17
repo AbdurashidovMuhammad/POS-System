@@ -1,3 +1,4 @@
+using Application.DTOs.Common;
 using Application.DTOs.ReportDTOs;
 using Application.Services;
 using ClosedXML.Excel;
@@ -16,17 +17,25 @@ public class ReportService : IReportService
         _context = context;
     }
 
-    public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to)
+    public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to, PaginationParams pagination)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
 
-        var items = await _context.SaleItems
+        var query = _context.SaleItems
             .AsNoTracking()
             .Include(si => si.Sale)
             .Include(si => si.Product)
-            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate)
+            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate);
+
+        var totalCount = await query.CountAsync();
+
+        var totalAmount = await query.SumAsync(si => si.Quantity * si.UnitPrice);
+
+        var items = await query
             .OrderByDescending(si => si.Sale.SaleDate)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
             .Select(si => new SalesReportItemDto
             {
                 Date = si.Sale.SaleDate,
@@ -45,22 +54,33 @@ public class ReportService : IReportService
             DateFrom = from.Date,
             DateTo = to.Date,
             Items = items,
-            TotalAmount = items.Sum(i => i.TotalPrice)
+            TotalAmount = totalAmount,
+            Page = pagination.Page,
+            PageSize = pagination.PageSize,
+            TotalCount = totalCount
         };
     }
 
-    public async Task<StockInReportDto> GetStockInReportAsync(DateTime from, DateTime to)
+    public async Task<StockInReportDto> GetStockInReportAsync(DateTime from, DateTime to, PaginationParams pagination)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
 
-        var items = await _context.StockMovements
+        var query = _context.StockMovements
             .AsNoTracking()
             .Include(sm => sm.Product)
             .Where(sm => sm.MovementType == Movement_Type.StockIn
                          && sm.MovementDate >= fromDate
-                         && sm.MovementDate < toDate)
+                         && sm.MovementDate < toDate);
+
+        var totalCount = await query.CountAsync();
+
+        var totalQuantity = await query.SumAsync(sm => sm.Quantity);
+
+        var items = await query
             .OrderByDescending(sm => sm.MovementDate)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
             .Select(sm => new StockInReportItemDto
             {
                 Date = sm.MovementDate,
@@ -76,13 +96,16 @@ public class ReportService : IReportService
             DateFrom = from.Date,
             DateTo = to.Date,
             Items = items,
-            TotalQuantity = items.Sum(i => i.Quantity)
+            TotalQuantity = totalQuantity,
+            Page = pagination.Page,
+            PageSize = pagination.PageSize,
+            TotalCount = totalCount
         };
     }
 
     public async Task<byte[]> ExportSalesReportAsync(DateTime from, DateTime to)
     {
-        var report = await GetSalesReportAsync(from, to);
+        var report = await GetAllSalesItemsAsync(from, to);
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Sotilgan mahsulotlar");
@@ -161,7 +184,7 @@ public class ReportService : IReportService
 
     public async Task<byte[]> ExportStockInReportAsync(DateTime from, DateTime to)
     {
-        var report = await GetStockInReportAsync(from, to);
+        var report = await GetAllStockInItemsAsync(from, to);
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Kirim mahsulotlar");
@@ -229,5 +252,75 @@ public class ReportService : IReportService
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
         return stream.ToArray();
+    }
+
+    private async Task<SalesReportDto> GetAllSalesItemsAsync(DateTime from, DateTime to)
+    {
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
+
+        var items = await _context.SaleItems
+            .AsNoTracking()
+            .Include(si => si.Sale)
+            .Include(si => si.Product)
+            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate)
+            .OrderByDescending(si => si.Sale.SaleDate)
+            .Select(si => new SalesReportItemDto
+            {
+                Date = si.Sale.SaleDate,
+                ProductName = si.Product.Name,
+                Quantity = si.Quantity,
+                UnitTypeName = si.Product.Unit_Type.ToString(),
+                UnitPrice = si.UnitPrice,
+                TotalPrice = si.Quantity * si.UnitPrice,
+                PaymentTypeName = si.Sale.PaymentType.ToString(),
+                Username = si.Sale.User.Username
+            })
+            .ToListAsync();
+
+        return new SalesReportDto
+        {
+            DateFrom = from.Date,
+            DateTo = to.Date,
+            Items = items,
+            TotalAmount = items.Sum(i => i.TotalPrice),
+            TotalCount = items.Count,
+            Page = 1,
+            PageSize = items.Count
+        };
+    }
+
+    private async Task<StockInReportDto> GetAllStockInItemsAsync(DateTime from, DateTime to)
+    {
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
+
+        var items = await _context.StockMovements
+            .AsNoTracking()
+            .Include(sm => sm.Product)
+            .Where(sm => sm.MovementType == Movement_Type.StockIn
+                         && sm.MovementDate >= fromDate
+                         && sm.MovementDate < toDate)
+            .OrderByDescending(sm => sm.MovementDate)
+            .Select(sm => new StockInReportItemDto
+            {
+                Date = sm.MovementDate,
+                ProductName = sm.Product.Name,
+                Quantity = sm.Quantity,
+                UnitTypeName = sm.Product.Unit_Type.ToString(),
+                Username = sm.User.Username
+            })
+            .ToListAsync();
+
+        return new StockInReportDto
+        {
+            DateFrom = from.Date,
+            DateTo = to.Date,
+            Items = items,
+            TotalQuantity = items.Sum(i => i.Quantity),
+            TotalCount = items.Count,
+            Page = 1,
+            PageSize = items.Count
+        };
     }
 }

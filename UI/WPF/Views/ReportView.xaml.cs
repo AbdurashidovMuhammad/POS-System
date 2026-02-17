@@ -15,6 +15,7 @@ public partial class ReportView : UserControl
         if (DataContext is ReportViewModel vm)
         {
             vm.SelectedTabIndex = 0;
+            vm.CurrentPage = 1;
         }
     }
 
@@ -23,6 +24,7 @@ public partial class ReportView : UserControl
         if (DataContext is ReportViewModel vm)
         {
             vm.SelectedTabIndex = 1;
+            vm.CurrentPage = 1;
         }
     }
 }

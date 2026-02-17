@@ -1,5 +1,6 @@
 using Application.DTOs;
 using Application.DTOs.CategoryDTOs;
+using Application.DTOs.Common;
 using Core.Entities;
 using Core.Enums;
 using DataAccess.Persistence;
@@ -66,7 +67,29 @@ internal class CategoryService : ICategoriesService
         return ApiResult<CategoryDto>.Success(MapToDto(category));
     }
 
-    public async Task<ApiResult<List<CategoryDto>>> GetAllCategoriesAsync()
+    public async Task<ApiResult<PagedResult<CategoryDto>>> GetAllCategoriesAsync(PaginationParams pagination)
+    {
+        var query = _context.Categories.OrderBy(c => c.Name);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync();
+
+        var result = new PagedResult<CategoryDto>
+        {
+            Items = items.Select(MapToDto).ToList(),
+            Page = pagination.Page,
+            PageSize = pagination.PageSize,
+            TotalCount = totalCount
+        };
+
+        return ApiResult<PagedResult<CategoryDto>>.Success(result);
+    }
+
+    public async Task<ApiResult<List<CategoryDto>>> GetAllCategoriesListAsync()
     {
         var categories = await _context.Categories
             .OrderBy(c => c.Name)

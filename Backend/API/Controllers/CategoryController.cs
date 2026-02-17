@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Application.DTOs.CategoryDTOs;
+using Application.DTOs.Common;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,9 +46,16 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] PaginationParams pagination)
     {
-        var result = await _categoriesService.GetAllCategoriesAsync();
+        var result = await _categoriesService.GetAllCategoriesAsync(pagination);
+        return Ok(result);
+    }
+
+    [HttpGet("list")]
+    public async Task<IActionResult> GetAllList()
+    {
+        var result = await _categoriesService.GetAllCategoriesListAsync();
         return Ok(result);
     }
 

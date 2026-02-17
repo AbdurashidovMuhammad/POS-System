@@ -387,17 +387,79 @@
                     </Grid>
                 </Border>
 
-                <!-- Footer -->
+                <!-- Pagination -->
                 <Border Grid.Row="5" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0" Padding="20,14">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,6">
-                            <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
-                                <Run Text="Jami: "/>
-                                <Run Text="{Binding Users.Count, Mode=OneWay}" FontWeight="Bold"/>
-                                <Run Text=" ta foydalanuvchi"/>
-                            </TextBlock>
-                        </Border>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,6">
+                                <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
+                                    <Run Text="Jami: "/>
+                                    <Run Text="{Binding TotalCount}" FontWeight="Bold"/>
+                                    <Run Text=" ta foydalanuvchi"/>
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Command="{Binding PreviousPageCommand}" Cursor="Hand" Margin="0,0,8,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="18,10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                                                      Fill="{StaticResource TextTertiaryBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Oldingi" FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="18,10" VerticalAlignment="Center">
+                                <TextBlock FontSize="14" Foreground="{StaticResource TextDarkBrush}">
+                                    <Run Text="{Binding CurrentPage}" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                                    <Run Text=" / "/>
+                                    <Run Text="{Binding TotalPages}" FontWeight="Bold"/>
+                                </TextBlock>
+                            </Border>
+
+                            <Button Command="{Binding NextPageCommand}" Cursor="Hand" Margin="8,0,0,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="18,10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Keyingi" FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold"/>
+                                                <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+                                                      Fill="{StaticResource TextTertiaryBrush}" Width="14" Height="14" Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </Border>
 
                 <!-- Loading Indicator -->

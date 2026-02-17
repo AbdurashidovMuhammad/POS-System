@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Application.DTOs.Common;
 using Application.DTOs.UserDTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -32,9 +33,16 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAdmins()
+    public async Task<IActionResult> GetAllAdmins([FromQuery] PaginationParams pagination)
     {
-        var result = await _userService.GetAllAdminsAsync();
+        var result = await _userService.GetAllAdminsAsync(pagination);
+        return Ok(result);
+    }
+
+    [HttpGet("list")]
+    public async Task<IActionResult> GetAllAdminsList()
+    {
+        var result = await _userService.GetAllAdminsListAsync();
         return Ok(result);
     }
 

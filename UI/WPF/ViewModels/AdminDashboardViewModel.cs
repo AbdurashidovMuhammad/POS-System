@@ -54,6 +54,20 @@ public partial class AdminDashboardViewModel : ViewModelBase
     private ObservableCollection<LowStockProductDto> _lowStockProducts = [];
 
     [ObservableProperty]
+    private ObservableCollection<LowStockProductDto> _pagedLowStockProducts = [];
+
+    [ObservableProperty]
+    private int _lowStockCurrentPage = 1;
+
+    [ObservableProperty]
+    private int _lowStockTotalPages = 1;
+
+    [ObservableProperty]
+    private string _lowStockPageInfo = "1 / 1";
+
+    private const int LowStockPageSize = 10;
+
+    [ObservableProperty]
     private ObservableCollection<AuditLogDto> _recentActivities = [];
 
     [ObservableProperty]
@@ -70,6 +84,44 @@ public partial class AdminDashboardViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _lowStockCount;
+
+    private void UpdateLowStockPage()
+    {
+        LowStockTotalPages = Math.Max(1, (int)Math.Ceiling((double)LowStockProducts.Count / LowStockPageSize));
+        if (LowStockCurrentPage > LowStockTotalPages)
+            LowStockCurrentPage = LowStockTotalPages;
+
+        var items = LowStockProducts
+            .Skip((LowStockCurrentPage - 1) * LowStockPageSize)
+            .Take(LowStockPageSize);
+        PagedLowStockProducts = new ObservableCollection<LowStockProductDto>(items);
+        LowStockPageInfo = $"{LowStockCurrentPage} / {LowStockTotalPages}";
+        OnPropertyChanged(nameof(CanLowStockPrevious));
+        OnPropertyChanged(nameof(CanLowStockNext));
+    }
+
+    public bool CanLowStockPrevious => LowStockCurrentPage > 1;
+    public bool CanLowStockNext => LowStockCurrentPage < LowStockTotalPages;
+
+    [RelayCommand]
+    private void LowStockPreviousPage()
+    {
+        if (LowStockCurrentPage > 1)
+        {
+            LowStockCurrentPage--;
+            UpdateLowStockPage();
+        }
+    }
+
+    [RelayCommand]
+    private void LowStockNextPage()
+    {
+        if (LowStockCurrentPage < LowStockTotalPages)
+        {
+            LowStockCurrentPage++;
+            UpdateLowStockPage();
+        }
+    }
 
     public AdminDashboardViewModel(
         INavigationService navigationService,
@@ -119,6 +171,8 @@ public partial class AdminDashboardViewModel : ViewModelBase
                 LowStockProducts = new ObservableCollection<LowStockProductDto>(stats.LowStockProducts);
                 HasLowStockProducts = LowStockProducts.Count > 0;
                 LowStockCount = LowStockProducts.Count;
+                LowStockCurrentPage = 1;
+                UpdateLowStockPage();
             }
         }
         catch

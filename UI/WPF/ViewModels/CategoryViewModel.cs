@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WPF.Models;
@@ -95,8 +96,37 @@ public partial class CategoryViewModel : ViewModelBase
     [ObservableProperty]
     private string? _successMessage;
 
+    // Pagination
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _currentPage = 1;
+
+    [ObservableProperty]
+    private int _pageSize = 10;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _totalPages = 1;
+
+    [ObservableProperty]
+    private int _totalCount;
+
     // CanExecute methods
     private bool HasSelectedCategory() => SelectedCategory is not null;
+    private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
+    private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IsLoading))
+        {
+            PreviousPageCommand.NotifyCanExecuteChanged();
+            NextPageCommand.NotifyCanExecuteChanged();
+        }
+    }
 
     // Load categories
     [RelayCommand]
@@ -108,11 +138,14 @@ public partial class CategoryViewModel : ViewModelBase
 
         try
         {
-            var result = await _apiService.GetAsync<List<CategoryDto>>("api/category");
+            var url = $"api/category?page={CurrentPage}&pageSize={PageSize}";
+            var result = await _apiService.GetAsync<PagedResult<CategoryDto>>(url);
 
             if (result?.Succeeded == true && result.Result is not null)
             {
-                Categories = new ObservableCollection<CategoryDto>(result.Result);
+                Categories = new ObservableCollection<CategoryDto>(result.Result.Items);
+                TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
+                TotalCount = result.Result.TotalCount;
             }
             else
             {
@@ -185,6 +218,7 @@ public partial class CategoryViewModel : ViewModelBase
     private async Task SearchCategoriesAsync()
     {
         IsSuggestionsOpen = false;
+        CurrentPage = 1;
 
         if (string.IsNullOrWhiteSpace(SearchText))
         {
@@ -390,6 +424,21 @@ public partial class CategoryViewModel : ViewModelBase
         {
             IsSaving = false;
         }
+    }
+
+    // Pagination
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private async Task PreviousPageAsync()
+    {
+        CurrentPage--;
+        await LoadCategoriesAsync();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private async Task NextPageAsync()
+    {
+        CurrentPage++;
+        await LoadCategoriesAsync();
     }
 
     // Cancel / Close Panel

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WPF.Models;
@@ -52,8 +53,37 @@ public partial class UserViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isSaving;
 
+    // Pagination
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _currentPage = 1;
+
+    [ObservableProperty]
+    private int _pageSize = 10;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _totalPages = 1;
+
+    [ObservableProperty]
+    private int _totalCount;
+
     // CanExecute
     private bool HasSelectedUser() => SelectedUser is not null;
+    private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
+    private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IsLoading))
+        {
+            PreviousPageCommand.NotifyCanExecuteChanged();
+            NextPageCommand.NotifyCanExecuteChanged();
+        }
+    }
 
     // Load users
     [RelayCommand]
@@ -64,11 +94,14 @@ public partial class UserViewModel : ViewModelBase
 
         try
         {
-            var result = await _apiService.GetAsync<List<UserDto>>("api/user");
+            var url = $"api/user?page={CurrentPage}&pageSize={PageSize}";
+            var result = await _apiService.GetAsync<PagedResult<UserDto>>(url);
 
             if (result?.Succeeded == true && result.Result is not null)
             {
-                Users = new ObservableCollection<UserDto>(result.Result);
+                Users = new ObservableCollection<UserDto>(result.Result.Items);
+                TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
+                TotalCount = result.Result.TotalCount;
             }
             else
             {
@@ -83,6 +116,21 @@ public partial class UserViewModel : ViewModelBase
         {
             IsLoading = false;
         }
+    }
+
+    // Pagination
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private async Task PreviousPageAsync()
+    {
+        CurrentPage--;
+        await LoadUsersAsync();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private async Task NextPageAsync()
+    {
+        CurrentPage++;
+        await LoadUsersAsync();
     }
 
     // Show Add Panel

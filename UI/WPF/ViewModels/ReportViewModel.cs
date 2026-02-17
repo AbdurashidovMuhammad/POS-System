@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -56,6 +57,36 @@ public partial class ReportViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isExporting;
 
+    // Pagination
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _currentPage = 1;
+
+    [ObservableProperty]
+    private int _pageSize = 10;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+    private int _totalPages = 1;
+
+    [ObservableProperty]
+    private int _totalCount;
+
+    private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
+    private bool CanGoToNextPage() => CurrentPage < TotalPages && !IsLoading;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IsLoading))
+        {
+            PreviousPageCommand.NotifyCanExecuteChanged();
+            NextPageCommand.NotifyCanExecuteChanged();
+        }
+    }
+
     private static string FormatDateParam(DateTime date) => date.ToString("yyyy-MM-dd");
 
     private static void AssignDateGroupColors<T>(IList<T> items, Func<T, DateTime> dateSelector, Action<T, bool> setAlternate)
@@ -79,6 +110,12 @@ public partial class ReportViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadReportAsync()
     {
+        CurrentPage = 1;
+        await FetchReportAsync();
+    }
+
+    private async Task FetchReportAsync()
+    {
         if (StartDate.Date > EndDate.Date)
         {
             ErrorMessage = "Boshlanish sanasi tugash sanasidan katta bo'lishi mumkin emas";
@@ -95,14 +132,16 @@ public partial class ReportViewModel : ViewModelBase
 
             if (SelectedTabIndex == 0)
             {
-                var result = await _apiService.GetAsync<SalesReportDto>($"api/reports/sales?from={from}&to={to}");
+                var result = await _apiService.GetAsync<SalesReportDto>($"api/reports/sales?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}");
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
                     AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     SalesItems = new ObservableCollection<SalesReportItemDto>(result.Result.Items);
                     TotalSalesAmount = result.Result.TotalAmount;
-                    SalesItemCount = result.Result.Items.Count;
+                    SalesItemCount = result.Result.TotalCount;
+                    TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
+                    TotalCount = result.Result.TotalCount;
                 }
                 else
                 {
@@ -111,14 +150,16 @@ public partial class ReportViewModel : ViewModelBase
             }
             else
             {
-                var result = await _apiService.GetAsync<StockInReportDto>($"api/reports/stock-in?from={from}&to={to}");
+                var result = await _apiService.GetAsync<StockInReportDto>($"api/reports/stock-in?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}");
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
                     AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     StockInItems = new ObservableCollection<StockInReportItemDto>(result.Result.Items);
                     TotalStockInQuantity = result.Result.TotalQuantity;
-                    StockInItemCount = result.Result.Items.Count;
+                    StockInItemCount = result.Result.TotalCount;
+                    TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
+                    TotalCount = result.Result.TotalCount;
                 }
                 else
                 {
@@ -134,6 +175,21 @@ public partial class ReportViewModel : ViewModelBase
         {
             IsLoading = false;
         }
+    }
+
+    // Pagination
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private async Task PreviousPageAsync()
+    {
+        CurrentPage--;
+        await FetchReportAsync();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private async Task NextPageAsync()
+    {
+        CurrentPage++;
+        await FetchReportAsync();
     }
 
     [RelayCommand]

@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Common;
 using Application.DTOs.ReportDTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("sales")]
-    public async Task<IActionResult> GetSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to)
+    public async Task<IActionResult> GetSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination)
     {
         try
         {
@@ -27,7 +28,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<SalesReportDto>.Failure([validationError]));
 
-            var report = await _reportService.GetSalesReportAsync(from, to);
+            var report = await _reportService.GetSalesReportAsync(from, to, pagination);
             return Ok(ApiResult<SalesReportDto>.Success(report));
         }
         catch (Exception ex)
@@ -37,7 +38,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("stock-in")]
-    public async Task<IActionResult> GetStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to)
+    public async Task<IActionResult> GetStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination)
     {
         try
         {
@@ -45,7 +46,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<StockInReportDto>.Failure([validationError]));
 
-            var report = await _reportService.GetStockInReportAsync(from, to);
+            var report = await _reportService.GetStockInReportAsync(from, to, pagination);
             return Ok(ApiResult<StockInReportDto>.Success(report));
         }
         catch (Exception ex)

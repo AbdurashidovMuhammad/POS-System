@@ -89,10 +89,13 @@ public partial class ActivityLogViewModel : ViewModelBase
             var from = StartDate.ToString("yyyy-MM-dd");
             var to = EndDate.ToString("yyyy-MM-dd");
 
-            var url = $"api/audit-logs?page={CurrentPage}&pageSize=20&from={from}&to={to}";
+            var url = $"api/audit-logs?page={CurrentPage}&pageSize=10&from={from}&to={to}";
 
-            if (SelectedUser is not null)
-                url += $"&userId={SelectedUser.Id}";
+            if (SelectedUser is not null && SelectedUser.Id != 0)
+            {
+                var userId = SelectedUser.Id == -1 ? 1 : SelectedUser.Id;
+                url += $"&userId={userId}";
+            }
 
             if (SelectedActionType?.Value is not null)
                 url += $"&actionType={SelectedActionType.Value}";
@@ -125,10 +128,16 @@ public partial class ActivityLogViewModel : ViewModelBase
     {
         try
         {
-            var result = await _apiService.GetAsync<List<UserDto>>("api/user");
+            var result = await _apiService.GetAsync<List<UserDto>>("api/user/list");
             if (result?.Succeeded == true && result.Result is not null)
             {
-                Users = new ObservableCollection<UserDto>(result.Result);
+                var users = new List<UserDto>
+                {
+                    new() { Id = 0, Username = "Barchasi" },
+                    new() { Id = -1, Username = "SuperAdmin" },
+                };
+                users.AddRange(result.Result);
+                Users = new ObservableCollection<UserDto>(users);
             }
         }
         catch { }

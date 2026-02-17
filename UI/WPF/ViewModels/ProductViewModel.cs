@@ -68,7 +68,7 @@ public partial class ProductViewModel : ViewModelBase
     private int _currentPage = 1;
 
     [ObservableProperty]
-    private int _pageSize = 20;
+    private int _pageSize = 10;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
@@ -191,7 +191,7 @@ public partial class ProductViewModel : ViewModelBase
     {
         try
         {
-            var result = await _apiService.GetAsync<List<CategoryDto>>("api/category");
+            var result = await _apiService.GetAsync<List<CategoryDto>>("api/category/list");
             if (result?.Succeeded == true && result.Result is not null)
             {
                 Categories = new ObservableCollection<CategoryDto>(result.Result.Where(c => c.IsActive));

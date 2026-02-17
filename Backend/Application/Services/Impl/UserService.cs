@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Common;
 using Application.DTOs.UserDTOs;
 using Application.Helpers;
 using Core.Entities;
@@ -48,7 +49,30 @@ internal class UserService : IUserService
         return ApiResult<UserDto>.Success(MapToDto(user));
     }
 
-    public async Task<ApiResult<List<UserDto>>> GetAllAdminsAsync()
+    public async Task<ApiResult<PagedResult<UserDto>>> GetAllAdminsAsync(PaginationParams pagination)
+    {
+        var query = _context.Users.Where(u => u.Role == Role.Admin);
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+            .OrderByDescending(u => u.CreatedAt)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync();
+
+        var result = new PagedResult<UserDto>
+        {
+            Items = users.Select(MapToDto).ToList(),
+            Page = pagination.Page,
+            PageSize = pagination.PageSize,
+            TotalCount = totalCount
+        };
+
+        return ApiResult<PagedResult<UserDto>>.Success(result);
+    }
+
+    public async Task<ApiResult<List<UserDto>>> GetAllAdminsListAsync()
     {
         var users = await _context.Users
             .Where(u => u.Role == Role.Admin)
