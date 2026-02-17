@@ -20,7 +20,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("sales")]
-    public async Task<IActionResult> GetSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination)
+    public async Task<IActionResult> GetSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination, [FromQuery] int? userId = null)
     {
         try
         {
@@ -28,7 +28,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<SalesReportDto>.Failure([validationError]));
 
-            var report = await _reportService.GetSalesReportAsync(from, to, pagination);
+            var report = await _reportService.GetSalesReportAsync(from, to, pagination, userId);
             return Ok(ApiResult<SalesReportDto>.Success(report));
         }
         catch (Exception ex)
@@ -38,7 +38,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("stock-in")]
-    public async Task<IActionResult> GetStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination)
+    public async Task<IActionResult> GetStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination, [FromQuery] int? userId = null)
     {
         try
         {
@@ -46,7 +46,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<StockInReportDto>.Failure([validationError]));
 
-            var report = await _reportService.GetStockInReportAsync(from, to, pagination);
+            var report = await _reportService.GetStockInReportAsync(from, to, pagination, userId);
             return Ok(ApiResult<StockInReportDto>.Success(report));
         }
         catch (Exception ex)
@@ -56,7 +56,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("sales/export")]
-    public async Task<IActionResult> ExportSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to)
+    public async Task<IActionResult> ExportSalesReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] int? userId = null)
     {
         try
         {
@@ -64,7 +64,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<string>.Failure([validationError]));
 
-            var fileBytes = await _reportService.ExportSalesReportAsync(from, to);
+            var fileBytes = await _reportService.ExportSalesReportAsync(from, to, userId);
             return File(fileBytes,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 $"Sotilgan_mahsulotlar_{from:dd.MM.yyyy}-{to:dd.MM.yyyy}.xlsx");
@@ -76,7 +76,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("stock-in/export")]
-    public async Task<IActionResult> ExportStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to)
+    public async Task<IActionResult> ExportStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] int? userId = null)
     {
         try
         {
@@ -84,7 +84,7 @@ public class ReportsController : ControllerBase
             if (validationError is not null)
                 return BadRequest(ApiResult<string>.Failure([validationError]));
 
-            var fileBytes = await _reportService.ExportStockInReportAsync(from, to);
+            var fileBytes = await _reportService.ExportStockInReportAsync(from, to, userId);
             return File(fileBytes,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 $"Kirim_mahsulotlar_{from:dd.MM.yyyy}-{to:dd.MM.yyyy}.xlsx");

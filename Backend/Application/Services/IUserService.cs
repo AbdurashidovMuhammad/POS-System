@@ -9,6 +9,7 @@ public interface IUserService
     Task<ApiResult<UserDto>> CreateAdminAsync(CreateUserDto dto, int performedByUserId);
     Task<ApiResult<PagedResult<UserDto>>> GetAllAdminsAsync(PaginationParams pagination);
     Task<ApiResult<List<UserDto>>> GetAllAdminsListAsync();
+    Task<ApiResult<List<UserDto>>> GetAllUsersListAsync();
     Task<ApiResult<UserDto>> GetAdminByIdAsync(int id);
     Task<ApiResult<UserDto>> UpdateAdminAsync(int id, UpdateUserDto dto, int performedByUserId);
     Task<ApiResult<bool>> DeactivateAdminAsync(int id, int performedByUserId);

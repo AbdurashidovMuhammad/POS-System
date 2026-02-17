@@ -17,7 +17,7 @@ public class ReportService : IReportService
         _context = context;
     }
 
-    public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to, PaginationParams pagination)
+    public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to, PaginationParams pagination, int? userId = null)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
@@ -27,6 +27,9 @@ public class ReportService : IReportService
             .Include(si => si.Sale)
             .Include(si => si.Product)
             .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(si => si.Sale.UserId == userId.Value);
 
         var totalCount = await query.CountAsync();
 
@@ -61,7 +64,7 @@ public class ReportService : IReportService
         };
     }
 
-    public async Task<StockInReportDto> GetStockInReportAsync(DateTime from, DateTime to, PaginationParams pagination)
+    public async Task<StockInReportDto> GetStockInReportAsync(DateTime from, DateTime to, PaginationParams pagination, int? userId = null)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
@@ -72,6 +75,9 @@ public class ReportService : IReportService
             .Where(sm => sm.MovementType == Movement_Type.StockIn
                          && sm.MovementDate >= fromDate
                          && sm.MovementDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(sm => sm.UserId == userId.Value);
 
         var totalCount = await query.CountAsync();
 
@@ -103,9 +109,9 @@ public class ReportService : IReportService
         };
     }
 
-    public async Task<byte[]> ExportSalesReportAsync(DateTime from, DateTime to)
+    public async Task<byte[]> ExportSalesReportAsync(DateTime from, DateTime to, int? userId = null)
     {
-        var report = await GetAllSalesItemsAsync(from, to);
+        var report = await GetAllSalesItemsAsync(from, to, userId);
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Sotilgan mahsulotlar");
@@ -182,9 +188,9 @@ public class ReportService : IReportService
         return stream.ToArray();
     }
 
-    public async Task<byte[]> ExportStockInReportAsync(DateTime from, DateTime to)
+    public async Task<byte[]> ExportStockInReportAsync(DateTime from, DateTime to, int? userId = null)
     {
-        var report = await GetAllStockInItemsAsync(from, to);
+        var report = await GetAllStockInItemsAsync(from, to, userId);
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Kirim mahsulotlar");
@@ -254,16 +260,21 @@ public class ReportService : IReportService
         return stream.ToArray();
     }
 
-    private async Task<SalesReportDto> GetAllSalesItemsAsync(DateTime from, DateTime to)
+    private async Task<SalesReportDto> GetAllSalesItemsAsync(DateTime from, DateTime to, int? userId = null)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
 
-        var items = await _context.SaleItems
+        var query = _context.SaleItems
             .AsNoTracking()
             .Include(si => si.Sale)
             .Include(si => si.Product)
-            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate)
+            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(si => si.Sale.UserId == userId.Value);
+
+        var items = await query
             .OrderByDescending(si => si.Sale.SaleDate)
             .Select(si => new SalesReportItemDto
             {
@@ -290,17 +301,22 @@ public class ReportService : IReportService
         };
     }
 
-    private async Task<StockInReportDto> GetAllStockInItemsAsync(DateTime from, DateTime to)
+    private async Task<StockInReportDto> GetAllStockInItemsAsync(DateTime from, DateTime to, int? userId = null)
     {
         var fromDate = from.Date;
         var toDate = to.Date.AddDays(1);
 
-        var items = await _context.StockMovements
+        var query = _context.StockMovements
             .AsNoTracking()
             .Include(sm => sm.Product)
             .Where(sm => sm.MovementType == Movement_Type.StockIn
                          && sm.MovementDate >= fromDate
-                         && sm.MovementDate < toDate)
+                         && sm.MovementDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(sm => sm.UserId == userId.Value);
+
+        var items = await query
             .OrderByDescending(sm => sm.MovementDate)
             .Select(sm => new StockInReportItemDto
             {

@@ -20,6 +20,7 @@ public partial class ReportViewModel : ViewModelBase
         _navigationService = navigationService;
         StartDate = DateTime.Today.AddDays(-30);
         EndDate = DateTime.Today;
+        _ = LoadUsersAsync();
     }
 
     // Date filters
@@ -32,6 +33,13 @@ public partial class ReportViewModel : ViewModelBase
     // Tab selection: 0 = Sales, 1 = StockIn
     [ObservableProperty]
     private int _selectedTabIndex;
+
+    // User filter
+    [ObservableProperty]
+    private ObservableCollection<UserFilterItem> _userFilterItems = new();
+
+    [ObservableProperty]
+    private UserFilterItem? _selectedUserFilter;
 
     // Sales report data
     [ObservableProperty]
@@ -87,6 +95,32 @@ public partial class ReportViewModel : ViewModelBase
         }
     }
 
+    private async Task LoadUsersAsync()
+    {
+        try
+        {
+            var result = await _apiService.GetAsync<List<UserDto>>($"api/user/all-list");
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                var items = new ObservableCollection<UserFilterItem>
+                {
+                    new() { Id = null, DisplayName = "Barchasi" }
+                };
+                foreach (var user in result.Result)
+                {
+                    items.Add(new UserFilterItem
+                    {
+                        Id = user.Id,
+                        DisplayName = $"{user.Username} ({user.Role})"
+                    });
+                }
+                UserFilterItems = items;
+                SelectedUserFilter = items[0];
+            }
+        }
+        catch { }
+    }
+
     private static string FormatDateParam(DateTime date) => date.ToString("yyyy-MM-dd");
 
     private static void AssignDateGroupColors<T>(IList<T> items, Func<T, DateTime> dateSelector, Action<T, bool> setAlternate)
@@ -129,10 +163,11 @@ public partial class ReportViewModel : ViewModelBase
         {
             var from = FormatDateParam(StartDate);
             var to = FormatDateParam(EndDate);
+            var userIdParam = SelectedUserFilter?.Id is not null ? $"&userId={SelectedUserFilter.Id}" : "";
 
             if (SelectedTabIndex == 0)
             {
-                var result = await _apiService.GetAsync<SalesReportDto>($"api/reports/sales?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}");
+                var result = await _apiService.GetAsync<SalesReportDto>($"api/reports/sales?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}{userIdParam}");
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
@@ -150,7 +185,7 @@ public partial class ReportViewModel : ViewModelBase
             }
             else
             {
-                var result = await _apiService.GetAsync<StockInReportDto>($"api/reports/stock-in?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}");
+                var result = await _apiService.GetAsync<StockInReportDto>($"api/reports/stock-in?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}{userIdParam}");
 
                 if (result?.Succeeded == true && result.Result is not null)
                 {
@@ -208,18 +243,19 @@ public partial class ReportViewModel : ViewModelBase
         {
             var from = FormatDateParam(StartDate);
             var to = FormatDateParam(EndDate);
+            var userIdParam = SelectedUserFilter?.Id is not null ? $"&userId={SelectedUserFilter.Id}" : "";
 
             string endpoint;
             string defaultFileName;
 
             if (SelectedTabIndex == 0)
             {
-                endpoint = $"api/reports/sales/export?from={from}&to={to}";
+                endpoint = $"api/reports/sales/export?from={from}&to={to}{userIdParam}";
                 defaultFileName = $"Sotilgan_mahsulotlar_{StartDate:dd.MM.yyyy}-{EndDate:dd.MM.yyyy}.xlsx";
             }
             else
             {
-                endpoint = $"api/reports/stock-in/export?from={from}&to={to}";
+                endpoint = $"api/reports/stock-in/export?from={from}&to={to}{userIdParam}";
                 defaultFileName = $"Kirim_mahsulotlar_{StartDate:dd.MM.yyyy}-{EndDate:dd.MM.yyyy}.xlsx";
             }
 

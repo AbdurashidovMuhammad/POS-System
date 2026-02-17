@@ -274,6 +274,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -314,11 +316,38 @@
 
                         <DatePicker Grid.Column="3"
                                     SelectedDate="{Binding EndDate}"
-                                    Style="{StaticResource ModernDatePicker}"/>
+                                    Style="{StaticResource ModernDatePicker}"
+                                    Margin="0,0,20,0"/>
+
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                  Fill="{StaticResource PrimaryBrush}"
+                                  Width="16" Height="16"
+                                  Stretch="Uniform"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                            <TextBlock Text="Foydalanuvchi:"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="5"
+                                  ItemsSource="{Binding UserFilterItems}"
+                                  SelectedItem="{Binding SelectedUserFilter}"
+                                  DisplayMemberPath="DisplayName"
+                                  FontSize="13"
+                                  Padding="8,6"
+                                  Width="180"
+                                  VerticalAlignment="Center"
+                                  Background="{StaticResource BackgroundInputBrush}"
+                                  BorderBrush="{StaticResource BorderDefaultBrush}"
+                                  BorderThickness="1.5"/>
 
                         <!-- Spacer -->
 
-                        <Button Grid.Column="5"
+                        <Button Grid.Column="7"
                                 Command="{Binding LoadReportCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="0,0,8,0">
@@ -333,7 +362,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Grid.Column="6"
+                        <Button Grid.Column="8"
                                 Command="{Binding ExportToExcelCommand}"
                                 Style="{StaticResource ExportButtonStyle}">
                             <StackPanel Orientation="Horizontal">

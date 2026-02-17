@@ -81,6 +81,16 @@ internal class UserService : IUserService
         return ApiResult<List<UserDto>>.Success(users.Select(MapToDto).ToList());
     }
 
+    public async Task<ApiResult<List<UserDto>>> GetAllUsersListAsync()
+    {
+        var users = await _context.Users
+            .Where(u => u.Role == Role.Admin || u.Role == Role.SuperAdmin)
+            .OrderBy(u => u.Username)
+            .ToListAsync();
+
+        return ApiResult<List<UserDto>>.Success(users.Select(MapToDto).ToList());
+    }
+
     public async Task<ApiResult<UserDto>> GetAdminByIdAsync(int id)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);

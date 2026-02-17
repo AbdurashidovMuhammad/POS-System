@@ -46,6 +46,13 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("all-list")]
+    public async Task<IActionResult> GetAllUsersList()
+    {
+        var result = await _userService.GetAllUsersListAsync();
+        return Ok(result);
+    }
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetAdminById(int id)
     {
