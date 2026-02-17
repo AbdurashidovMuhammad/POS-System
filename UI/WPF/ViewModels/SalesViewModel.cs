@@ -166,6 +166,13 @@ public partial class SalesViewModel : ViewModelBase
             if (result?.Succeeded == true && result.Result is not null)
             {
                 var product = result.Result;
+
+                if (!product.IsActive)
+                {
+                    ErrorMessage = "Bu mahsulot nofaol holatda";
+                    return;
+                }
+
                 var existingItem = CartItems.FirstOrDefault(x => x.Product.Id == product.Id);
                 var currentQty = existingItem?.Quantity ?? 0;
 
@@ -241,7 +248,7 @@ public partial class SalesViewModel : ViewModelBase
 
             if (result?.Succeeded == true && result.Result is not null)
             {
-                SearchResults = new ObservableCollection<ProductDto>(result.Result.Items);
+                SearchResults = new ObservableCollection<ProductDto>(result.Result.Items.Where(p => p.IsActive));
                 if (SearchResults.Count == 0)
                     SearchError = "Mahsulot topilmadi";
             }
