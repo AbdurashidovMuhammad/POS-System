@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -30,18 +29,6 @@ public partial class AdminDashboardViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _totalCategoriesCount = "0 ta";
-
-    [ObservableProperty]
-    private string _salesChangeText = "kechagidan";
-
-    [ObservableProperty]
-    private SolidColorBrush _salesChangeBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
-
-    [ObservableProperty]
-    private string _ordersChangeText = "kechagidan";
-
-    [ObservableProperty]
-    private SolidColorBrush _ordersChangeBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
 
     // Ro'yxatlar
     [ObservableProperty]
@@ -157,11 +144,6 @@ public partial class AdminDashboardViewModel : ViewModelBase
                 TotalProductsCount = $"{stats.TotalProductsCount} ta";
                 TotalCategoriesCount = $"{stats.TotalCategoriesCount} ta";
 
-                UpdateChange(stats.TodaySalesAmount, stats.YesterdaySalesAmount,
-                    v => SalesChangeText = v, b => SalesChangeBrush = b);
-                UpdateChange(stats.TodayOrdersCount, stats.YesterdayOrdersCount,
-                    v => OrdersChangeText = v, b => OrdersChangeBrush = b);
-
                 TopSellingProducts = new ObservableCollection<TopSellingProductDto>(stats.TopSellingProducts);
                 HasTopProducts = TopSellingProducts.Count > 0;
 
@@ -196,25 +178,6 @@ public partial class AdminDashboardViewModel : ViewModelBase
         {
             // silently fail
         }
-    }
-
-    private static readonly SolidColorBrush GreenBrush = new(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static readonly SolidColorBrush GrayBrush = new(Color.FromRgb(0x66, 0x66, 0x66));
-
-    private static void UpdateChange(decimal today, decimal yesterday,
-        Action<string> setText, Action<SolidColorBrush> setBrush)
-    {
-        if (yesterday == 0)
-        {
-            setText(today > 0 ? "Kecha bo'lmagan" : "Hali yo'q");
-            setBrush(today > 0 ? GreenBrush : GrayBrush);
-            return;
-        }
-
-        var change = (today - yesterday) / yesterday * 100;
-        setText(change >= 0 ? $"+{change:N0}% kechagidan" : $"{change:N0}% kechagidan");
-        setBrush(change >= 0 ? GreenBrush : RedBrush);
     }
 
     [RelayCommand]

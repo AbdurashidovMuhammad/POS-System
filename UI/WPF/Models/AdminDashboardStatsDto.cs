@@ -3,9 +3,7 @@ namespace WPF.Models;
 public class AdminDashboardStatsDto
 {
     public decimal TodaySalesAmount { get; set; }
-    public decimal YesterdaySalesAmount { get; set; }
     public int TodayOrdersCount { get; set; }
-    public int YesterdayOrdersCount { get; set; }
     public int TotalProductsCount { get; set; }
     public int TotalCategoriesCount { get; set; }
     public List<TopSellingProductDto> TopSellingProducts { get; set; } = [];

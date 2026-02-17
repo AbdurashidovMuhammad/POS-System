@@ -57,7 +57,6 @@ internal class DashboardService : IDashboardService
     {
         var today = DateTime.Today;
         var tomorrow = today.AddDays(1);
-        var yesterday = today.AddDays(-1);
 
         // Umumiy bugungi sotish
         var todaySalesQuery = _context.Sales.AsNoTracking()
@@ -65,13 +64,6 @@ internal class DashboardService : IDashboardService
 
         var todaySalesAmount = await todaySalesQuery.SumAsync(s => (decimal?)s.TotalAmount) ?? 0m;
         var todayOrdersCount = await todaySalesQuery.CountAsync();
-
-        // Kechagi sotish
-        var yesterdaySalesQuery = _context.Sales.AsNoTracking()
-            .Where(s => s.SaleDate >= yesterday && s.SaleDate < today);
-
-        var yesterdaySalesAmount = await yesterdaySalesQuery.SumAsync(s => (decimal?)s.TotalAmount) ?? 0m;
-        var yesterdayOrdersCount = await yesterdaySalesQuery.CountAsync();
 
         // Mahsulotlar va kategoriyalar
         var totalProductsCount = await _context.Products.AsNoTracking().CountAsync(p => p.IsActive);
@@ -126,9 +118,7 @@ internal class DashboardService : IDashboardService
         return new AdminDashboardStatsDto
         {
             TodaySalesAmount = todaySalesAmount,
-            YesterdaySalesAmount = yesterdaySalesAmount,
             TodayOrdersCount = todayOrdersCount,
-            YesterdayOrdersCount = yesterdayOrdersCount,
             TotalProductsCount = totalProductsCount,
             TotalCategoriesCount = totalCategoriesCount,
             TopSellingProducts = topSellingProducts,

@@ -146,9 +146,8 @@
                             <TextBlock Text="{Binding TodaySalesAmount}"
                                        FontSize="24" FontWeight="Bold"
                                        Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
-                            <TextBlock Text="{Binding SalesChangeText}"
-                                       FontSize="12"
-                                       Foreground="{Binding SalesChangeBrush}"
+                            <TextBlock Text="Bugungi savdo"
+                                       FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
                                        Margin="0,5,0,0"/>
                         </StackPanel>
                         <Border Grid.Column="1" Width="50" Height="50" CornerRadius="12">
@@ -178,9 +177,8 @@
                             <TextBlock Text="{Binding TodayOrdersCount}"
                                        FontSize="24" FontWeight="Bold"
                                        Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
-                            <TextBlock Text="{Binding OrdersChangeText}"
-                                       FontSize="12"
-                                       Foreground="{Binding OrdersChangeBrush}"
+                            <TextBlock Text="Bugungi buyurtmalar"
+                                       FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
                                        Margin="0,5,0,0"/>
                         </StackPanel>
                         <Border Grid.Column="1" Width="50" Height="50" CornerRadius="12">
