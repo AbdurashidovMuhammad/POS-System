@@ -114,7 +114,6 @@ internal class DashboardService : IDashboardService
             .Include(p => p.Category)
             .Where(p => p.IsActive && p.StockQuantity <= 10)
             .OrderBy(p => p.StockQuantity)
-            .Take(10)
             .Select(p => new LowStockProductDto
             {
                 ProductId = p.Id,
