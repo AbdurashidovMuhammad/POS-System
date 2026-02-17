@@ -463,7 +463,7 @@ public partial class SalesViewModel : ViewModelBase
 
     private void CalculateTotal()
     {
-        TotalAmount = CartItems.Sum(x => x.Product.UnitPrice * x.Quantity);
+        TotalAmount = CartItems.Sum(x => x.Subtotal);
         TotalQuantity = CartItems.Sum(x => x.Quantity);
     }
 }
@@ -477,5 +477,7 @@ public partial class CartItem : ObservableObject
     [NotifyPropertyChangedFor(nameof(Subtotal))]
     private decimal _quantity;
 
-    public decimal Subtotal => Product.UnitPrice * Quantity;
+    public decimal Subtotal => Product.UnitType == Enums.UnitType.Gramm
+        ? Product.UnitPrice * Quantity / 1000m
+        : Product.UnitPrice * Quantity;
 }

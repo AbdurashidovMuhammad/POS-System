@@ -8,5 +8,8 @@ public class SaleItemDto
     public string ProductBarcode { get; set; } = null!;
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
-    public decimal Subtotal => Quantity * UnitPrice;
+    public int UnitType { get; set; }
+    public decimal Subtotal => UnitType == (int)Core.Enums.Unit_Type.Gramm
+        ? Quantity * UnitPrice / 1000m
+        : Quantity * UnitPrice;
 }

@@ -77,7 +77,9 @@ public class SaleService : ISaleService
             foreach (var item in dto.Items)
             {
                 var product = products[item.ProductId];
-                totalAmount += product.UnitPrice * item.Quantity;
+                totalAmount += product.Unit_Type == Unit_Type.Gramm
+                    ? product.UnitPrice * item.Quantity / 1000m
+                    : product.UnitPrice * item.Quantity;
             }
 
             // Create Sale
@@ -157,7 +159,8 @@ public class SaleService : ISaleService
                     ProductName = products[si.ProductId].Name,
                     ProductBarcode = products[si.ProductId].barcode,
                     Quantity = si.Quantity,
-                    UnitPrice = si.UnitPrice
+                    UnitPrice = si.UnitPrice,
+                    UnitType = (int)products[si.ProductId].Unit_Type
                 }).ToList()
             };
         }
