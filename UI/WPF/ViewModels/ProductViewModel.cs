@@ -424,7 +424,7 @@ public partial class ProductViewModel : ViewModelBase
                 var productId = result.Result;
                 var hasCustomBarcode = !string.IsNullOrWhiteSpace(FormBarcode);
                 var productName = FormName.Trim();
-                CloseAllPanels();
+                ClearForm();
                 SuccessMessage = "Mahsulot muvaffaqiyatli qo'shildi";
                 await LoadProductsAsync();
                 if (!hasCustomBarcode)
