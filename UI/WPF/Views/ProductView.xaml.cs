@@ -134,6 +134,35 @@ public partial class ProductView : UserControl
         e.Handled = true;
     }
 
+    private void GrammTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            textBox.SelectAll();
+        }
+    }
+
+    private void GrammTextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = !int.TryParse(e.Text, out _);
+    }
+
+    private void GrammTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            if (int.TryParse(textBox.Text, out var value))
+            {
+                value = Math.Clamp(value, 0, 999);
+                textBox.Text = value.ToString("000");
+            }
+            else
+            {
+                textBox.Text = "000";
+            }
+        }
+    }
+
     private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
     {
         // Delay closing to allow click on suggestion item

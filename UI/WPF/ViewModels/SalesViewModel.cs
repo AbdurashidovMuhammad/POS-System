@@ -236,6 +236,7 @@ public partial class SalesViewModel : ViewModelBase
             || product.UnitType == UnitType.Shisha
             || product.UnitType == UnitType.Oram
             || product.UnitType == UnitType.Juft
+            || product.UnitType == UnitType.Gramm
             ? "1"
             : "";
         SearchError = null;

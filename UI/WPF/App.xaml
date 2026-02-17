@@ -19,6 +19,7 @@
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
         <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
         <converters:IndexConverter x:Key="IndexConverter"/>
+        <converters:GrammToKgConverter x:Key="GrammToKgConverter"/>
 
         <!-- DataTemplates for View-ViewModel mapping -->
         <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">

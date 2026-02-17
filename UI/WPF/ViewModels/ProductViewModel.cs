@@ -128,6 +128,22 @@ public partial class ProductViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _formStockQuantity;
 
+    // Gramm uchun kg + gramm split input
+    [ObservableProperty]
+    private int _formStockKg = 1;
+
+    [ObservableProperty]
+    private int _formStockGramm;
+
+    [ObservableProperty]
+    private int _stockInKg;
+
+    [ObservableProperty]
+    private int _stockInGramm;
+
+    public bool IsGrammSelected => FormUnitType == UnitType.Gramm;
+    public bool IsStockInGramm => SelectedProduct?.UnitType == UnitType.Gramm;
+
     [ObservableProperty]
     private string _formBarcode = string.Empty;
 
@@ -142,6 +158,26 @@ public partial class ProductViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _successMessage;
+
+    partial void OnFormUnitTypeChanged(UnitType value)
+    {
+        OnPropertyChanged(nameof(IsGrammSelected));
+        if (value == UnitType.Gramm)
+        {
+            FormStockKg = 1;
+            FormStockGramm = 0;
+        }
+    }
+
+    partial void OnSelectedProductChanged(ProductDto? value)
+    {
+        OnPropertyChanged(nameof(IsStockInGramm));
+        if (value?.UnitType == UnitType.Gramm)
+        {
+            StockInKg = 0;
+            StockInGramm = 0;
+        }
+    }
 
     // CanExecute methods
     private bool CanGoToPreviousPage() => CurrentPage > 1 && !IsLoading;
@@ -349,6 +385,8 @@ public partial class ProductViewModel : ViewModelBase
 
         CloseAllPanels();
         StockInQuantity = 0;
+        StockInKg = 0;
+        StockInGramm = 0;
         FormError = null;
         IsStockInPanelOpen = true;
         await Task.CompletedTask;
@@ -365,13 +403,17 @@ public partial class ProductViewModel : ViewModelBase
 
         try
         {
+            var stockQty = FormUnitType == UnitType.Gramm
+                ? FormStockKg * 1000m + FormStockGramm
+                : FormStockQuantity;
+
             var dto = new CreateProductDto
             {
                 Name = FormName.Trim(),
                 CategoryId = FormCategoryId!.Value,
                 UnitPrice = FormUnitPrice,
                 UnitType = FormUnitType,
-                StockQuantity = FormStockQuantity,
+                StockQuantity = stockQty,
                 Barcode = string.IsNullOrWhiteSpace(FormBarcode) ? null : FormBarcode.Trim()
             };
 
@@ -451,7 +493,11 @@ public partial class ProductViewModel : ViewModelBase
     {
         if (SelectedProduct is null) return;
 
-        if (StockInQuantity <= 0)
+        var stockQty = SelectedProduct.UnitType == UnitType.Gramm
+            ? StockInKg * 1000m + StockInGramm
+            : StockInQuantity;
+
+        if (stockQty <= 0)
         {
             FormError = "Miqdor 0 dan katta bo'lishi kerak";
             return;
@@ -464,7 +510,7 @@ public partial class ProductViewModel : ViewModelBase
         {
             var dto = new AddStockDto
             {
-                Quantity = StockInQuantity,
+                Quantity = stockQty,
                 UserId = _authService.UserId ?? 1
             };
 
@@ -473,7 +519,7 @@ public partial class ProductViewModel : ViewModelBase
             if (result?.Succeeded == true)
             {
                 CloseAllPanels();
-                SuccessMessage = $"{StockInQuantity:N2} {SelectedProduct.UnitType} zaxiraga qo'shildi";
+                SuccessMessage = $"{stockQty:N2} {SelectedProduct.UnitType} zaxiraga qo'shildi";
                 await LoadProductsAsync();
             }
             else
@@ -628,8 +674,12 @@ public partial class ProductViewModel : ViewModelBase
         FormUnitPrice = 0;
         FormUnitType = UnitType.Dona;
         FormStockQuantity = 0;
+        FormStockKg = 1;
+        FormStockGramm = 0;
         FormBarcode = string.Empty;
         StockInQuantity = 0;
+        StockInKg = 0;
+        StockInGramm = 0;
         FormError = null;
     }
 
@@ -659,10 +709,21 @@ public partial class ProductViewModel : ViewModelBase
             return false;
         }
 
-        if (!isUpdate && FormStockQuantity < 0)
+        if (!isUpdate)
         {
-            FormError = "Zaxira miqdori manfiy bo'lishi mumkin emas";
-            return false;
+            if (FormUnitType == UnitType.Gramm)
+            {
+                if (FormStockKg < 0 || FormStockGramm < 0 || FormStockGramm >= 1000)
+                {
+                    FormError = "Gramm qiymati 0 dan 999 gacha bo'lishi kerak";
+                    return false;
+                }
+            }
+            else if (FormStockQuantity < 0)
+            {
+                FormError = "Zaxira miqdori manfiy bo'lishi mumkin emas";
+                return false;
+            }
         }
 
         FormError = null;

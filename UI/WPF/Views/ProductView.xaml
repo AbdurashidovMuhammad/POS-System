@@ -410,7 +410,12 @@
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>
-                                                        <Run Text="{Binding StockQuantity, StringFormat=0.##}"/>
+                                                        <TextBlock.Text>
+                                                            <MultiBinding Converter="{StaticResource GrammToKgConverter}">
+                                                                <Binding Path="StockQuantity"/>
+                                                                <Binding Path="UnitType"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
                                                     </TextBlock>
                                                 </Border>
                                             </Border>
@@ -774,13 +779,55 @@
                             <!-- Initial Stock and Barcode (only for new products) -->
                             <StackPanel Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Text="Boshlang'ich zaxira" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
-                                <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
+
+                                <!-- Normal input (boshqa o'lchov birliklari uchun) -->
+                                <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18"
+                                        Visibility="{Binding IsGrammSelected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
                                     <TextBox Text="{Binding FormStockQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                              Background="Transparent"
                                              BorderThickness="0"
                                              Padding="14,12"
                                              FontSize="14"/>
                                 </Border>
+
+                                <!-- Gramm uchun kg + gramm split input -->
+                                <Grid Margin="0,0,0,18"
+                                      Visibility="{Binding IsGrammSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                        <TextBox Text="{Binding FormStockKg, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Padding="14,12"
+                                                 FontSize="16"
+                                                 FontWeight="SemiBold"
+                                                 HorizontalContentAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="kg" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"
+                                               VerticalAlignment="Center" Margin="8,0,14,0"/>
+
+                                    <Border Grid.Column="2" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                        <TextBox Text="{Binding FormStockGramm, StringFormat=000}"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Padding="14,12"
+                                                 FontSize="16"
+                                                 FontWeight="SemiBold"
+                                                 HorizontalContentAlignment="Center"
+                                                 MaxLength="3"
+                                                 GotFocus="GrammTextBox_GotFocus"
+                                                 PreviewTextInput="GrammTextBox_PreviewTextInput"
+                                                 LostFocus="GrammTextBox_LostFocus"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="3" Text="gr" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"
+                                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </Grid>
 
                                 <!-- Custom Barcode (ixtiyoriy) -->
                                 <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8">
@@ -839,7 +886,10 @@
 
                             <!-- Stock Quantity Input -->
                             <TextBlock Text="Qo'shiladigan miqdor" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
-                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,10">
+
+                            <!-- Normal input (boshqa o'lchov birliklari uchun) -->
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,10"
+                                    Visibility="{Binding IsStockInGramm, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
                                 <TextBox Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                          Background="Transparent"
                                          BorderThickness="0"
@@ -847,6 +897,44 @@
                                          FontSize="18"
                                          FontWeight="SemiBold"/>
                             </Border>
+
+                            <!-- Gramm uchun kg + gramm split input -->
+                            <Grid Margin="0,0,0,10"
+                                  Visibility="{Binding IsStockInGramm, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                    <TextBox Text="{Binding StockInKg, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="14,14"
+                                             FontSize="18"
+                                             FontWeight="SemiBold"
+                                             HorizontalContentAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="kg" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"
+                                           VerticalAlignment="Center" Margin="8,0,14,0"/>
+
+                                <Border Grid.Column="2" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                    <TextBox Text="{Binding StockInGramm, StringFormat=000}"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="14,14"
+                                             FontSize="18"
+                                             FontWeight="SemiBold"
+                                             HorizontalContentAlignment="Center"
+                                             MaxLength="3"
+                                             GotFocus="GrammTextBox_GotFocus"
+                                             PreviewTextInput="GrammTextBox_PreviewTextInput"/>
+                                </Border>
+                                <TextBlock Grid.Column="3" Text="gr" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"
+                                           VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </Grid>
                             <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,8" Margin="0,0,0,20">
                                 <TextBlock Foreground="{StaticResource PrimaryBrush}" FontSize="12" HorizontalAlignment="Center">
                                     <Run Text="Yangi zaxira: "/>
