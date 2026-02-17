@@ -33,6 +33,8 @@ public class ReportService : IReportService
 
         var totalCount = await query.CountAsync();
 
+        var orderCount = await query.Select(si => si.Sale.Id).Distinct().CountAsync();
+
         var totalAmount = await query.SumAsync(si => si.Quantity * si.UnitPrice);
 
         var items = await query
@@ -58,6 +60,7 @@ public class ReportService : IReportService
             DateTo = to.Date,
             Items = items,
             TotalAmount = totalAmount,
+            OrderCount = orderCount,
             Page = pagination.Page,
             PageSize = pagination.PageSize,
             TotalCount = totalCount

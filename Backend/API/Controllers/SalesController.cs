@@ -1,5 +1,7 @@
 using Application.DTOs;
+using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
+using Application.DTOs.ReportDTOs;
 using Application.DTOs.SaleDTOs;
 using Application.Exceptions;
 using Application.Services;
@@ -15,10 +17,12 @@ namespace API.Controllers;
 public class SalesController : ControllerBase
 {
     private readonly ISaleService _saleService;
+    private readonly IReportService _reportService;
 
-    public SalesController(ISaleService saleService)
+    public SalesController(ISaleService saleService, IReportService reportService)
     {
         _saleService = saleService;
+        _reportService = reportService;
     }
 
     /// <summary>
@@ -60,6 +64,38 @@ public class SalesController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, ApiResult<SaleDto>.Failure([ex.Message]));
+        }
+    }
+
+    /// <summary>
+    /// Get current user's sales history with pagination and date range filter
+    /// </summary>
+    [HttpGet("my-history")]
+    public async Task<IActionResult> GetMySalesHistory(
+        [FromQuery] DateTime from,
+        [FromQuery] DateTime to,
+        [FromQuery] PaginationParams pagination)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized(ApiResult<SalesReportDto>.Failure(["Foydalanuvchi autentifikatsiyadan o'tmagan"]));
+            }
+
+            if (from == default || to == default)
+                return BadRequest(ApiResult<SalesReportDto>.Failure(["Sana kiritilishi shart"]));
+
+            if (from.Date > to.Date)
+                return BadRequest(ApiResult<SalesReportDto>.Failure(["Boshlanish sanasi tugash sanasidan katta bo'lishi mumkin emas"]));
+
+            var report = await _reportService.GetSalesReportAsync(from, to, pagination, userId);
+            return Ok(ApiResult<SalesReportDto>.Success(report));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<SalesReportDto>.Failure([ex.Message]));
         }
     }
 
