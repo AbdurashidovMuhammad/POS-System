@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.ProductDTOs;
 using Application.DTOs.SaleDTOs;
 using Application.Exceptions;
 using Application.Services;
@@ -59,6 +60,20 @@ public class SalesController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, ApiResult<SaleDto>.Failure([ex.Message]));
+        }
+    }
+
+    [HttpGet("top-selling")]
+    public async Task<IActionResult> GetTopSellingProducts()
+    {
+        try
+        {
+            var products = await _saleService.GetTopSellingProductsAsync();
+            return Ok(ApiResult<List<ProductDto>>.Success(products));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<List<ProductDto>>.Failure([ex.Message]));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Application.DTOs.SaleDTOs;
+﻿using Application.DTOs.CategoryDTOs;
+using Application.DTOs.ProductDTOs;
+using Application.DTOs.SaleDTOs;
 using Application.Exceptions;
 using Core.Entities;
 using Core.Enums;
@@ -164,5 +166,57 @@ public class SaleService : ISaleService
             await transaction.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<List<ProductDto>> GetTopSellingProductsAsync(int count = 5)
+    {
+        var tomorrow = DateTime.Today.AddDays(1);
+        var twoDaysAgo = DateTime.Today.AddDays(-1);
+
+        // So'nggi 2 kunlik sotuvlardan eng ko'p sotilganlarni olish
+        var topProductIds = await _context.SaleItems
+            .AsNoTracking()
+            .Where(si => si.Sale.SaleDate >= twoDaysAgo && si.Sale.SaleDate < tomorrow)
+            .GroupBy(si => si.ProductId)
+            .OrderByDescending(g => g.Sum(si => si.Quantity))
+            .Take(count)
+            .Select(g => g.Key)
+            .ToListAsync();
+
+        if (topProductIds.Count == 0)
+            return [];
+
+        // To'liq mahsulot ma'lumotlarini olish
+        var products = await _context.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .Where(p => topProductIds.Contains(p.Id) && p.IsActive)
+            .ToListAsync();
+
+        // Tartibni saqlash (eng ko'p sotilganidan kamiga)
+        var ordered = topProductIds
+            .Select(id => products.FirstOrDefault(p => p.Id == id))
+            .Where(p => p != null)
+            .Select(p => new ProductDto
+            {
+                Id = p!.Id,
+                Name = p.Name,
+                CategoryId = p.CategoryId,
+                Category = p.Category != null ? new CategoryDto
+                {
+                    Id = p.Category.Id,
+                    Name = p.Category.Name,
+                    IsActive = p.Category.IsActive
+                } : null,
+                UnitPrice = p.UnitPrice,
+                UnitType = p.Unit_Type,
+                StockQuantity = p.StockQuantity,
+                Barcode = p.barcode,
+                IsActive = p.IsActive,
+                CreatedAt = p.CreatedAt
+            })
+            .ToList();
+
+        return ordered;
     }
 }

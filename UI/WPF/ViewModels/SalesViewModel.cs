@@ -20,6 +20,7 @@ public partial class SalesViewModel : ViewModelBase
         _apiService = apiService;
         _navigationService = navigationService;
         CartItems.CollectionChanged += CartItems_CollectionChanged;
+        _ = LoadTopSellingProductsAsync();
     }
 
     [ObservableProperty]
@@ -33,6 +34,56 @@ public partial class SalesViewModel : ViewModelBase
 
     [ObservableProperty]
     private decimal _totalQuantity;
+
+    // --- Top selling products ---
+    [ObservableProperty]
+    private ObservableCollection<ProductDto> _topSellingProducts = [];
+
+    private async Task LoadTopSellingProductsAsync()
+    {
+        try
+        {
+            var result = await _apiService.GetAsync<List<ProductDto>>("api/sales/top-selling");
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                TopSellingProducts = new ObservableCollection<ProductDto>(result.Result);
+            }
+        }
+        catch { }
+    }
+
+    [RelayCommand]
+    private void AddTopSellingProduct(ProductDto product)
+    {
+        if (product is null) return;
+
+        ClearError();
+
+        if (!product.IsActive)
+        {
+            ErrorMessage = "Bu mahsulot nofaol holatda";
+            return;
+        }
+
+        var existingItem = CartItems.FirstOrDefault(x => x.Product.Id == product.Id);
+        var currentQty = existingItem?.Quantity ?? 0;
+
+        if (currentQty + 1 > product.StockQuantity)
+        {
+            ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity})";
+            return;
+        }
+
+        if (existingItem is not null)
+        {
+            existingItem.Quantity++;
+        }
+        else
+        {
+            CartItems.Add(new CartItem { Product = product, Quantity = 1 });
+        }
+        CalculateTotal();
+    }
 
     // --- Payment type selection ---
     [ObservableProperty]
@@ -387,6 +438,7 @@ public partial class SalesViewModel : ViewModelBase
             {
                 SuccessMessage = $"Sotuv muvaffaqiyatli yakunlandi! Chek #{result.Result?.Id}";
                 ClearCart();
+                _ = LoadTopSellingProductsAsync();
             }
             else
             {

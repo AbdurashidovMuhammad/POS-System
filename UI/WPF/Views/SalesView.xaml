@@ -24,6 +24,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -144,8 +145,58 @@
                     </Grid>
                 </Border>
 
+                <!-- Top Selling Products -->
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding TopSellingProducts}" Margin="20,0,20,8"
+                              Visibility="{Binding TopSellingProducts.Count, Converter={StaticResource IntToVisibilityConverter}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.AddTopSellingProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="0,0,6,6"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                Background="{StaticResource PrimaryLighterBrush}"
+                                                CornerRadius="8"
+                                                Padding="12,7"
+                                                BorderBrush="{StaticResource PrimaryLightBrush}"
+                                                BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="M17.56,21C17.43,21.63 16.85,22 16.22,22H7.78C7.15,22 6.57,21.63 6.44,21L4,12H20L17.56,21M12,2A3,3 0 0,1 15,5H9A3,3 0 0,1 12,2M20,7H4A1,1 0 0,0 3,8V10C3,10.55 3.45,11 4,11H20C20.55,11 21,10.55 21,10V8A1,1 0 0,0 20,7Z"
+                                                      Fill="{StaticResource PrimaryBrush}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,6,0" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource PrimaryDarkBrush}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding UnitPrice, StringFormat=' · {0:N0}'}"
+                                                           FontSize="11"
+                                                           Foreground="{StaticResource PrimaryBrush}"
+                                                           VerticalAlignment="Center"
+                                                           Opacity="0.7"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
                 <!-- Column headers -->
-                <Border Grid.Row="2" Padding="20,0,20,0"
+                <Border Grid.Row="3" Padding="20,0,20,0"
                         Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}}">
                     <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="8" Padding="12,10" Margin="0,4,0,0">
                         <Grid>
@@ -165,7 +216,7 @@
                 </Border>
 
                 <!-- Cart Items List -->
-                <ListView Grid.Row="3"
+                <ListView Grid.Row="4"
                           ItemsSource="{Binding CartItems}"
                           BorderThickness="0"
                           Background="Transparent"
@@ -330,7 +381,7 @@
                 </ListView>
 
                 <!-- Empty Cart -->
-                <StackPanel Grid.Row="3"
+                <StackPanel Grid.Row="4"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             Visibility="{Binding CartItems.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}">

@@ -1,4 +1,5 @@
-﻿using Application.DTOs.SaleDTOs;
+﻿using Application.DTOs.ProductDTOs;
+using Application.DTOs.SaleDTOs;
 
 namespace Application.Services;
 
@@ -11,4 +12,9 @@ public interface ISaleService
     /// <param name="userId">User ID from JWT token</param>
     /// <returns>Created sale with items</returns>
     Task<SaleDto> CreateSaleAsync(CreateSaleDto dto, int userId);
+
+    /// <summary>
+    /// Bugungi eng ko'p sotilgan mahsulotlarni qaytaradi
+    /// </summary>
+    Task<List<ProductDto>> GetTopSellingProductsAsync(int count = 5);
 }
