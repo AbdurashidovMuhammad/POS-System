@@ -75,6 +75,14 @@ public partial class SalesViewModel : ViewModelBase
     partial void OnSearchTextChanged(string value)
     {
         _searchCts?.Cancel();
+
+        if (string.IsNullOrWhiteSpace(value) || value.Trim().Length < 3)
+        {
+            SearchResults.Clear();
+            SearchError = null;
+            return;
+        }
+
         _searchCts = new CancellationTokenSource();
         var token = _searchCts.Token;
 

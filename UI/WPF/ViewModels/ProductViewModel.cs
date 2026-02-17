@@ -58,6 +58,13 @@ public partial class ProductViewModel : ViewModelBase
 
     partial void OnSearchTextChanged(string value)
     {
+        if (string.IsNullOrWhiteSpace(value) || value.Trim().Length < 3)
+        {
+            Suggestions.Clear();
+            IsSuggestionsOpen = false;
+            return;
+        }
+
         _ = LoadSuggestionsAsync(value);
     }
 
