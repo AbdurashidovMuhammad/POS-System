@@ -178,7 +178,7 @@
                                                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                                                     <TextBlock Text="{Binding Barcode}" FontSize="11" Foreground="{StaticResource TextFaintBrush}"/>
                                                                     <TextBlock Text="  ·  " FontSize="11" Foreground="{StaticResource TextSeparatorBrush}"/>
-                                                                    <TextBlock Text="{Binding UnitPrice, StringFormat={}{0:N0} sum}" FontSize="11" Foreground="{StaticResource SuccessBrush}" FontWeight="SemiBold"/>
+                                                                    <TextBlock Text="{Binding SellPrice, StringFormat={}{0:N0} sum}" FontSize="11" Foreground="{StaticResource SuccessBrush}" FontWeight="SemiBold"/>
                                                                 </StackPanel>
                                                             </StackPanel>
                                                             <Border.Style>
@@ -320,6 +320,14 @@
                                                               Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
+                                                <MenuItem Header="Batch ma'lumotlari" Padding="6,8,20,8"
+                                                          Command="{Binding PlacementTarget.Tag.ShowBatchesCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          Visibility="{Binding PlacementTarget.Tag.IsSuperAdmin, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z"
+                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                                 <Separator/>
                                                 <MenuItem Header="O'chirish" Padding="6,8,20,8"
                                                           Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
@@ -376,7 +384,7 @@
 
                                             <!-- Price -->
                                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding UnitPrice, StringFormat={}{0:N0}}"
+                                                <TextBlock Text="{Binding SellPrice, StringFormat={}{0:N0}}"
                                                            FontSize="13" FontWeight="Bold" Foreground="{StaticResource SuccessDarkBrush}"/>
                                                 <TextBlock Text=" sum" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Bottom" Margin="2,0,0,1"/>
                                             </StackPanel>
@@ -755,10 +763,10 @@
                                           FontSize="14"/>
                             </Border>
 
-                            <!-- Unit Price -->
-                            <TextBlock Text="Narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
+                            <!-- Sell Price -->
+                            <TextBlock Text="Sotish narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
                             <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,18">
-                                <TextBox Text="{Binding FormUnitPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                <TextBox Text="{Binding FormSellPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                          Background="Transparent"
                                          BorderThickness="0"
                                          Padding="14,12"
@@ -845,6 +853,19 @@
                                 <TextBlock Text="Bo'sh qoldirilsa, barcode avtomatik generatsiya qilinadi"
                                            FontSize="11" Foreground="{StaticResource TextMutedBrush}"
                                            Margin="4,0,0,18"/>
+
+                                <!-- Buy Price (only shown when adding new product with initial stock) -->
+                                <TextBlock Text="Kelish narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
+                                <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,6">
+                                    <TextBox Text="{Binding FormBuyPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="14,12"
+                                             FontSize="14"/>
+                                </Border>
+                                <TextBlock Text="Boshlang'ich zaxira 0 bo'lsa, kelish narxi shart emas"
+                                           FontSize="11" Foreground="{StaticResource TextMutedBrush}"
+                                           Margin="4,0,0,18"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -877,7 +898,7 @@
                                         <Border Grid.Column="1" Background="{StaticResource SemiTransparentWhiteBrush}" CornerRadius="10" Padding="14,10" Margin="6,0,0,0">
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBlock Text="Narxi" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="{Binding SelectedProduct.UnitPrice, StringFormat={}{0:N0} sum}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                                <TextBlock Text="{Binding SelectedProduct.SellPrice, StringFormat={}{0:N0} sum}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,3,0,0"/>
                                             </StackPanel>
                                         </Border>
                                     </Grid>
@@ -935,6 +956,17 @@
                                 <TextBlock Grid.Column="3" Text="gr" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"
                                            VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </Grid>
+                            <!-- Buy Price for Stock In -->
+                            <TextBlock Text="Kelish narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,20">
+                                <TextBox Text="{Binding StockInBuyPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,14"
+                                         FontSize="18"
+                                         FontWeight="SemiBold"/>
+                            </Border>
+
                             <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,8" Margin="0,0,0,20">
                                 <TextBlock Foreground="{StaticResource PrimaryBrush}" FontSize="12" HorizontalAlignment="Center">
                                     <Run Text="Yangi zaxira: "/>
@@ -1121,6 +1153,176 @@
                     </StackPanel>
                 </Border>
             </Grid>
+        </Border>
+
+        <!-- ═══════════════ BATCH DIALOG (SuperAdmin only) ═══════════════ -->
+        <Border Grid.ColumnSpan="2"
+                Background="{StaticResource OverlayModalBrush}"
+                Visibility="{Binding IsBatchDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border Background="{StaticResource BackgroundCardBrush}"
+                    CornerRadius="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MinWidth="620"
+                    MaxWidth="820"
+                    MaxHeight="600">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="40" ShadowDepth="5" Opacity="0.2" Direction="270"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Dialog Header -->
+                    <Border Grid.Row="0" CornerRadius="20,20,0,0" Padding="28,22,28,18">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                                <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                                <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z"
+                                      Fill="White" Width="20" Height="20" Stretch="Uniform" Opacity="0.9"/>
+                                <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="Batch ma'lumotlari" FontSize="17" FontWeight="SemiBold" Foreground="White"/>
+                                    <TextBlock Text="{Binding BatchDialogProductName}" FontSize="12" Foreground="#CCFFFFFF"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Button HorizontalAlignment="Right"
+                                    Command="{Binding CloseBatchDialogCommand}"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Padding="8">
+                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                  Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource ErrorTextBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Dialog Content -->
+                    <Grid Grid.Row="1" Margin="28,20,28,28">
+                        <!-- Loading -->
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Visibility="{Binding IsBatchLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Yuklanmoqda..." FontSize="14" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Batch Table -->
+                        <StackPanel Visibility="{Binding IsBatchLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                            <!-- Table Header -->
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" Padding="14,10" Margin="0,0,0,4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Kelish sanasi" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                    <TextBlock Grid.Column="1" Text="Kelish narxi" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                    <TextBlock Grid.Column="2" Text="Boshlang'ich" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                    <TextBlock Grid.Column="3" Text="Qolgan" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Batch Rows -->
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="380">
+                                <ItemsControl ItemsSource="{Binding Batches}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="14,10" CornerRadius="8" Margin="0,1">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RemainingQuantity}" Value="0">
+                                                                <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <!-- ReceivedAt -->
+                                                    <TextBlock Grid.Column="0" Text="{Binding ReceivedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                                               FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                                    <!-- BuyPrice -->
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding BuyPrice, StringFormat={}{0:N0}}"
+                                                                   FontSize="13" FontWeight="Bold" Foreground="{StaticResource WarningBrush}"/>
+                                                        <TextBlock Text=" sum" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Bottom" Margin="2,0,0,1"/>
+                                                    </StackPanel>
+                                                    <!-- OriginalQuantity -->
+                                                    <TextBlock Grid.Column="2" Text="{Binding OriginalQuantity, StringFormat={}{0:N2}}"
+                                                               FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                    <!-- RemainingQuantity -->
+                                                    <TextBlock Grid.Column="3" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                               Text="{Binding RemainingQuantity, StringFormat={}{0:N2}}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{StaticResource SuccessDarkBrush}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RemainingQuantity}" Value="0">
+                                                                        <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <!-- Empty state -->
+                            <TextBlock Text="Batch ma'lumotlari topilmadi"
+                                       FontSize="14" Foreground="{StaticResource TextFaintBrush}"
+                                       HorizontalAlignment="Center" Margin="0,24"
+                                       Visibility="{Binding Batches.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}"/>
+
+                            <!-- Close button -->
+                            <Button Command="{Binding CloseBatchDialogCommand}"
+                                    Margin="0,20,0,0"
+                                    HorizontalAlignment="Right"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10"
+                                                Padding="28,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                            <TextBlock Text="Yopish" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{StaticResource BorderLightBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
         </Border>
 
         <!-- ═══════════════ BARCODE DIALOG ═══════════════ -->

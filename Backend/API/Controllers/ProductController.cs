@@ -261,6 +261,24 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
+    /// Get FIFO batches for a product (SuperAdmin only)
+    /// </summary>
+    [HttpGet("{id:int}/batches")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> GetBatches(int id)
+    {
+        try
+        {
+            var batches = await _productService.GetBatchesAsync(id);
+            return Ok(ApiResult<List<ProductBatchDto>>.Success(batches));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<List<ProductBatchDto>>.Failure([ex.Message]));
+        }
+    }
+
+    /// <summary>
     /// Get barcode image for product (PNG with name, barcode, price)
     /// </summary>
     [HttpGet("{id:int}/barcode-image")]
@@ -272,7 +290,7 @@ public class ProductController : ControllerBase
             var imageBytes = await _barcodeService.GenerateBarcodeImageAsync(
                 product.Barcode,
                 product.Name,
-                product.UnitPrice);
+                product.SellPrice);
 
             return File(imageBytes, "image/png", $"barcode_{product.Barcode}.png");
         }

@@ -43,6 +43,7 @@ public partial class ProductViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(EditProductCommand))]
     [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))]
     [NotifyCanExecuteChangedFor(nameof(ShowStockInPanelCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ShowBatchesCommand))]
     private ProductDto? _selectedProduct;
 
     // Search
@@ -100,6 +101,23 @@ public partial class ProductViewModel : ViewModelBase
 
     public bool IsPanelOpen => IsAddPanelOpen || IsEditPanelOpen || IsStockInPanelOpen;
 
+    // SuperAdmin check
+    public bool IsSuperAdmin =>
+        string.Equals(_authService.Role, "SuperAdmin", StringComparison.OrdinalIgnoreCase);
+
+    // Batch dialog
+    [ObservableProperty]
+    private bool _isBatchDialogOpen;
+
+    [ObservableProperty]
+    private string _batchDialogProductName = string.Empty;
+
+    [ObservableProperty]
+    private ObservableCollection<ProductBatchDto> _batches = [];
+
+    [ObservableProperty]
+    private bool _isBatchLoading;
+
     // Barcode image dialog
     [ObservableProperty]
     private bool _isBarcodeDialogOpen;
@@ -120,7 +138,13 @@ public partial class ProductViewModel : ViewModelBase
     private int? _formCategoryId;
 
     [ObservableProperty]
-    private decimal _formUnitPrice;
+    private decimal _formSellPrice;
+
+    [ObservableProperty]
+    private decimal _formBuyPrice;
+
+    [ObservableProperty]
+    private decimal _stockInBuyPrice;
 
     [ObservableProperty]
     private UnitType _formUnitType = UnitType.Dona;
@@ -370,7 +394,7 @@ public partial class ProductViewModel : ViewModelBase
 
         FormName = SelectedProduct.Name;
         FormCategoryId = SelectedProduct.CategoryId;
-        FormUnitPrice = SelectedProduct.UnitPrice;
+        FormSellPrice = SelectedProduct.SellPrice;
         FormUnitType = SelectedProduct.UnitType;
         FormError = null;
 
@@ -385,6 +409,7 @@ public partial class ProductViewModel : ViewModelBase
 
         CloseAllPanels();
         StockInQuantity = 0;
+        StockInBuyPrice = 0;
         StockInKg = 0;
         StockInGramm = 0;
         FormError = null;
@@ -411,9 +436,10 @@ public partial class ProductViewModel : ViewModelBase
             {
                 Name = FormName.Trim(),
                 CategoryId = FormCategoryId!.Value,
-                UnitPrice = FormUnitPrice,
+                SellPrice = FormSellPrice,
                 UnitType = FormUnitType,
                 StockQuantity = stockQty,
+                BuyPrice = stockQty > 0 ? FormBuyPrice : null,
                 Barcode = string.IsNullOrWhiteSpace(FormBarcode) ? null : FormBarcode.Trim()
             };
 
@@ -460,7 +486,7 @@ public partial class ProductViewModel : ViewModelBase
             {
                 Name = FormName.Trim(),
                 CategoryId = FormCategoryId!.Value,
-                UnitPrice = FormUnitPrice,
+                SellPrice = FormSellPrice,
                 UnitType = FormUnitType
             };
 
@@ -503,6 +529,12 @@ public partial class ProductViewModel : ViewModelBase
             return;
         }
 
+        if (StockInBuyPrice <= 0)
+        {
+            FormError = "Kelish narxini kiriting";
+            return;
+        }
+
         IsSaving = true;
         FormError = null;
 
@@ -511,6 +543,7 @@ public partial class ProductViewModel : ViewModelBase
             var dto = new AddStockDto
             {
                 Quantity = stockQty,
+                BuyPrice = StockInBuyPrice,
                 UserId = _authService.UserId ?? 1
             };
 
@@ -577,6 +610,45 @@ public partial class ProductViewModel : ViewModelBase
     {
         if (SelectedProduct is null) return;
         await ShowBarcodeImageAsync(SelectedProduct.Id, SelectedProduct.Name);
+    }
+
+    // Show batch details dialog (SuperAdmin only)
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
+    private async Task ShowBatchesAsync()
+    {
+        if (SelectedProduct is null) return;
+
+        IsBatchLoading = true;
+        BatchDialogProductName = SelectedProduct.Name;
+        Batches.Clear();
+        IsBatchDialogOpen = true;
+
+        try
+        {
+            var result = await _apiService.GetAsync<List<ProductBatchDto>>(
+                $"api/products/{SelectedProduct.Id}/batches");
+
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                Batches = new ObservableCollection<ProductBatchDto>(result.Result);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBatchLoading = false;
+        }
+    }
+
+    // Close batch dialog
+    [RelayCommand]
+    private void CloseBatchDialog()
+    {
+        IsBatchDialogOpen = false;
+        Batches.Clear();
     }
 
     // Close barcode dialog
@@ -671,13 +743,15 @@ public partial class ProductViewModel : ViewModelBase
     {
         FormName = string.Empty;
         FormCategoryId = null;
-        FormUnitPrice = 0;
+        FormSellPrice = 0;
+        FormBuyPrice = 0;
         FormUnitType = UnitType.Dona;
         FormStockQuantity = 0;
         FormStockKg = 1;
         FormStockGramm = 0;
         FormBarcode = string.Empty;
         StockInQuantity = 0;
+        StockInBuyPrice = 0;
         StockInKg = 0;
         StockInGramm = 0;
         FormError = null;
@@ -703,9 +777,9 @@ public partial class ProductViewModel : ViewModelBase
             return false;
         }
 
-        if (FormUnitPrice <= 0)
+        if (FormSellPrice <= 0)
         {
-            FormError = "Narx 0 dan katta bo'lishi kerak";
+            FormError = "Sotish narxi 0 dan katta bo'lishi kerak";
             return false;
         }
 
@@ -718,11 +792,25 @@ public partial class ProductViewModel : ViewModelBase
                     FormError = "Gramm qiymati 0 dan 999 gacha bo'lishi kerak";
                     return false;
                 }
+                var grammQty = FormStockKg * 1000m + FormStockGramm;
+                if (grammQty > 0 && FormBuyPrice <= 0)
+                {
+                    FormError = "Kelish narxini kiriting";
+                    return false;
+                }
             }
-            else if (FormStockQuantity < 0)
+            else
             {
-                FormError = "Zaxira miqdori manfiy bo'lishi mumkin emas";
-                return false;
+                if (FormStockQuantity < 0)
+                {
+                    FormError = "Zaxira miqdori manfiy bo'lishi mumkin emas";
+                    return false;
+                }
+                if (FormStockQuantity > 0 && FormBuyPrice <= 0)
+                {
+                    FormError = "Kelish narxini kiriting";
+                    return false;
+                }
             }
         }
 

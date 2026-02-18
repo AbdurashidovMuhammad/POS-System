@@ -11,7 +11,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(e => e.Id);
 
         // Table configuration with check constraint
-        builder.ToTable(t => t.HasCheckConstraint("CK_Products_UnitPrice_Positive", "\"UnitPrice\" > 0"));
+        builder.ToTable(t => t.HasCheckConstraint("CK_Products_SellPrice_Positive", "\"SellPrice\" > 0"));
 
         builder.Property(e => e.Name)
             .IsRequired()
@@ -31,7 +31,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsUnique()
             .HasDatabaseName("IX_Products_Barcode_Unique");
 
-        builder.Property(e => e.UnitPrice)
+        builder.Property(e => e.SellPrice)
             .IsRequired()
             .HasPrecision(18, 2);
 

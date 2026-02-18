@@ -1,4 +1,4 @@
-﻿using Application.DTOs.CategoryDTOs;
+using Application.DTOs.CategoryDTOs;
 using Application.DTOs.ProductDTOs;
 using Application.DTOs.SaleDTOs;
 using Application.Exceptions;
@@ -67,6 +67,15 @@ public class SaleService : ISaleService
             }
         }
 
+        // Fetch all batches for required products ordered by ReceivedAt (FIFO)
+        var batches = await _context.ProductBatches
+            .Where(b => productIds.Contains(b.ProductId) && b.RemainingQuantity > 0)
+            .OrderBy(b => b.ReceivedAt)
+            .ToListAsync();
+
+        var batchesByProduct = batches.GroupBy(b => b.ProductId)
+            .ToDictionary(g => g.Key, g => g.OrderBy(b => b.ReceivedAt).ToList());
+
         // Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -78,8 +87,8 @@ public class SaleService : ISaleService
             {
                 var product = products[item.ProductId];
                 totalAmount += product.Unit_Type == Unit_Type.Gramm
-                    ? product.UnitPrice * item.Quantity / 1000m
-                    : product.UnitPrice * item.Quantity;
+                    ? product.SellPrice * item.Quantity / 1000m
+                    : product.SellPrice * item.Quantity;
             }
 
             // Create Sale
@@ -101,13 +110,33 @@ public class SaleService : ISaleService
             {
                 var product = products[item.ProductId];
 
-                // Create SaleItem with historical price
+                // FIFO batch consumption — calculate weighted average buy price
+                decimal buyPriceAtSale = 0;
+                if (batchesByProduct.TryGetValue(item.ProductId, out var productBatches))
+                {
+                    decimal needed = item.Quantity;
+                    decimal totalCost = 0;
+
+                    foreach (var batch in productBatches)
+                    {
+                        if (needed <= 0) break;
+                        var take = Math.Min(batch.RemainingQuantity, needed);
+                        totalCost += take * batch.BuyPrice;
+                        batch.RemainingQuantity -= take;
+                        needed -= take;
+                    }
+
+                    buyPriceAtSale = item.Quantity > 0 ? totalCost / item.Quantity : 0;
+                }
+
                 var saleItem = new SaleItem
                 {
                     SaleId = sale.Id,
                     ProductId = item.ProductId,
+                    ProductName = product.Name,
                     Quantity = item.Quantity,
-                    UnitPrice = product.UnitPrice // Historical price snapshot
+                    UnitPrice = product.SellPrice,
+                    BuyPriceAtSale = buyPriceAtSale
                 };
                 saleItems.Add(saleItem);
                 _context.SaleItems.Add(saleItem);
@@ -116,15 +145,14 @@ public class SaleService : ISaleService
                 product.StockQuantity -= item.Quantity;
 
                 // Create StockMovement (StockOut)
-                var stockMovement = new StockMovement
+                _context.StockMovements.Add(new StockMovement
                 {
                     ProductId = item.ProductId,
                     MovementType = Movement_Type.StockOut,
                     Quantity = item.Quantity,
                     UserId = userId,
                     MovementDate = DateTime.Now
-                };
-                _context.StockMovements.Add(stockMovement);
+                });
             }
 
             await _context.SaveChangesAsync();
@@ -160,6 +188,7 @@ public class SaleService : ISaleService
                     ProductBarcode = products[si.ProductId].barcode,
                     Quantity = si.Quantity,
                     UnitPrice = si.UnitPrice,
+                    BuyPriceAtSale = si.BuyPriceAtSale,
                     UnitType = (int)products[si.ProductId].Unit_Type
                 }).ToList()
             };
@@ -195,10 +224,11 @@ public class SaleService : ISaleService
             {
                 Id = si.Id,
                 ProductId = si.ProductId,
-                ProductName = si.Product.Name,
+                ProductName = si.ProductName,
                 ProductBarcode = si.Product.barcode,
                 Quantity = si.Quantity,
                 UnitPrice = si.UnitPrice,
+                BuyPriceAtSale = si.BuyPriceAtSale,
                 UnitType = (int)si.Product.Unit_Type
             }).ToList()
         };
@@ -209,10 +239,10 @@ public class SaleService : ISaleService
         var tomorrow = DateTime.Today.AddDays(1);
         var twoDaysAgo = DateTime.Today.AddDays(-1);
 
-        // So'nggi 2 kunlik sotuvlardan eng ko'p sotilganlarni olish
         var topProductIds = await _context.SaleItems
             .AsNoTracking()
-            .Where(si => si.Sale.SaleDate >= twoDaysAgo && si.Sale.SaleDate < tomorrow)
+            .Where(si => si.Sale.SaleDate >= twoDaysAgo && si.Sale.SaleDate < tomorrow
+                      && si.Product.IsActive && si.Product.StockQuantity > 0)
             .GroupBy(si => si.ProductId)
             .OrderByDescending(g => g.Sum(si => si.Quantity))
             .Take(count)
@@ -222,14 +252,12 @@ public class SaleService : ISaleService
         if (topProductIds.Count == 0)
             return [];
 
-        // To'liq mahsulot ma'lumotlarini olish
         var products = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
-            .Where(p => topProductIds.Contains(p.Id) && p.IsActive)
+            .Where(p => topProductIds.Contains(p.Id))
             .ToListAsync();
 
-        // Tartibni saqlash (eng ko'p sotilganidan kamiga)
         var ordered = topProductIds
             .Select(id => products.FirstOrDefault(p => p.Id == id))
             .Where(p => p != null)
@@ -244,7 +272,7 @@ public class SaleService : ISaleService
                     Name = p.Category.Name,
                     IsActive = p.Category.IsActive
                 } : null,
-                UnitPrice = p.UnitPrice,
+                SellPrice = p.SellPrice,
                 UnitType = p.Unit_Type,
                 StockQuantity = p.StockQuantity,
                 Barcode = p.barcode,

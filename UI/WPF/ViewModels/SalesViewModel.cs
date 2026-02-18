@@ -70,7 +70,7 @@ public partial class SalesViewModel : ViewModelBase
 
         if (currentQty + 1 > product.StockQuantity)
         {
-            ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity})";
+            ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity} {product.UnitLabel})";
             return;
         }
 
@@ -254,7 +254,7 @@ public partial class SalesViewModel : ViewModelBase
 
                 if (currentQty + 1 > product.StockQuantity)
                 {
-                    ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity})";
+                    ErrorMessage = $"Omborda mahsulot qolmadi! (Mavjud: {product.StockQuantity} {product.UnitLabel})";
                 }
                 else
                 {
@@ -378,7 +378,7 @@ public partial class SalesViewModel : ViewModelBase
 
         if (currentQty + qty > product.StockQuantity)
         {
-            SearchError = $"Omborda yetarli mahsulot yo'q! (Mavjud: {product.StockQuantity})";
+            SearchError = $"Omborda yetarli mahsulot yo'q! (Mavjud: {product.StockQuantity} {product.UnitLabel})";
             return;
         }
 
@@ -505,6 +505,6 @@ public partial class CartItem : ObservableObject
     private decimal _quantity;
 
     public decimal Subtotal => Product.UnitType == Enums.UnitType.Gramm
-        ? Product.UnitPrice * Quantity / 1000m
-        : Product.UnitPrice * Quantity;
+        ? Product.SellPrice * Quantity / 1000m
+        : Product.SellPrice * Quantity;
 }

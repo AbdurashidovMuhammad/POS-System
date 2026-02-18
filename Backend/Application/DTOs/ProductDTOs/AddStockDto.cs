@@ -8,6 +8,10 @@ public class AddStockDto
     [Range(0.01, double.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
     public decimal Quantity { get; set; }
 
+    [Required(ErrorMessage = "Kelish narxi kiritilishi shart")]
+    [Range(0.01, double.MaxValue, ErrorMessage = "Kelish narxi 0 dan katta bo'lishi kerak")]
+    public decimal BuyPrice { get; set; }
+
     [Required(ErrorMessage = "User ID is required")]
     public int UserId { get; set; }
 }

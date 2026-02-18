@@ -36,6 +36,7 @@ public class ReportService : IReportService
         var orderCount = await query.Select(si => si.Sale.Id).Distinct().CountAsync();
 
         var totalAmount = await query.SumAsync(si => si.Quantity * si.UnitPrice);
+        var totalProfit = await query.SumAsync(si => si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale);
 
         var items = await query
             .OrderByDescending(si => si.Sale.SaleDate)
@@ -45,11 +46,13 @@ public class ReportService : IReportService
             {
                 SaleId = si.Sale.Id,
                 Date = si.Sale.SaleDate,
-                ProductName = si.Product.Name,
+                ProductName = si.ProductName,
                 Quantity = si.Quantity,
                 UnitTypeName = si.Product.Unit_Type.ToString(),
                 UnitPrice = si.UnitPrice,
+                BuyPriceAtSale = si.BuyPriceAtSale,
                 TotalPrice = si.Quantity * si.UnitPrice,
+                Profit = si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale,
                 PaymentTypeName = si.Sale.PaymentType.ToString(),
                 Username = si.Sale.User.Username
             })
@@ -61,6 +64,7 @@ public class ReportService : IReportService
             DateTo = to.Date,
             Items = items,
             TotalAmount = totalAmount,
+            TotalProfit = totalProfit,
             OrderCount = orderCount,
             Page = pagination.Page,
             PageSize = pagination.PageSize,
@@ -102,7 +106,7 @@ public class ReportService : IReportService
                 ItemCount = s.SaleItems.Count,
                 Items = s.SaleItems.Select(si => new OrderReportProductDto
                 {
-                    ProductName = si.Product.Name,
+                    ProductName = si.ProductName,
                     Quantity = si.Quantity,
                     UnitTypeName = si.Product.Unit_Type.ToString(),
                     UnitPrice = si.UnitPrice,
@@ -177,14 +181,14 @@ public class ReportService : IReportService
 
         // Title
         worksheet.Cell(1, 1).Value = $"Sotilgan mahsulotlar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
-        worksheet.Range(1, 1, 1, 7).Merge();
+        worksheet.Range(1, 1, 1, 9).Merge();
         worksheet.Cell(1, 1).Style.Font.Bold = true;
         worksheet.Cell(1, 1).Style.Font.FontSize = 14;
         worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         // Headers
         var headerRow = 3;
-        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Narxi", "Jami", "To'lov usuli", "Foydalanuvchi" };
+        var headers = new[] { "Sana", "Mahsulot", "Miqdor", "Sotish narxi", "Kelish narxi", "Jami", "Foyda", "To'lov usuli", "Foydalanuvchi" };
         for (int i = 0; i < headers.Length; i++)
         {
             var cell = worksheet.Cell(headerRow, i + 1);
@@ -205,18 +209,21 @@ public class ReportService : IReportService
             worksheet.Cell(row, 3).Value = $"{item.Quantity} {item.UnitTypeName}";
             worksheet.Cell(row, 4).Value = item.UnitPrice;
             worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0 \"so'm\"";
-            worksheet.Cell(row, 5).Value = item.TotalPrice;
+            worksheet.Cell(row, 5).Value = item.BuyPriceAtSale;
             worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
-            worksheet.Cell(row, 6).Value = item.PaymentTypeName;
-            worksheet.Cell(row, 7).Value = item.Username;
+            worksheet.Cell(row, 6).Value = item.TotalPrice;
+            worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+            worksheet.Cell(row, 7).Value = item.Profit;
+            worksheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+            worksheet.Cell(row, 8).Value = item.PaymentTypeName;
+            worksheet.Cell(row, 9).Value = item.Username;
 
-            // Alternate row colors
             if (row % 2 == 0)
             {
-                worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                worksheet.Range(row, 1, row, 9).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
             }
 
-            for (int col = 1; col <= 7; col++)
+            for (int col = 1; col <= 9; col++)
             {
                 worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
@@ -227,19 +234,21 @@ public class ReportService : IReportService
 
         // Footer - total
         worksheet.Cell(row, 1).Value = "JAMI:";
-        worksheet.Range(row, 1, row, 4).Merge();
+        worksheet.Range(row, 1, row, 5).Merge();
         worksheet.Cell(row, 1).Style.Font.Bold = true;
         worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-        worksheet.Cell(row, 5).Value = report.TotalAmount;
-        worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
-        worksheet.Cell(row, 5).Style.Font.Bold = true;
-        worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
-        for (int col = 1; col <= 7; col++)
+        worksheet.Cell(row, 6).Value = report.TotalAmount;
+        worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+        worksheet.Cell(row, 6).Style.Font.Bold = true;
+        worksheet.Cell(row, 7).Value = report.TotalProfit;
+        worksheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+        worksheet.Cell(row, 7).Style.Font.Bold = true;
+        worksheet.Range(row, 1, row, 9).Style.Fill.BackgroundColor = XLColor.FromHtml("#e8f5e9");
+        for (int col = 1; col <= 9; col++)
         {
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }
 
-        // Auto-fit columns
         worksheet.Columns().AdjustToContents();
 
         using var stream = new MemoryStream();
@@ -311,7 +320,6 @@ public class ReportService : IReportService
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }
 
-        // Auto-fit columns
         worksheet.Columns().AdjustToContents();
 
         using var stream = new MemoryStream();
@@ -339,11 +347,13 @@ public class ReportService : IReportService
             {
                 SaleId = si.Sale.Id,
                 Date = si.Sale.SaleDate,
-                ProductName = si.Product.Name,
+                ProductName = si.ProductName,
                 Quantity = si.Quantity,
                 UnitTypeName = si.Product.Unit_Type.ToString(),
                 UnitPrice = si.UnitPrice,
+                BuyPriceAtSale = si.BuyPriceAtSale,
                 TotalPrice = si.Quantity * si.UnitPrice,
+                Profit = si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale,
                 PaymentTypeName = si.Sale.PaymentType.ToString(),
                 Username = si.Sale.User.Username
             })
@@ -355,6 +365,7 @@ public class ReportService : IReportService
             DateTo = to.Date,
             Items = items,
             TotalAmount = items.Sum(i => i.TotalPrice),
+            TotalProfit = items.Sum(i => i.Profit),
             TotalCount = items.Count,
             Page = 1,
             PageSize = items.Count

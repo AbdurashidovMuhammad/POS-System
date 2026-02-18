@@ -1,4 +1,4 @@
-﻿using Application.DTOs.CategoryDTOs;
+using Application.DTOs.CategoryDTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
@@ -76,7 +76,7 @@ public class ProductService : IProductService
                 Id = p.Id,
                 Name = p.Name,
                 Barcode = p.barcode,
-                UnitPrice = p.UnitPrice
+                SellPrice = p.SellPrice
             })
             .ToListAsync();
 
@@ -159,6 +159,12 @@ public class ProductService : IProductService
             throw new ArgumentException("Invalid unit type", nameof(dto.UnitType));
         }
 
+        // If initial stock provided, buy price is required
+        if (dto.StockQuantity > 0 && (dto.BuyPrice == null || dto.BuyPrice <= 0))
+        {
+            throw new ArgumentException("Boshlang'ich zaxira uchun kelish narxi kiritilishi shart");
+        }
+
         // Use provided barcode or generate a new one
         string barcode;
         if (!string.IsNullOrWhiteSpace(dto.Barcode))
@@ -178,26 +184,63 @@ public class ProductService : IProductService
             barcode = await _barcodeService.GenerateBarcodeAsync();
         }
 
-        // Create product
-        var product = new Product
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
         {
-            Name = dto.Name,
-            CategoryId = dto.CategoryId,
-            UnitPrice = dto.UnitPrice,
-            Unit_Type = dto.UnitType,
-            StockQuantity = dto.StockQuantity,
-            barcode = barcode,
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        };
+            var product = new Product
+            {
+                Name = dto.Name,
+                CategoryId = dto.CategoryId,
+                SellPrice = dto.SellPrice,
+                Unit_Type = dto.UnitType,
+                StockQuantity = dto.StockQuantity,
+                barcode = barcode,
+                IsActive = true,
+                CreatedAt = DateTime.Now
+            };
 
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
 
-        try { await _auditLogService.LogAsync(userId, Action_Type.ProductCreate, "Product", product.Id, $"Mahsulot yaratdi: {dto.Name}"); }
-        catch { }
+            // Create initial batch if stock provided
+            if (dto.StockQuantity > 0 && dto.BuyPrice.HasValue)
+            {
+                var batch = new ProductBatch
+                {
+                    ProductId = product.Id,
+                    BuyPrice = dto.BuyPrice.Value,
+                    OriginalQuantity = dto.StockQuantity,
+                    RemainingQuantity = dto.StockQuantity,
+                    ReceivedAt = DateTime.Now
+                };
+                _context.ProductBatches.Add(batch);
 
-        return product.Id;
+                var stockMovement = new StockMovement
+                {
+                    ProductId = product.Id,
+                    MovementType = Movement_Type.StockIn,
+                    Quantity = dto.StockQuantity,
+                    UnitCost = dto.BuyPrice.Value,
+                    UserId = userId,
+                    MovementDate = DateTime.Now
+                };
+                _context.StockMovements.Add(stockMovement);
+
+                await _context.SaveChangesAsync();
+            }
+
+            await transaction.CommitAsync();
+
+            try { await _auditLogService.LogAsync(userId, Action_Type.ProductCreate, "Product", product.Id, $"Mahsulot yaratdi: {dto.Name}"); }
+            catch { }
+
+            return product.Id;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto dto, int userId)
@@ -238,10 +281,9 @@ public class ProductService : IProductService
             throw new ArgumentException("Invalid unit type", nameof(dto.UnitType));
         }
 
-        // Update product
         product.Name = dto.Name;
         product.CategoryId = dto.CategoryId;
-        product.UnitPrice = dto.UnitPrice;
+        product.SellPrice = dto.SellPrice;
         product.Unit_Type = dto.UnitType;
 
         await _context.SaveChangesAsync();
@@ -249,7 +291,6 @@ public class ProductService : IProductService
         try { await _auditLogService.LogAsync(userId, Action_Type.ProductUpdate, "Product", id, $"Mahsulotni yangiladi: {dto.Name}"); }
         catch { }
 
-        // Reload category if changed
         if (product.CategoryId != dto.CategoryId)
         {
             await _context.Entry(product).Reference(p => p.Category).LoadAsync();
@@ -260,7 +301,6 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> AddStockAsync(int id, AddStockDto dto)
     {
-        // Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync();
 
         try
@@ -274,33 +314,52 @@ public class ProductService : IProductService
                 throw new NotFoundException($"Product with ID {id} not found");
             }
 
-            // Validate user exists
             var userExists = await _context.Users.AnyAsync(u => u.Id == dto.UserId);
             if (!userExists)
             {
                 throw new NotFoundException($"User with ID {dto.UserId} not found");
             }
 
-            // Add to product stock
+            // FIFO batch logic: merge if same buy price exists, else create new batch
+            var existingBatch = await _context.ProductBatches
+                .Where(b => b.ProductId == id
+                         && b.BuyPrice == dto.BuyPrice
+                         && b.RemainingQuantity > 0)
+                .FirstOrDefaultAsync();
+
+            if (existingBatch != null)
+            {
+                existingBatch.OriginalQuantity += dto.Quantity;
+                existingBatch.RemainingQuantity += dto.Quantity;
+            }
+            else
+            {
+                _context.ProductBatches.Add(new ProductBatch
+                {
+                    ProductId = id,
+                    BuyPrice = dto.BuyPrice,
+                    OriginalQuantity = dto.Quantity,
+                    RemainingQuantity = dto.Quantity,
+                    ReceivedAt = DateTime.Now
+                });
+            }
+
             product.StockQuantity += dto.Quantity;
 
-            // Create stock movement record
-            var stockMovement = new StockMovement
+            _context.StockMovements.Add(new StockMovement
             {
                 ProductId = id,
                 MovementType = Movement_Type.StockIn,
                 Quantity = dto.Quantity,
+                UnitCost = dto.BuyPrice,
                 UserId = dto.UserId,
                 MovementDate = DateTime.Now
-            };
+            });
 
-            _context.StockMovements.Add(stockMovement);
-
-            // Save changes
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            try { await _auditLogService.LogAsync(dto.UserId, Action_Type.StockIn, "Product", id, $"Zaxiraga qo'shdi: {product.Name} +{dto.Quantity}"); }
+            try { await _auditLogService.LogAsync(dto.UserId, Action_Type.StockIn, "Product", id, $"Zaxiraga qo'shdi: {product.Name} +{dto.Quantity} ({dto.BuyPrice:N0} so'm)"); }
             catch { }
 
             return MapToDto(product);
@@ -339,7 +398,24 @@ public class ProductService : IProductService
         return products.Select(MapToDto).ToList();
     }
 
-    // Private helper method to map Product to ProductDto
+    public async Task<List<ProductBatchDto>> GetBatchesAsync(int productId)
+    {
+        var batches = await _context.ProductBatches
+            .Where(b => b.ProductId == productId)
+            .OrderBy(b => b.ReceivedAt)
+            .Select(b => new ProductBatchDto
+            {
+                Id = b.Id,
+                BuyPrice = b.BuyPrice,
+                OriginalQuantity = b.OriginalQuantity,
+                RemainingQuantity = b.RemainingQuantity,
+                ReceivedAt = b.ReceivedAt
+            })
+            .ToListAsync();
+
+        return batches;
+    }
+
     private static ProductDto MapToDto(Product product)
     {
         return new ProductDto
@@ -353,7 +429,7 @@ public class ProductService : IProductService
                 Name = product.Category.Name,
                 IsActive = product.Category.IsActive
             } : null,
-            UnitPrice = product.UnitPrice,
+            SellPrice = product.SellPrice,
             UnitType = product.Unit_Type,
             StockQuantity = product.StockQuantity,
             Barcode = product.barcode,

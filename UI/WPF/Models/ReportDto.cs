@@ -6,6 +6,7 @@ public class SalesReportDto
     public DateTime DateTo { get; set; }
     public List<SalesReportItemDto> Items { get; set; } = new();
     public decimal TotalAmount { get; set; }
+    public decimal TotalProfit { get; set; }
     public int Page { get; set; }
     public int PageSize { get; set; }
     public int TotalCount { get; set; }
@@ -22,7 +23,9 @@ public class SalesReportItemDto
     public string FormattedQuantity => Quantity.ToString("0.##");
     public string UnitTypeName { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
+    public decimal BuyPriceAtSale { get; set; }
     public decimal TotalPrice { get; set; }
+    public decimal Profit { get; set; }
     public string PaymentTypeName { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public bool DateGroupIsAlternate { get; set; }

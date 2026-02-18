@@ -12,9 +12,9 @@ public class UpdateProductDto
     [Required(ErrorMessage = "Category is required")]
     public int CategoryId { get; set; }
 
-    [Required(ErrorMessage = "Unit price is required")]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Unit price must be greater than 0")]
-    public decimal UnitPrice { get; set; }
+    [Required(ErrorMessage = "Sotish narxi kiritilishi shart")]
+    [Range(0.01, double.MaxValue, ErrorMessage = "Sotish narxi 0 dan katta bo'lishi kerak")]
+    public decimal SellPrice { get; set; }
 
     [Required(ErrorMessage = "Unit type is required")]
     public Unit_Type UnitType { get; set; }

@@ -49,6 +49,9 @@ public partial class ReportViewModel : ViewModelBase
     private decimal _totalSalesAmount;
 
     [ObservableProperty]
+    private decimal _totalSalesProfit;
+
+    [ObservableProperty]
     private int _salesItemCount;
 
     // Orders report data
@@ -187,6 +190,7 @@ public partial class ReportViewModel : ViewModelBase
                     AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     SalesItems = new ObservableCollection<SalesReportItemDto>(result.Result.Items);
                     TotalSalesAmount = result.Result.TotalAmount;
+                    TotalSalesProfit = result.Result.TotalProfit;
                     SalesItemCount = result.Result.TotalCount;
                     TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
                     TotalCount = result.Result.TotalCount;

@@ -54,4 +54,9 @@ public interface IProductService
     /// Get products by category ID
     /// </summary>
     Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId);
+
+    /// <summary>
+    /// Get FIFO batches for a product (SuperAdmin only)
+    /// </summary>
+    Task<List<ProductBatchDto>> GetBatchesAsync(int productId);
 }

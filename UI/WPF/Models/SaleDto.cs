@@ -20,6 +20,7 @@ public class SaleItemDto
     public string ProductBarcode { get; set; } = string.Empty;
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
+    public decimal BuyPriceAtSale { get; set; }
     public int UnitType { get; set; }
     public decimal Subtotal => UnitType == (int)Enums.UnitType.Gramm
         ? Quantity * UnitPrice / 1000m
