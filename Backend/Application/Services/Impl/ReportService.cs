@@ -43,6 +43,7 @@ public class ReportService : IReportService
             .Take(pagination.PageSize)
             .Select(si => new SalesReportItemDto
             {
+                SaleId = si.Sale.Id,
                 Date = si.Sale.SaleDate,
                 ProductName = si.Product.Name,
                 Quantity = si.Quantity,
@@ -61,6 +62,61 @@ public class ReportService : IReportService
             Items = items,
             TotalAmount = totalAmount,
             OrderCount = orderCount,
+            Page = pagination.Page,
+            PageSize = pagination.PageSize,
+            TotalCount = totalCount
+        };
+    }
+
+    public async Task<OrdersReportDto> GetOrdersReportAsync(DateTime from, DateTime to, PaginationParams pagination, int? userId = null)
+    {
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
+
+        var query = _context.Sales
+            .AsNoTracking()
+            .Where(s => s.SaleDate >= fromDate && s.SaleDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(s => s.UserId == userId.Value);
+
+        var totalCount = await query.CountAsync();
+
+        var totalAmount = await _context.SaleItems
+            .AsNoTracking()
+            .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate
+                         && (!userId.HasValue || si.Sale.UserId == userId.Value))
+            .SumAsync(si => si.Quantity * si.UnitPrice);
+
+        var orders = await query
+            .OrderByDescending(s => s.SaleDate)
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .Select(s => new OrderReportItemDto
+            {
+                SaleId = s.Id,
+                Date = s.SaleDate,
+                TotalAmount = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice),
+                PaymentTypeName = s.PaymentType.ToString(),
+                Username = s.User.Username,
+                ItemCount = s.SaleItems.Count,
+                Items = s.SaleItems.Select(si => new OrderReportProductDto
+                {
+                    ProductName = si.Product.Name,
+                    Quantity = si.Quantity,
+                    UnitTypeName = si.Product.Unit_Type.ToString(),
+                    UnitPrice = si.UnitPrice,
+                    TotalPrice = si.Quantity * si.UnitPrice
+                }).ToList()
+            })
+            .ToListAsync();
+
+        return new OrdersReportDto
+        {
+            DateFrom = from.Date,
+            DateTo = to.Date,
+            Items = orders,
+            TotalAmount = totalAmount,
             Page = pagination.Page,
             PageSize = pagination.PageSize,
             TotalCount = totalCount
@@ -281,6 +337,7 @@ public class ReportService : IReportService
             .OrderByDescending(si => si.Sale.SaleDate)
             .Select(si => new SalesReportItemDto
             {
+                SaleId = si.Sale.Id,
                 Date = si.Sale.SaleDate,
                 ProductName = si.Product.Name,
                 Quantity = si.Quantity,

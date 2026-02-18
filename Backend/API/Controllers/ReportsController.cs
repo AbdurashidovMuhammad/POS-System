@@ -37,6 +37,24 @@ public class ReportsController : ControllerBase
         }
     }
 
+    [HttpGet("orders")]
+    public async Task<IActionResult> GetOrdersReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination, [FromQuery] int? userId = null)
+    {
+        try
+        {
+            var validationError = ValidateDateRange(from, to);
+            if (validationError is not null)
+                return BadRequest(ApiResult<OrdersReportDto>.Failure([validationError]));
+
+            var report = await _reportService.GetOrdersReportAsync(from, to, pagination, userId);
+            return Ok(ApiResult<OrdersReportDto>.Success(report));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<OrdersReportDto>.Failure([ex.Message]));
+        }
+    }
+
     [HttpGet("stock-in")]
     public async Task<IActionResult> GetStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] PaginationParams pagination, [FromQuery] int? userId = null)
     {

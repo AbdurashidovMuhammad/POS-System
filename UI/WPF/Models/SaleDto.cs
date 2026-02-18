@@ -24,6 +24,12 @@ public class SaleItemDto
     public decimal Subtotal => UnitType == (int)Enums.UnitType.Gramm
         ? Quantity * UnitPrice / 1000m
         : Quantity * UnitPrice;
+    public string FormattedQuantity => Quantity.ToString("0.##");
+    public string UnitTypeName => UnitType switch
+    {
+        8 => "g",
+        _ => ((Enums.UnitType)UnitType).ToString().ToLower()
+    };
 }
 
 public class SaleDto

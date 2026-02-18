@@ -2,6 +2,7 @@ namespace Application.DTOs.ReportDTOs;
 
 public class SalesReportItemDto
 {
+    public int SaleId { get; set; }
     public DateTime Date { get; set; }
     public string ProductName { get; set; } = null!;
     public decimal Quantity { get; set; }

@@ -114,7 +114,7 @@ public partial class SalesView : UserControl
         // 80mm termal printer: 302pt ≈ 80mm (WPF 96dpi)
         // Courier New 10pt ≈ 6pt/belgi → 278pt usable / 6 ≈ 46 belgi
         const double pageW = 302.0;
-        const int    cols  = 38;
+        const int    cols  = 44;
 
         var doc = new FlowDocument
         {
@@ -151,10 +151,8 @@ public partial class SalesView : UserControl
 
         doc.Blocks.Add(MakeSep('-', cols));
 
-        // PadLeft bilan o'ng hizalash — TextAlignment.Right ishlatilmaydi,
-        // chunki u A4 da sahifaning o'ng chetiga ketadi.
         string totalStr = $"JAMI: {sale.TotalAmount:N0} so'm";
-        doc.Blocks.Add(MakePara(totalStr.PadLeft(cols), fontSize: 12, weight: FontWeights.Bold));
+        doc.Blocks.Add(MakePara(totalStr, fontSize: 12, weight: FontWeights.Bold));
 
         doc.Blocks.Add(MakeSep('=', cols));
         doc.Blocks.Add(MakePara("Rahmat! Yana tashrif buyuring.", weight: FontWeights.Bold, align: TextAlignment.Center, margin: new Thickness(0, 6, 0, 0)));

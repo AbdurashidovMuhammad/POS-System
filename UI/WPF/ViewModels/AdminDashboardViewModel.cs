@@ -38,6 +38,20 @@ public partial class AdminDashboardViewModel : ViewModelBase
     private ObservableCollection<CashierSalesDto> _cashierSales = [];
 
     [ObservableProperty]
+    private ObservableCollection<CashierSalesDto> _pagedCashierSales = [];
+
+    [ObservableProperty]
+    private int _cashierCurrentPage = 1;
+
+    [ObservableProperty]
+    private int _cashierTotalPages = 1;
+
+    [ObservableProperty]
+    private string _cashierPageInfo = "1 / 1";
+
+    private const int CashierPageSize = 5;
+
+    [ObservableProperty]
     private ObservableCollection<LowStockProductDto> _lowStockProducts = [];
 
     [ObservableProperty]
@@ -71,6 +85,44 @@ public partial class AdminDashboardViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _lowStockCount;
+
+    private void UpdateCashierPage()
+    {
+        CashierTotalPages = Math.Max(1, (int)Math.Ceiling((double)CashierSales.Count / CashierPageSize));
+        if (CashierCurrentPage > CashierTotalPages)
+            CashierCurrentPage = CashierTotalPages;
+
+        var items = CashierSales
+            .Skip((CashierCurrentPage - 1) * CashierPageSize)
+            .Take(CashierPageSize);
+        PagedCashierSales = new ObservableCollection<CashierSalesDto>(items);
+        CashierPageInfo = $"{CashierCurrentPage} / {CashierTotalPages}";
+        OnPropertyChanged(nameof(CanCashierPrevious));
+        OnPropertyChanged(nameof(CanCashierNext));
+    }
+
+    public bool CanCashierPrevious => CashierCurrentPage > 1;
+    public bool CanCashierNext => CashierCurrentPage < CashierTotalPages;
+
+    [RelayCommand]
+    private void CashierPreviousPage()
+    {
+        if (CashierCurrentPage > 1)
+        {
+            CashierCurrentPage--;
+            UpdateCashierPage();
+        }
+    }
+
+    [RelayCommand]
+    private void CashierNextPage()
+    {
+        if (CashierCurrentPage < CashierTotalPages)
+        {
+            CashierCurrentPage++;
+            UpdateCashierPage();
+        }
+    }
 
     private void UpdateLowStockPage()
     {
@@ -149,6 +201,8 @@ public partial class AdminDashboardViewModel : ViewModelBase
 
                 CashierSales = new ObservableCollection<CashierSalesDto>(stats.CashierSales);
                 HasCashierSales = CashierSales.Count > 0;
+                CashierCurrentPage = 1;
+                UpdateCashierPage();
 
                 LowStockProducts = new ObservableCollection<LowStockProductDto>(stats.LowStockProducts);
                 HasLowStockProducts = LowStockProducts.Count > 0;

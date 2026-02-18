@@ -30,7 +30,7 @@ public partial class ReportViewModel : ViewModelBase
     [ObservableProperty]
     private DateTime _endDate;
 
-    // Tab selection: 0 = Sales, 1 = StockIn
+    // Tab selection: 0 = Sales (products), 1 = Orders, 2 = StockIn
     [ObservableProperty]
     private int _selectedTabIndex;
 
@@ -41,7 +41,7 @@ public partial class ReportViewModel : ViewModelBase
     [ObservableProperty]
     private UserFilterItem? _selectedUserFilter;
 
-    // Sales report data
+    // Sales report data (products per sale)
     [ObservableProperty]
     private ObservableCollection<SalesReportItemDto> _salesItems = new();
 
@@ -50,6 +50,19 @@ public partial class ReportViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _salesItemCount;
+
+    // Orders report data
+    [ObservableProperty]
+    private ObservableCollection<OrderReportItemDto> _orderItems = new();
+
+    [ObservableProperty]
+    private decimal _totalOrdersAmount;
+
+    [ObservableProperty]
+    private int _totalOrdersCount;
+
+    [ObservableProperty]
+    private OrderReportItemDto? _selectedOrderItem;
 
     // Stock-in report data
     [ObservableProperty]
@@ -183,6 +196,25 @@ public partial class ReportViewModel : ViewModelBase
                     ErrorMessage = result?.Errors?.FirstOrDefault() ?? "Hisobot olishda xatolik";
                 }
             }
+            else if (SelectedTabIndex == 1)
+            {
+                var result = await _apiService.GetAsync<OrdersReportDto>($"api/reports/orders?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}{userIdParam}");
+
+                if (result?.Succeeded == true && result.Result is not null)
+                {
+                    AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
+                    OrderItems = new ObservableCollection<OrderReportItemDto>(result.Result.Items);
+                    TotalOrdersAmount = result.Result.TotalAmount;
+                    TotalOrdersCount = result.Result.TotalCount;
+                    TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
+                    TotalCount = result.Result.TotalCount;
+                    SelectedOrderItem = null;
+                }
+                else
+                {
+                    ErrorMessage = result?.Errors?.FirstOrDefault() ?? "Hisobot olishda xatolik";
+                }
+            }
             else
             {
                 var result = await _apiService.GetAsync<StockInReportDto>($"api/reports/stock-in?from={from}&to={to}&page={CurrentPage}&pageSize={PageSize}{userIdParam}");
@@ -233,6 +265,12 @@ public partial class ReportViewModel : ViewModelBase
         if (StartDate.Date > EndDate.Date)
         {
             ErrorMessage = "Boshlanish sanasi tugash sanasidan katta bo'lishi mumkin emas";
+            return;
+        }
+
+        if (SelectedTabIndex == 1)
+        {
+            ErrorMessage = "Buyurtmalar hisoboti uchun export qo'llab-quvvatlanmaydi";
             return;
         }
 

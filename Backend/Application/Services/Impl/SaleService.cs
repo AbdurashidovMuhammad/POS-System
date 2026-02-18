@@ -171,6 +171,39 @@ public class SaleService : ISaleService
         }
     }
 
+    public async Task<SaleDto?> GetSaleByIdAsync(int id)
+    {
+        var sale = await _context.Sales
+            .AsNoTracking()
+            .Include(s => s.User)
+            .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (sale is null) return null;
+
+        return new SaleDto
+        {
+            Id = sale.Id,
+            UserId = sale.UserId,
+            UserFullName = sale.User.Username,
+            TotalAmount = sale.TotalAmount,
+            PaymentType = (int)sale.PaymentType,
+            PaymentTypeName = sale.PaymentType.ToString(),
+            SaleDate = sale.SaleDate,
+            Items = sale.SaleItems.Select(si => new SaleItemDto
+            {
+                Id = si.Id,
+                ProductId = si.ProductId,
+                ProductName = si.Product.Name,
+                ProductBarcode = si.Product.barcode,
+                Quantity = si.Quantity,
+                UnitPrice = si.UnitPrice,
+                UnitType = (int)si.Product.Unit_Type
+            }).ToList()
+        };
+    }
+
     public async Task<List<ProductDto>> GetTopSellingProductsAsync(int count = 5)
     {
         var tomorrow = DateTime.Today.AddDays(1);

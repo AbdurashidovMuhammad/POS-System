@@ -99,6 +99,23 @@ public class SalesController : ControllerBase
         }
     }
 
+    [HttpGet("{id:int}")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> GetSaleById(int id)
+    {
+        try
+        {
+            var sale = await _saleService.GetSaleByIdAsync(id);
+            if (sale is null)
+                return NotFound(ApiResult<SaleDto>.Failure([$"ID {id} buyurtma topilmadi"]));
+            return Ok(ApiResult<SaleDto>.Success(sale));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<SaleDto>.Failure([ex.Message]));
+        }
+    }
+
     [HttpGet("top-selling")]
     public async Task<IActionResult> GetTopSellingProducts()
     {

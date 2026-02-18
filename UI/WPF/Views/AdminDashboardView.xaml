@@ -312,64 +312,140 @@
                             </StackPanel>
 
                             <!-- Cashier list -->
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="320"
-                                          Visibility="{Binding HasCashierSales, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <ItemsControl ItemsSource="{Binding CashierSales}" Margin="0,4,0,4">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Padding="24,14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
+                            <DockPanel Grid.Row="1"
+                                       Visibility="{Binding HasCashierSales, Converter={StaticResource BoolToVisibilityConverter}}">
 
-                                                    <!-- Avatar -->
-                                                    <Border Grid.Column="0" Width="40" Height="40"
-                                                            CornerRadius="20" Margin="0,0,14,0">
-                                                        <Border.Background>
-                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                <GradientStop Color="{StaticResource InfoBackgroundColor}" Offset="0"/>
-                                                                <GradientStop Color="{StaticResource InfoDarkColor}" Offset="1"/>
-                                                            </LinearGradientBrush>
-                                                        </Border.Background>
-                                                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-                                                              Fill="{StaticResource InfoBrush}" Width="20" Height="20"
-                                                              Stretch="Uniform"
-                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <!-- Pagination - docked at bottom -->
+                                <Border DockPanel.Dock="Bottom" Padding="16,10" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0"
+                                                Command="{Binding CashierPreviousPageCommand}"
+                                                IsEnabled="{Binding CanCashierPrevious}"
+                                                Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="btnBorder" Background="Transparent" CornerRadius="6" Padding="8,4">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Path Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                                                                  Fill="{StaticResource TextMutedBrush}" Width="14" Height="14"
+                                                                  Stretch="Uniform" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="Oldingi" FontSize="12"
+                                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                                       VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                                        </StackPanel>
                                                     </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource InfoBackgroundBrush}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter TargetName="btnBorder" Property="Opacity" Value="0.4"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
 
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding Username}"
-                                                               FontSize="14" FontWeight="SemiBold"
-                                                               Foreground="{StaticResource TextPrimaryBrush}"
-                                                               VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding CashierPageInfo}"
+                                                   FontSize="12" Foreground="{StaticResource TextMutedBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                                                    <Border Grid.Column="2" Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6"
-                                                            Padding="8,3" Margin="15,0" VerticalAlignment="Center">
-                                                        <TextBlock FontSize="12" Foreground="{StaticResource InfoBrush}">
-                                                            <Run Text="{Binding TodayOrdersCount, Mode=OneWay}"/>
-                                                            <Run Text=" buyurtma" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                        <Button Grid.Column="2"
+                                                Command="{Binding CashierNextPageCommand}"
+                                                IsEnabled="{Binding CanCashierNext}"
+                                                Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="btnBorder" Background="Transparent" CornerRadius="6" Padding="8,4">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="Keyingi" FontSize="12"
+                                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                                       VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                            <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+                                                                  Fill="{StaticResource TextMutedBrush}" Width="14" Height="14"
+                                                                  Stretch="Uniform" VerticalAlignment="Center"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource InfoBackgroundBrush}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter TargetName="btnBorder" Property="Opacity" Value="0.4"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Scrollable cashier list -->
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding PagedCashierSales}" Margin="0,4,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="24,14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <!-- Avatar -->
+                                                        <Border Grid.Column="0" Width="40" Height="40"
+                                                                CornerRadius="20" Margin="0,0,14,0">
+                                                            <Border.Background>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                    <GradientStop Color="{StaticResource InfoBackgroundColor}" Offset="0"/>
+                                                                    <GradientStop Color="{StaticResource InfoDarkColor}" Offset="1"/>
+                                                                </LinearGradientBrush>
+                                                            </Border.Background>
+                                                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                                                  Fill="{StaticResource InfoBrush}" Width="20" Height="20"
+                                                                  Stretch="Uniform"
+                                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+
+                                                        <TextBlock Grid.Column="1"
+                                                                   Text="{Binding Username}"
+                                                                   FontSize="14" FontWeight="SemiBold"
+                                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                                   VerticalAlignment="Center"/>
+
+                                                        <Border Grid.Column="2" Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6"
+                                                                Padding="8,3" Margin="15,0" VerticalAlignment="Center">
+                                                            <TextBlock FontSize="12" Foreground="{StaticResource InfoBrush}">
+                                                                <Run Text="{Binding TodayOrdersCount, Mode=OneWay}"/>
+                                                                <Run Text=" buyurtma" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                                            </TextBlock>
+                                                        </Border>
+
+                                                        <TextBlock Grid.Column="3"
+                                                                   FontSize="14" FontWeight="Bold"
+                                                                   Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0:N0} sum">
+                                                                    <Binding Path="TodaySalesAmount"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
                                                         </TextBlock>
-                                                    </Border>
-
-                                                    <TextBlock Grid.Column="3"
-                                                               FontSize="14" FontWeight="Bold"
-                                                               Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
-                                                        <TextBlock.Text>
-                                                            <MultiBinding StringFormat="{}{0:N0} sum">
-                                                                <Binding Path="TodaySalesAmount"/>
-                                                            </MultiBinding>
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </DockPanel>
                         </Grid>
                     </Border>
                 </StackPanel>

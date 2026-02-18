@@ -14,6 +14,11 @@ public interface ISaleService
     Task<SaleDto> CreateSaleAsync(CreateSaleDto dto, int userId);
 
     /// <summary>
+    /// Buyurtmani ID bo'yicha olish
+    /// </summary>
+    Task<SaleDto?> GetSaleByIdAsync(int id);
+
+    /// <summary>
     /// Bugungi eng ko'p sotilgan mahsulotlarni qaytaradi
     /// </summary>
     Task<List<ProductDto>> GetTopSellingProductsAsync(int count = 5);
