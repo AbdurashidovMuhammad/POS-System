@@ -25,6 +25,7 @@ public class ProductService : IProductService
     public async Task<PagedResult<ProductDto>> GetAllProductsAsync(PaginationParams paginationParams)
     {
         var query = _context.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .OrderBy(p => p.Name);
 
@@ -47,6 +48,7 @@ public class ProductService : IProductService
     public async Task<ProductDto> GetProductByIdAsync(int id)
     {
         var product = await _context.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -68,6 +70,7 @@ public class ProductService : IProductService
         var lowerQuery = query.Trim().ToLower();
 
         var products = await _context.Products
+            .AsNoTracking()
             .Where(p => p.IsActive && p.Name.ToLower().StartsWith(lowerQuery))
             .OrderBy(p => p.Name)
             .Take(10)
@@ -86,6 +89,7 @@ public class ProductService : IProductService
     public async Task<PagedResult<ProductDto>> SearchProductsFullAsync(string query, PaginationParams paginationParams)
     {
         var baseQuery = _context.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .AsQueryable();
 
@@ -122,6 +126,7 @@ public class ProductService : IProductService
         }
 
         var product = await _context.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.barcode.ToLower() == barcode.ToLower());
 
@@ -390,6 +395,7 @@ public class ProductService : IProductService
     public async Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId)
     {
         var products = await _context.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .Where(p => p.CategoryId == categoryId && p.IsActive)
             .OrderBy(p => p.Name)
@@ -401,6 +407,7 @@ public class ProductService : IProductService
     public async Task<List<ProductBatchDto>> GetBatchesAsync(int productId)
     {
         var batches = await _context.ProductBatches
+            .AsNoTracking()
             .Where(b => b.ProductId == productId)
             .OrderBy(b => b.ReceivedAt)
             .Select(b => new ProductBatchDto

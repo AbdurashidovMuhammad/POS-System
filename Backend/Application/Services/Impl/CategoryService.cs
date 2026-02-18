@@ -69,7 +69,7 @@ internal class CategoryService : ICategoriesService
 
     public async Task<ApiResult<PagedResult<CategoryDto>>> GetAllCategoriesAsync(PaginationParams pagination)
     {
-        var query = _context.Categories.OrderBy(c => c.Name);
+        var query = _context.Categories.AsNoTracking().OrderBy(c => c.Name);
 
         var totalCount = await query.CountAsync();
 
@@ -92,6 +92,7 @@ internal class CategoryService : ICategoriesService
     public async Task<ApiResult<List<CategoryDto>>> GetAllCategoriesListAsync()
     {
         var categories = await _context.Categories
+            .AsNoTracking()
             .OrderBy(c => c.Name)
             .ToListAsync();
 
@@ -100,7 +101,7 @@ internal class CategoryService : ICategoriesService
 
     public async Task<ApiResult<CategoryDto>> GetCategoryByIdAsync(int id)
     {
-        var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null)
             return ApiResult<CategoryDto>.Failure(new[] { $"Category with Id = {id} was not found." });
@@ -116,6 +117,7 @@ internal class CategoryService : ICategoriesService
         var lowerQuery = query.Trim().ToLower();
 
         var categories = await _context.Categories
+            .AsNoTracking()
             .Where(c => c.IsActive && c.Name.ToLower().StartsWith(lowerQuery))
             .OrderBy(c => c.Name)
             .Take(10)

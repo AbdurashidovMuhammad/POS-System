@@ -36,5 +36,8 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
             .WithMany()
             .HasForeignKey(e => e.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Reporting queries aggregate by product within a sale
+        builder.HasIndex(e => new { e.SaleId, e.ProductId });
     }
 }

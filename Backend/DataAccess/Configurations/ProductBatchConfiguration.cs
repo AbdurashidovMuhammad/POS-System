@@ -37,5 +37,8 @@ public class ProductBatchConfiguration : IEntityTypeConfiguration<ProductBatch>
             .WithMany()
             .HasForeignKey(e => e.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // FIFO lookups: open batches by product filtered by remaining quantity
+        builder.HasIndex(e => new { e.ProductId, e.RemainingQuantity });
     }
 }

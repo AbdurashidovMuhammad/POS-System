@@ -35,5 +35,8 @@ public class StockMovementConfiguration : IEntityTypeConfiguration<StockMovement
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(e => e.MovementType);
+        builder.HasIndex(e => new { e.ProductId, e.MovementType, e.MovementDate });
     }
 }

@@ -1197,7 +1197,7 @@
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Padding="8">
+                                        <Border x:Name="border" Background="{StaticResource ErrorBrush}" CornerRadius="8" Width="36" Height="36">
                                             <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
                                                   Fill="White" Width="14" Height="14" Stretch="Uniform"/>
                                         </Border>

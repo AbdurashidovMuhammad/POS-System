@@ -30,5 +30,8 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(e => e.SaleDate);
+        builder.HasIndex(e => new { e.SaleDate, e.UserId });
     }
 }
