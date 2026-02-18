@@ -796,6 +796,7 @@
 
                             <Button Grid.Column="1"
                                     Command="{Binding CloseProductsPanelCommand}"
+                                    VerticalAlignment="Center"
                                     Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">

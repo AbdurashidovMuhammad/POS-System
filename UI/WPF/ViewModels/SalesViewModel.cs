@@ -152,6 +152,31 @@ public partial class SalesViewModel : ViewModelBase
     /// </summary>
     public event Action? SearchDialogClosed;
 
+    // --- Receipt dialog ---
+
+    [ObservableProperty]
+    private SaleDto? _lastSaleResult;
+
+    [ObservableProperty]
+    private bool _isReceiptDialogOpen;
+
+    public event Action? ReceiptDialogClosed;
+    public event Action<SaleDto>? PrintReceiptRequested;
+
+    [RelayCommand]
+    private void CloseReceiptDialog()
+    {
+        IsReceiptDialogOpen = false;
+        ReceiptDialogClosed?.Invoke();
+    }
+
+    [RelayCommand]
+    private void PrintReceipt()
+    {
+        if (LastSaleResult is null) return;
+        PrintReceiptRequested?.Invoke(LastSaleResult);
+    }
+
     private CancellationTokenSource? _searchCts;
 
     partial void OnSearchTextChanged(string value)
@@ -437,6 +462,8 @@ public partial class SalesViewModel : ViewModelBase
             if (result?.Succeeded == true)
             {
                 SuccessMessage = $"Sotuv muvaffaqiyatli yakunlandi! Chek #{result.Result?.Id}";
+                LastSaleResult = result.Result;
+                IsReceiptDialogOpen = true;
                 ClearCart();
                 _ = LoadTopSellingProductsAsync();
             }
