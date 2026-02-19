@@ -61,7 +61,9 @@ public partial class ReportView : UserControl
         while (child is not null)
         {
             if (child is T parent) return parent;
-            child = System.Windows.Media.VisualTreeHelper.GetParent(child);
+            child = child is System.Windows.Media.Visual or System.Windows.Media.Media3D.Visual3D
+                ? System.Windows.Media.VisualTreeHelper.GetParent(child)
+                : LogicalTreeHelper.GetParent(child);
         }
         return null;
     }
