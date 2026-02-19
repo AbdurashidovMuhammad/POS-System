@@ -276,12 +276,6 @@ public partial class ReportViewModel : ViewModelBase
             return;
         }
 
-        if (SelectedTabIndex == 1)
-        {
-            ErrorMessage = "Buyurtmalar hisoboti uchun export qo'llab-quvvatlanmaydi";
-            return;
-        }
-
         IsExporting = true;
         ClearMessages();
 
@@ -298,6 +292,11 @@ public partial class ReportViewModel : ViewModelBase
             {
                 endpoint = $"api/reports/sales/export?from={from}&to={to}{userIdParam}";
                 defaultFileName = $"Sotilgan_mahsulotlar_{StartDate:dd.MM.yyyy}-{EndDate:dd.MM.yyyy}.xlsx";
+            }
+            else if (SelectedTabIndex == 1)
+            {
+                endpoint = $"api/reports/orders/export?from={from}&to={to}{userIdParam}";
+                defaultFileName = $"Buyurtmalar_{StartDate:dd.MM.yyyy}-{EndDate:dd.MM.yyyy}.xlsx";
             }
             else
             {

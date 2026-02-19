@@ -258,6 +258,85 @@ public class ReportService : IReportService
         return stream.ToArray();
     }
 
+    public async Task<byte[]> ExportOrdersReportAsync(DateTime from, DateTime to, int? userId = null)
+    {
+        var orders = await GetAllOrdersAsync(from, to, userId);
+
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Buyurtmalar");
+
+        // Title
+        worksheet.Cell(1, 1).Value = $"Buyurtmalar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
+        worksheet.Range(1, 1, 1, 6).Merge();
+        worksheet.Cell(1, 1).Style.Font.Bold = true;
+        worksheet.Cell(1, 1).Style.Font.FontSize = 14;
+        worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        // Headers
+        var headerRow = 3;
+        var headers = new[] { "Sana", "Buyurtma #", "Mahsulot", "Miqdor", "Narxi", "To'lov usuli" };
+        for (int i = 0; i < headers.Length; i++)
+        {
+            var cell = worksheet.Cell(headerRow, i + 1);
+            cell.Value = headers[i];
+            cell.Style.Font.Bold = true;
+            cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FF9800");
+            cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+
+        // Data rows
+        var row = headerRow + 1;
+        foreach (var order in orders)
+        {
+            foreach (var item in order.Items)
+            {
+                worksheet.Cell(row, 1).Value = order.Date.ToString("dd.MM.yyyy HH:mm");
+                worksheet.Cell(row, 2).Value = order.SaleId;
+                worksheet.Cell(row, 3).Value = item.ProductName;
+                worksheet.Cell(row, 4).Value = $"{item.Quantity:0.##} {item.UnitTypeName}";
+                worksheet.Cell(row, 5).Value = item.TotalPrice;
+                worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+                worksheet.Cell(row, 6).Value = order.PaymentTypeName;
+
+                if (row % 2 == 0)
+                {
+                    worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                }
+
+                for (int col = 1; col <= 6; col++)
+                {
+                    worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
+                }
+
+                row++;
+            }
+        }
+
+        // Footer - total
+        var totalAmount = orders.Sum(o => o.TotalAmount);
+        worksheet.Cell(row, 1).Value = "JAMI:";
+        worksheet.Range(row, 1, row, 4).Merge();
+        worksheet.Cell(row, 1).Style.Font.Bold = true;
+        worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        worksheet.Cell(row, 5).Value = totalAmount;
+        worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+        worksheet.Cell(row, 5).Style.Font.Bold = true;
+        worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#fff3e0");
+        for (int col = 1; col <= 6; col++)
+        {
+            worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+
+        worksheet.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
+
     public async Task<byte[]> ExportStockInReportAsync(DateTime from, DateTime to, int? userId = null)
     {
         var report = await GetAllStockInItemsAsync(from, to, userId);
@@ -372,6 +451,40 @@ public class ReportService : IReportService
             Page = 1,
             PageSize = items.Count
         };
+    }
+
+    private async Task<List<OrderReportItemDto>> GetAllOrdersAsync(DateTime from, DateTime to, int? userId = null)
+    {
+        var fromDate = from.Date;
+        var toDate = to.Date.AddDays(1);
+
+        var query = _context.Sales
+            .AsNoTracking()
+            .Where(s => s.SaleDate >= fromDate && s.SaleDate < toDate);
+
+        if (userId.HasValue)
+            query = query.Where(s => s.UserId == userId.Value);
+
+        return await query
+            .OrderByDescending(s => s.SaleDate)
+            .Select(s => new OrderReportItemDto
+            {
+                SaleId = s.Id,
+                Date = s.SaleDate,
+                TotalAmount = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice),
+                PaymentTypeName = s.PaymentType.ToString(),
+                Username = s.User.Username,
+                ItemCount = s.SaleItems.Count,
+                Items = s.SaleItems.Select(si => new OrderReportProductDto
+                {
+                    ProductName = si.ProductName,
+                    Quantity = si.Quantity,
+                    UnitTypeName = si.Product.Unit_Type.ToString(),
+                    UnitPrice = si.UnitPrice,
+                    TotalPrice = si.Quantity * si.UnitPrice
+                }).ToList()
+            })
+            .ToListAsync();
     }
 
     private async Task<StockInReportDto> GetAllStockInItemsAsync(DateTime from, DateTime to, int? userId = null)

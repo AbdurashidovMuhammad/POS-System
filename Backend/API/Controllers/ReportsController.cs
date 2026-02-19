@@ -93,6 +93,26 @@ public class ReportsController : ControllerBase
         }
     }
 
+    [HttpGet("orders/export")]
+    public async Task<IActionResult> ExportOrdersReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] int? userId = null)
+    {
+        try
+        {
+            var validationError = ValidateDateRange(from, to);
+            if (validationError is not null)
+                return BadRequest(ApiResult<string>.Failure([validationError]));
+
+            var fileBytes = await _reportService.ExportOrdersReportAsync(from, to, userId);
+            return File(fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"Buyurtmalar_{from:dd.MM.yyyy}-{to:dd.MM.yyyy}.xlsx");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<string>.Failure([$"Excel yaratishda xatolik: {ex.Message}"]));
+        }
+    }
+
     [HttpGet("stock-in/export")]
     public async Task<IActionResult> ExportStockInReport([FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] int? userId = null)
     {
