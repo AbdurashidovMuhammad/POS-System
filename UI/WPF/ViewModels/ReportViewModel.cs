@@ -75,6 +75,9 @@ public partial class ReportViewModel : ViewModelBase
     private decimal _totalStockInQuantity;
 
     [ObservableProperty]
+    private decimal _totalStockInAmount;
+
+    [ObservableProperty]
     private int _stockInItemCount;
 
     // Export loading state
@@ -228,6 +231,7 @@ public partial class ReportViewModel : ViewModelBase
                     AssignDateGroupColors(result.Result.Items, x => x.Date, (x, alt) => x.DateGroupIsAlternate = alt);
                     StockInItems = new ObservableCollection<StockInReportItemDto>(result.Result.Items);
                     TotalStockInQuantity = result.Result.TotalQuantity;
+                    TotalStockInAmount = result.Result.TotalAmount;
                     StockInItemCount = result.Result.TotalCount;
                     TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
                     TotalCount = result.Result.TotalCount;
