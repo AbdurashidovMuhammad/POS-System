@@ -16,6 +16,11 @@ namespace API
 
             var builder = WebApplication.CreateBuilder(args);
 
+            // Railway PORT env variable ni qo'llab-quvvatlash
+            var port = Environment.GetEnvironmentVariable("PORT");
+            if (!string.IsNullOrEmpty(port))
+                builder.WebHost.UseUrls($"http://+:{port}");
+
             // Add services to the container.
 
             builder.Services.AddDataAccess(builder.Configuration);
@@ -48,15 +53,14 @@ namespace API
             await app.Services.ApplyMigrationsAsync();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Swagger barcha muhitlarda (Railway da ham) ishlashi uchun
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-            app.UseHttpsRedirection();
+            // Railway SSL terminationni o'zi qiladi, shuning uchun olib tashlandi
+            // app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 

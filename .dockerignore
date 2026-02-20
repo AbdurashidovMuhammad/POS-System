@@ -1,0 +1,8 @@
+**/.vs
+**/.git
+**/bin
+**/obj
+UI/
+*.slnLaunch.user
+publish/
+README.md
