@@ -38,5 +38,8 @@ public class StockMovementConfiguration : IEntityTypeConfiguration<StockMovement
 
         builder.HasIndex(e => e.MovementType);
         builder.HasIndex(e => new { e.ProductId, e.MovementType, e.MovementDate });
+        // Report filtering by user + date range
+        builder.HasIndex(e => new { e.UserId, e.MovementType, e.MovementDate })
+            .HasDatabaseName("IX_StockMovements_UserId_Type_Date");
     }
 }

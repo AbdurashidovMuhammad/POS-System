@@ -38,7 +38,8 @@ public class ProductBatchConfiguration : IEntityTypeConfiguration<ProductBatch>
             .HasForeignKey(e => e.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // FIFO lookups: open batches by product filtered by remaining quantity
-        builder.HasIndex(e => new { e.ProductId, e.RemainingQuantity });
+        // FIFO lookups: open batches ordered by ReceivedAt (oldest first)
+        builder.HasIndex(e => new { e.ProductId, e.RemainingQuantity, e.ReceivedAt })
+            .HasDatabaseName("IX_ProductBatches_FIFO");
     }
 }

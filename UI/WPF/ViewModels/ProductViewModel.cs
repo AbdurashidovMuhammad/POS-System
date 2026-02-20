@@ -18,6 +18,7 @@ public partial class ProductViewModel : ViewModelBase
     private readonly IApiService _apiService;
     private readonly INavigationService _navigationService;
     private readonly IAuthService _authService;
+    private CancellationTokenSource? _suggestionsCts;
 
     public ProductViewModel(IApiService apiService, INavigationService navigationService, IAuthService authService)
     {
@@ -59,6 +60,8 @@ public partial class ProductViewModel : ViewModelBase
 
     partial void OnSearchTextChanged(string value)
     {
+        _suggestionsCts?.Cancel();
+
         if (string.IsNullOrWhiteSpace(value) || value.Trim().Length < 3)
         {
             Suggestions.Clear();
@@ -66,7 +69,20 @@ public partial class ProductViewModel : ViewModelBase
             return;
         }
 
-        _ = LoadSuggestionsAsync(value);
+        _suggestionsCts = new CancellationTokenSource();
+        var token = _suggestionsCts.Token;
+        _ = DebounceSuggestionsAsync(value, token);
+    }
+
+    private async Task DebounceSuggestionsAsync(string query, CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(300, token);
+            if (token.IsCancellationRequested) return;
+            await LoadSuggestionsAsync(query);
+        }
+        catch (TaskCanceledException) { }
     }
 
     // Pagination

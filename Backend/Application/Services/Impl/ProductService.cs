@@ -67,11 +67,11 @@ public class ProductService : IProductService
             return Enumerable.Empty<ProductSuggestDto>();
         }
 
-        var lowerQuery = query.Trim().ToLower();
+        var pattern = query.Trim() + "%";
 
         var products = await _context.Products
             .AsNoTracking()
-            .Where(p => p.IsActive && p.Name.ToLower().StartsWith(lowerQuery))
+            .Where(p => p.IsActive && EF.Functions.ILike(p.Name, pattern))
             .OrderBy(p => p.Name)
             .Take(10)
             .Select(p => new ProductSuggestDto
@@ -95,10 +95,10 @@ public class ProductService : IProductService
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            var lowerQuery = query.Trim().ToLower();
+            var pattern = query.Trim() + "%";
             baseQuery = baseQuery.Where(p =>
-                p.Name.ToLower().StartsWith(lowerQuery) ||
-                p.barcode.ToLower().StartsWith(lowerQuery));
+                EF.Functions.ILike(p.Name, pattern) ||
+                EF.Functions.ILike(p.barcode, pattern));
         }
 
         var totalCount = await baseQuery.CountAsync();
@@ -270,7 +270,7 @@ public class ProductService : IProductService
         }
 
         // Check name uniqueness (excluding current product)
-        if (product.Name.ToLower() != dto.Name.ToLower())
+        if (!string.Equals(product.Name, dto.Name, StringComparison.OrdinalIgnoreCase))
         {
             var nameExists = await _context.Products
                 .AnyAsync(p => p.Name.ToLower() == dto.Name.ToLower() && p.Id != id);

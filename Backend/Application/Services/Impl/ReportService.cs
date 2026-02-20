@@ -425,12 +425,15 @@ public class ReportService : IReportService
 
         var query = _context.SaleItems
             .AsNoTracking()
-            .Include(si => si.Sale)
-            .Include(si => si.Product)
             .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate);
 
         if (userId.HasValue)
             query = query.Where(si => si.Sale.UserId == userId.Value);
+
+        // Aggregatlarni DB da hisoblash (memory ga tortmasdan)
+        var totalCount = await query.CountAsync();
+        var totalAmount = await query.SumAsync(si => si.Quantity * si.UnitPrice);
+        var totalProfit = await query.SumAsync(si => si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale);
 
         var items = await query
             .OrderByDescending(si => si.Sale.SaleDate)
@@ -455,11 +458,11 @@ public class ReportService : IReportService
             DateFrom = from.Date,
             DateTo = to.Date,
             Items = items,
-            TotalAmount = items.Sum(i => i.TotalPrice),
-            TotalProfit = items.Sum(i => i.Profit),
-            TotalCount = items.Count,
+            TotalAmount = totalAmount,
+            TotalProfit = totalProfit,
+            TotalCount = totalCount,
             Page = 1,
-            PageSize = items.Count
+            PageSize = totalCount
         };
     }
 
@@ -504,13 +507,17 @@ public class ReportService : IReportService
 
         var query = _context.StockMovements
             .AsNoTracking()
-            .Include(sm => sm.Product)
             .Where(sm => sm.MovementType == Movement_Type.StockIn
                          && sm.MovementDate >= fromDate
                          && sm.MovementDate < toDate);
 
         if (userId.HasValue)
             query = query.Where(sm => sm.UserId == userId.Value);
+
+        // Aggregatlarni DB da hisoblash (items yuklanishidan oldin)
+        var totalCount = await query.CountAsync();
+        var totalQuantity = await query.SumAsync(sm => sm.Quantity);
+        var totalAmount = await query.SumAsync(sm => sm.Quantity * (sm.UnitCost ?? 0));
 
         var items = await query
             .OrderByDescending(sm => sm.MovementDate)
@@ -524,18 +531,16 @@ public class ReportService : IReportService
             })
             .ToListAsync();
 
-        var totalAmount = await query.SumAsync(sm => sm.Quantity * (sm.UnitCost ?? 0));
-
         return new StockInReportDto
         {
             DateFrom = from.Date,
             DateTo = to.Date,
             Items = items,
-            TotalQuantity = items.Sum(i => i.Quantity),
+            TotalQuantity = totalQuantity,
             TotalAmount = totalAmount,
-            TotalCount = items.Count,
+            TotalCount = totalCount,
             Page = 1,
-            PageSize = items.Count
+            PageSize = totalCount
         };
     }
 }
