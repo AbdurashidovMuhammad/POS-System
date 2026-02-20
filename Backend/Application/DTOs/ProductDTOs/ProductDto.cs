@@ -12,6 +12,7 @@ public class ProductDto
     public decimal SellPrice { get; set; }
     public Unit_Type UnitType { get; set; }
     public decimal StockQuantity { get; set; }
+    public decimal MinStockThreshold { get; set; }
     public string Barcode { get; set; } = null!;
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }

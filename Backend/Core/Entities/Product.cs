@@ -10,6 +10,7 @@ public class Product
     public decimal SellPrice { get; set; }
     public Unit_Type Unit_Type { get; set; }
     public decimal StockQuantity { get; set; } = 0;
+    public decimal MinStockThreshold { get; set; } = 0;
     public string barcode { get; set; } = null!;
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.Now;

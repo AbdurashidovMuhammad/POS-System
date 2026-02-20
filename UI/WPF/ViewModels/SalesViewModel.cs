@@ -32,8 +32,6 @@ public partial class SalesViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _totalAmount;
 
-    [ObservableProperty]
-    private decimal _totalQuantity;
 
     // --- Top selling products ---
     [ObservableProperty]
@@ -400,9 +398,10 @@ public partial class SalesViewModel : ViewModelBase
     [RelayCommand]
     private void IncrementQuantity(CartItem item)
     {
-        if (item.Quantity + 1 <= item.Product.StockQuantity)
+        var step = item.Product.UnitType == UnitType.Gramm ? 100m : 1m;
+        if (item.Quantity + step <= item.Product.StockQuantity)
         {
-            item.Quantity++;
+            item.Quantity += step;
             CalculateTotal();
         }
     }
@@ -410,9 +409,10 @@ public partial class SalesViewModel : ViewModelBase
     [RelayCommand]
     private void DecrementQuantity(CartItem item)
     {
-        if (item.Quantity > 1)
+        var step = item.Product.UnitType == UnitType.Gramm ? 100m : 1m;
+        if (item.Quantity - step >= step)
         {
-            item.Quantity--;
+            item.Quantity -= step;
             CalculateTotal();
         }
     }
@@ -429,7 +429,6 @@ public partial class SalesViewModel : ViewModelBase
     {
         CartItems.Clear();
         TotalAmount = 0;
-        TotalQuantity = 0;
         SelectedPaymentType = 1;
     }
 
@@ -491,7 +490,6 @@ public partial class SalesViewModel : ViewModelBase
     private void CalculateTotal()
     {
         TotalAmount = CartItems.Sum(x => x.Subtotal);
-        TotalQuantity = CartItems.Sum(x => x.Quantity);
     }
 }
 

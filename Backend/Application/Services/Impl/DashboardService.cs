@@ -100,18 +100,20 @@ internal class DashboardService : IDashboardService
             .OrderByDescending(x => x.TodaySalesAmount)
             .ToListAsync();
 
-        // Kam qolgan mahsulotlar (10 va undan kam)
+        // Kam qolgan mahsulotlar (MinStockThreshold belgilangan va zaxira undan past)
         var lowStockProducts = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
-            .Where(p => p.IsActive && p.StockQuantity <= 10)
+            .Where(p => p.IsActive && p.MinStockThreshold > 0 && p.StockQuantity < p.MinStockThreshold)
             .OrderBy(p => p.StockQuantity)
             .Select(p => new LowStockProductDto
             {
                 ProductId = p.Id,
                 ProductName = p.Name,
                 CategoryName = p.Category.Name,
-                StockQuantity = p.StockQuantity
+                StockQuantity = p.StockQuantity,
+                MinStockThreshold = p.MinStockThreshold,
+                UnitType = p.Unit_Type
             })
             .ToListAsync();
 

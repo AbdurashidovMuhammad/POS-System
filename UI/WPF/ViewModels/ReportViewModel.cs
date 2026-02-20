@@ -80,6 +80,9 @@ public partial class ReportViewModel : ViewModelBase
     [ObservableProperty]
     private int _stockInItemCount;
 
+    [ObservableProperty]
+    private ObservableCollection<StockInUnitSummaryDto> _stockInQuantityByUnit = new();
+
     // Export loading state
     [ObservableProperty]
     private bool _isExporting;
@@ -233,6 +236,7 @@ public partial class ReportViewModel : ViewModelBase
                     TotalStockInQuantity = result.Result.TotalQuantity;
                     TotalStockInAmount = result.Result.TotalAmount;
                     StockInItemCount = result.Result.TotalCount;
+                    StockInQuantityByUnit = new ObservableCollection<StockInUnitSummaryDto>(result.Result.QuantityByUnit);
                     TotalPages = result.Result.TotalPages == 0 ? 1 : result.Result.TotalPages;
                     TotalCount = result.Result.TotalCount;
                 }

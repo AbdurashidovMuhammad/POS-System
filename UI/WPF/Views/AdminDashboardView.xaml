@@ -485,10 +485,10 @@
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <Border HorizontalAlignment="Right"
-                                            Background="{StaticResource CategoryBackgroundBrush}" CornerRadius="8" Padding="10,4"
+                                            Background="{StaticResource WarningBackgroundBrush}" CornerRadius="8" Padding="10,4"
                                             VerticalAlignment="Center"
                                             Visibility="{Binding HasLowStockProducts, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <TextBlock FontSize="12" Foreground="{StaticResource CategoryBrush}" FontWeight="SemiBold">
+                                        <TextBlock FontSize="12" Foreground="{StaticResource WarningDarkBrush}" FontWeight="SemiBold">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} ta">
                                                     <Binding Path="LowStockCount"/>
@@ -621,17 +621,32 @@
                                                                    Margin="0,2,0,0"/>
                                                     </StackPanel>
 
-                                                    <Border Grid.Column="2" VerticalAlignment="Center"
-                                                            Background="{StaticResource CategoryBackgroundBrush}" CornerRadius="6" Padding="8,3">
-                                                        <TextBlock FontSize="12" FontWeight="SemiBold"
-                                                                   Foreground="{StaticResource CategoryBrush}">
-                                                            <TextBlock.Text>
-                                                                <MultiBinding StringFormat="{}{0:N0} ta">
-                                                                    <Binding Path="StockQuantity"/>
-                                                                </MultiBinding>
-                                                            </TextBlock.Text>
-                                                        </TextBlock>
-                                                    </Border>
+                                                    <!-- Stock vs Threshold badge -->
+                                                    <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                        <!-- Current stock -->
+                                                        <Border Background="{StaticResource WarningBackgroundBrush}" CornerRadius="6" Padding="8,3" HorizontalAlignment="Right">
+                                                            <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource WarningDarkBrush}">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource GrammToKgConverter}">
+                                                                        <Binding Path="StockQuantity"/>
+                                                                        <Binding Path="UnitType"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </Border>
+                                                        <!-- Threshold -->
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,3,0,0">
+                                                            <TextBlock Text="chegara: " FontSize="10" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                            <TextBlock FontSize="10" Foreground="{StaticResource TextTertiaryBrush}" FontWeight="SemiBold">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource GrammToKgConverter}">
+                                                                        <Binding Path="MinStockThreshold"/>
+                                                                        <Binding Path="UnitType"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </StackPanel>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>

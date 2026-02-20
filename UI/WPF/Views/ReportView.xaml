@@ -1029,7 +1029,7 @@
                                 <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="8" Padding="10,6">
                                     <TextBlock FontSize="12" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold">
                                         <Run Text="Jami: "/>
-                                        <Run Text="{Binding TotalCount}" FontWeight="Bold"/>
+                                        <Run Text="{Binding TotalOrdersCount}" FontWeight="Bold"/>
                                         <Run Text=" ta buyurtma"/>
                                     </TextBlock>
                                 </Border>
@@ -1105,10 +1105,26 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Jami kirim miqdori" FontSize="13" Foreground="{StaticResource TextMutedBrush}"/>
-                            <TextBlock Text="{Binding TotalStockInQuantity, StringFormat={}{0:0.##}}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,0"/>
+                            <!-- Per-unit breakdown -->
+                            <ItemsControl ItemsSource="{Binding StockInQuantityByUnit}" Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}">
+                                                <Run Text="{Binding FormattedQuantity, Mode=OneWay}"/>
+                                                <Run Text=" "/>
+                                                <Run Text="{Binding UnitTypeName, Mode=OneWay}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="14" FontWeight="Normal"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <!-- Empty state -->
+                            <TextBlock Text="—" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextFaintBrush}" Margin="0,8,0,0"
+                                       Visibility="{Binding StockInQuantityByUnit.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=invert}"/>
                             <TextBlock Text="Tanlangan davr uchun" FontSize="11" Foreground="{StaticResource TextFaintBrush}" Margin="0,4,0,0"/>
                         </StackPanel>
-                        <Border Grid.Column="1" Width="50" Height="50" Background="{StaticResource WarningBackgroundBrush}" CornerRadius="12">
+                        <Border Grid.Column="1" Width="50" Height="50" Background="{StaticResource WarningBackgroundBrush}" CornerRadius="12" VerticalAlignment="Top">
                             <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
                                   Fill="{StaticResource WarningBrush}" Width="24" Height="24" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>

@@ -18,4 +18,7 @@ public class UpdateProductDto
 
     [Required(ErrorMessage = "Unit type is required")]
     public Unit_Type UnitType { get; set; }
+
+    [Range(0, double.MaxValue, ErrorMessage = "Min. zaxira chegarasi manfiy bo'lishi mumkin emas")]
+    public decimal MinStockThreshold { get; set; } = 0;
 }

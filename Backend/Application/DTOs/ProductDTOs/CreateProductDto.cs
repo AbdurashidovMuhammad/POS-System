@@ -27,4 +27,7 @@ public class CreateProductDto
 
     [StringLength(80, ErrorMessage = "Barcode cannot exceed 80 characters")]
     public string? Barcode { get; set; }
+
+    [Range(0, double.MaxValue, ErrorMessage = "Min. zaxira chegarasi manfiy bo'lishi mumkin emas")]
+    public decimal MinStockThreshold { get; set; } = 0;
 }

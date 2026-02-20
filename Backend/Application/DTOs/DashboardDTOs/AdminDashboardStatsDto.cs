@@ -1,3 +1,5 @@
+using Core.Enums;
+
 namespace Application.DTOs.DashboardDTOs;
 
 public class AdminDashboardStatsDto
@@ -33,4 +35,6 @@ public class LowStockProductDto
     public string ProductName { get; set; } = null!;
     public string CategoryName { get; set; } = null!;
     public decimal StockQuantity { get; set; }
+    public decimal MinStockThreshold { get; set; }
+    public Unit_Type UnitType { get; set; }
 }

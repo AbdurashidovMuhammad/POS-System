@@ -199,6 +199,7 @@ public class ProductService : IProductService
                 SellPrice = dto.SellPrice,
                 Unit_Type = dto.UnitType,
                 StockQuantity = dto.StockQuantity,
+                MinStockThreshold = dto.MinStockThreshold,
                 barcode = barcode,
                 IsActive = true,
                 CreatedAt = DateTime.Now
@@ -290,6 +291,7 @@ public class ProductService : IProductService
         product.CategoryId = dto.CategoryId;
         product.SellPrice = dto.SellPrice;
         product.Unit_Type = dto.UnitType;
+        product.MinStockThreshold = dto.MinStockThreshold;
 
         await _context.SaveChangesAsync();
 
@@ -439,6 +441,7 @@ public class ProductService : IProductService
             SellPrice = product.SellPrice,
             UnitType = product.Unit_Type,
             StockQuantity = product.StockQuantity,
+            MinStockThreshold = product.MinStockThreshold,
             Barcode = product.barcode,
             IsActive = product.IsActive,
             CreatedAt = product.CreatedAt

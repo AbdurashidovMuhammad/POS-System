@@ -169,6 +169,16 @@ public partial class ProductViewModel : ViewModelBase
     public bool IsStockInGramm => SelectedProduct?.UnitType == UnitType.Gramm;
 
     [ObservableProperty]
+    private decimal _formMinThreshold;
+
+    // Gramm uchun min threshold kg + gramm split
+    [ObservableProperty]
+    private int _formMinThresholdKg;
+
+    [ObservableProperty]
+    private int _formMinThresholdGramm;
+
+    [ObservableProperty]
     private string _formBarcode = string.Empty;
 
     [ObservableProperty]
@@ -398,6 +408,17 @@ public partial class ProductViewModel : ViewModelBase
         FormUnitType = SelectedProduct.UnitType;
         FormError = null;
 
+        if (SelectedProduct.UnitType == UnitType.Gramm)
+        {
+            var grams = (int)SelectedProduct.MinStockThreshold;
+            FormMinThresholdKg = grams / 1000;
+            FormMinThresholdGramm = grams % 1000;
+        }
+        else
+        {
+            FormMinThreshold = SelectedProduct.MinStockThreshold;
+        }
+
         IsEditPanelOpen = true;
     }
 
@@ -432,6 +453,10 @@ public partial class ProductViewModel : ViewModelBase
                 ? FormStockKg * 1000m + FormStockGramm
                 : FormStockQuantity;
 
+            var minThreshold = FormUnitType == UnitType.Gramm
+                ? FormMinThresholdKg * 1000m + FormMinThresholdGramm
+                : FormMinThreshold;
+
             var dto = new CreateProductDto
             {
                 Name = FormName.Trim(),
@@ -440,7 +465,8 @@ public partial class ProductViewModel : ViewModelBase
                 UnitType = FormUnitType,
                 StockQuantity = stockQty,
                 BuyPrice = stockQty > 0 ? FormBuyPrice : null,
-                Barcode = string.IsNullOrWhiteSpace(FormBarcode) ? null : FormBarcode.Trim()
+                Barcode = string.IsNullOrWhiteSpace(FormBarcode) ? null : FormBarcode.Trim(),
+                MinStockThreshold = minThreshold
             };
 
             var result = await _apiService.PostAsync<int>("api/products", dto);
@@ -482,12 +508,17 @@ public partial class ProductViewModel : ViewModelBase
 
         try
         {
+            var minThreshold = FormUnitType == UnitType.Gramm
+                ? FormMinThresholdKg * 1000m + FormMinThresholdGramm
+                : FormMinThreshold;
+
             var dto = new UpdateProductDto
             {
                 Name = FormName.Trim(),
                 CategoryId = FormCategoryId!.Value,
                 SellPrice = FormSellPrice,
-                UnitType = FormUnitType
+                UnitType = FormUnitType,
+                MinStockThreshold = minThreshold
             };
 
             var result = await _apiService.PutAsync<ProductDto>($"api/products/{SelectedProduct.Id}", dto);
@@ -750,6 +781,9 @@ public partial class ProductViewModel : ViewModelBase
         FormStockKg = 1;
         FormStockGramm = 0;
         FormBarcode = string.Empty;
+        FormMinThreshold = 0;
+        FormMinThresholdKg = 0;
+        FormMinThresholdGramm = 0;
         StockInQuantity = 0;
         StockInBuyPrice = 0;
         StockInKg = 0;

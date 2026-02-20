@@ -11,9 +11,12 @@ public class ProductDto
     public decimal SellPrice { get; set; }
     public UnitType UnitType { get; set; }
     public decimal StockQuantity { get; set; }
+    public decimal MinStockThreshold { get; set; }
     public string Barcode { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public bool IsLowStock => MinStockThreshold > 0 && StockQuantity < MinStockThreshold;
 
     public string UnitLabel => UnitType switch
     {
@@ -31,6 +34,7 @@ public class CreateProductDto
     public decimal StockQuantity { get; set; }
     public decimal? BuyPrice { get; set; }
     public string? Barcode { get; set; }
+    public decimal MinStockThreshold { get; set; } = 0;
 }
 
 public class UpdateProductDto
@@ -39,6 +43,7 @@ public class UpdateProductDto
     public int CategoryId { get; set; }
     public decimal SellPrice { get; set; }
     public UnitType UnitType { get; set; }
+    public decimal MinStockThreshold { get; set; } = 0;
 }
 
 public class AddStockDto

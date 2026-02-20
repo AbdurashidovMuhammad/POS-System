@@ -1,3 +1,5 @@
+using WPF.Enums;
+
 namespace WPF.Models;
 
 public class AdminDashboardStatsDto
@@ -33,4 +35,6 @@ public class LowStockProductDto
     public string ProductName { get; set; } = string.Empty;
     public string CategoryName { get; set; } = string.Empty;
     public decimal StockQuantity { get; set; }
+    public decimal MinStockThreshold { get; set; }
+    public UnitType UnitType { get; set; }
 }

@@ -401,30 +401,55 @@
                                                         <Style TargetType="Border">
                                                             <Setter Property="Background" Value="{StaticResource SuccessBackgroundBrush}"/>
                                                             <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                                                    <Setter Property="Background" Value="{StaticResource WarningBackgroundBrush}"/>
+                                                                </DataTrigger>
                                                                 <DataTrigger Binding="{Binding StockQuantity}" Value="0">
                                                                     <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Border.Style>
-                                                    <TextBlock FontSize="12" FontWeight="Bold">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                <Setter Property="Foreground" Value="{StaticResource SuccessDarkBrush}"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding StockQuantity}" Value="0">
-                                                                        <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                        <TextBlock.Text>
-                                                            <MultiBinding Converter="{StaticResource GrammToKgConverter}">
-                                                                <Binding Path="StockQuantity"/>
-                                                                <Binding Path="UnitType"/>
-                                                            </MultiBinding>
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock FontSize="12" FontWeight="Bold">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Foreground" Value="{StaticResource SuccessDarkBrush}"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                                                            <Setter Property="Foreground" Value="{StaticResource WarningDarkBrush}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding StockQuantity}" Value="0">
+                                                                            <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource GrammToKgConverter}">
+                                                                    <Binding Path="StockQuantity"/>
+                                                                    <Binding Path="UnitType"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                        <!-- Low stock warning icon -->
+                                                        <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"
+                                                              Fill="{StaticResource WarningBrush}"
+                                                              Width="13" Height="13" Stretch="Uniform"
+                                                              Margin="5,0,0,0" VerticalAlignment="Center"
+                                                              ToolTip="Zaxira kam! Belgilangan chegaradan past">
+                                                            <Path.Style>
+                                                                <Style TargetType="Path">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Path.Style>
+                                                        </Path>
+                                                    </StackPanel>
                                                 </Border>
                                             </Border>
 
@@ -782,6 +807,52 @@
                                           BorderThickness="0"
                                           Padding="10,10"
                                           FontSize="14"/>
+                            </Border>
+
+                            <!-- Min Stock Threshold -->
+                            <Border CornerRadius="10" Padding="14,12" Margin="0,0,0,18">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{StaticResource WarningBackgroundColor}" Offset="0"/>
+                                        <GradientStop Color="{StaticResource WarningLightColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"
+                                              Fill="{StaticResource WarningBrush}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Kam zaxira chegarasi" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource WarningDarkBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Zaxira shu miqdordan kam bo'lsa, ogohlantirish ko'rinadi"
+                                               FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,10"/>
+
+                                    <!-- Normal unit threshold input -->
+                                    <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1"
+                                            Visibility="{Binding IsGrammSelected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                                        <TextBox Text="{Binding FormMinThreshold, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                                 Background="Transparent" BorderThickness="0" Padding="14,12" FontSize="14"/>
+                                    </Border>
+
+                                    <!-- Gramm uchun kg + gramm split input -->
+                                    <Grid Visibility="{Binding IsGrammSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                            <TextBox Text="{Binding FormMinThresholdKg, UpdateSourceTrigger=PropertyChanged}"
+                                                     Background="Transparent" BorderThickness="0" Padding="14,12" FontSize="16" FontWeight="SemiBold" HorizontalContentAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="kg" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Center" Margin="8,0,14,0"/>
+                                        <Border Grid.Column="2" Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+                                            <TextBox Text="{Binding FormMinThresholdGramm, UpdateSourceTrigger=PropertyChanged}"
+                                                     Background="Transparent" BorderThickness="0" Padding="14,12" FontSize="16" FontWeight="SemiBold" HorizontalContentAlignment="Center" MaxLength="3"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="3" Text="gr" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                    </Grid>
+                                </StackPanel>
                             </Border>
 
                             <!-- Initial Stock and Barcode (only for new products) -->

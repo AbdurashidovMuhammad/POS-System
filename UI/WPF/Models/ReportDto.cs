@@ -70,10 +70,18 @@ public class StockInReportDto
     public List<StockInReportItemDto> Items { get; set; } = new();
     public decimal TotalQuantity { get; set; }
     public decimal TotalAmount { get; set; }
+    public List<StockInUnitSummaryDto> QuantityByUnit { get; set; } = new();
     public int Page { get; set; }
     public int PageSize { get; set; }
     public int TotalCount { get; set; }
     public int TotalPages { get; set; }
+}
+
+public class StockInUnitSummaryDto
+{
+    public string UnitTypeName { get; set; } = string.Empty;
+    public decimal TotalQuantity { get; set; }
+    public string FormattedQuantity => TotalQuantity.ToString("0.##");
 }
 
 public class StockInReportItemDto

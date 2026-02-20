@@ -147,6 +147,15 @@ public class ReportService : IReportService
         var totalQuantity = await query.SumAsync(sm => sm.Quantity);
         var totalAmount = await query.SumAsync(sm => sm.Quantity * (sm.UnitCost ?? 0));
 
+        var quantityByUnit = await query
+            .GroupBy(sm => sm.Product.Unit_Type)
+            .Select(g => new UnitQuantitySummaryDto
+            {
+                UnitTypeName = g.Key.ToString(),
+                TotalQuantity = g.Sum(sm => sm.Quantity)
+            })
+            .ToListAsync();
+
         var items = await query
             .OrderByDescending(sm => sm.MovementDate)
             .Skip((pagination.Page - 1) * pagination.PageSize)
@@ -168,6 +177,7 @@ public class ReportService : IReportService
             Items = items,
             TotalQuantity = totalQuantity,
             TotalAmount = totalAmount,
+            QuantityByUnit = quantityByUnit,
             Page = pagination.Page,
             PageSize = pagination.PageSize,
             TotalCount = totalCount
