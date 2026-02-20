@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WPF.Services;
 using WPF.ViewModels;
@@ -12,19 +13,24 @@ public partial class App : Application
 
     public App()
     {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+
         var services = new ServiceCollection();
-        ConfigureServices(services);
+        ConfigureServices(services, config);
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    private void ConfigureServices(IServiceCollection services)
+    private void ConfigureServices(IServiceCollection services, IConfiguration config)
     {
         // HttpClient - singleton uchun
         services.AddSingleton(sp =>
         {
+            var baseUrl = config["ApiBaseUrl"]!;
             var client = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7144/")
+                BaseAddress = new Uri(baseUrl)
             };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             return client;
