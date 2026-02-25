@@ -22,5 +22,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(e => e.IsActive)
             .IsRequired()
             .HasDefaultValue(true);
+
+        builder.HasIndex(e => e.IsActive)
+            .HasDatabaseName("IX_Categories_IsActive");
     }
 }

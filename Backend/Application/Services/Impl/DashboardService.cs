@@ -103,7 +103,6 @@ internal class DashboardService : IDashboardService
         // Kam qolgan mahsulotlar (MinStockThreshold belgilangan va zaxira undan past)
         var lowStockProducts = await _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
             .Where(p => p.IsActive && p.MinStockThreshold > 0 && p.StockQuantity < p.MinStockThreshold)
             .OrderBy(p => p.StockQuantity)
             .Select(p => new LowStockProductDto

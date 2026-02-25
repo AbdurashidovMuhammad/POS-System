@@ -24,8 +24,6 @@ public class ReportService : IReportService
 
         var query = _context.SaleItems
             .AsNoTracking()
-            .Include(si => si.Sale)
-            .Include(si => si.Product)
             .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate);
 
         if (userId.HasValue)
@@ -134,7 +132,6 @@ public class ReportService : IReportService
 
         var query = _context.StockMovements
             .AsNoTracking()
-            .Include(sm => sm.Product)
             .Where(sm => sm.MovementType == Movement_Type.StockIn
                          && sm.MovementDate >= fromDate
                          && sm.MovementDate < toDate);

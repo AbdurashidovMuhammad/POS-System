@@ -1,0 +1,220 @@
+================================================================================
+                        POS SYSTEM — LOYIHA HAQIDA
+                   (Yangi ishtirokchi uchun qo'llanma)
+================================================================================
+
+TEXNOLOGIYALAR
+--------------
+  Backend  : .NET 8, ASP.NET Core Web API, Entity Framework Core, PostgreSQL
+  Frontend : WPF (.NET 8), CommunityToolkit.Mvvm
+  Auth     : JWT access token + refresh token
+  Deploy   : Docker + Railway (PostgreSQL ham Railway da)
+
+================================================================================
+PAPKA TUZILMASI
+================================================================================
+
+POS-System/
+├── Backend/              ← Server tomoni (Clean Architecture)
+│   ├── Core/             ← Domenli sinflar (Entity, Enum)
+│   ├── Application/      ← Biznes logika (Service, DTO)
+│   ├── DataAccess/       ← Ma'lumotlar bazasi (EF Core, Migration)
+│   └── API/              ← HTTP qatlam (Controller, Middleware)
+│
+├── UI/
+│   └── WPF/              ← Foydalanuvchi interfeysi (MVVM)
+│       ├── Views/        ← XAML ekranlar
+│       ├── ViewModels/   ← Ekran logikasi
+│       ├── Models/       ← API javoblarini qabul qiluvchi DTO
+│       ├── Services/     ← API bilan aloqa, navigatsiya, auth
+│       ├── Converters/   ← XAML Binding konvertorlari
+│       └── Messages/     ← ViewModel-lar orasidagi xabarlar
+│
+├── Dockerfile            ← Backend uchun Docker konfiguratsiya
+├── POS System.slnx       ← Visual Studio solution fayli
+└── PROJECT_OVERVIEW.txt  ← Shu fayl
+
+================================================================================
+BACKEND — QANDAY ISHLAYDI
+================================================================================
+
+1. CLEAN ARCHITECTURE QATLAMLARI
+   Core → Application → DataAccess → API
+   (har qatlam faqat ichkaridagi qatlamga bog'liq)
+
+2. ASOSIY ENTITYLAR (Backend/Core/Entities/)
+   ┌─────────────────┬──────────────────────────────────────────────────────┐
+   │ Entity          │ Vazifasi                                              │
+   ├─────────────────┼──────────────────────────────────────────────────────┤
+   │ User            │ Foydalanuvchilar (SuperAdmin, Admin rollari)          │
+   │ Category        │ Mahsulot kategoriyalari                               │
+   │ Product         │ Mahsulotlar (SellPrice = sotish narxi)                │
+   │ ProductBatch    │ FIFO ombor partiyalari (xarid narxi + miqdor)        │
+   │ Sale            │ Sotuv savdosi (sarlavha)                              │
+   │ SaleItem        │ Sotuvdagi har bir mahsulot qatori                     │
+   │ StockMovement   │ Ombor harakatlari (kirim/chiqim)                     │
+   │ AuditLog        │ Barcha muhim amallar logi                             │
+   └─────────────────┴──────────────────────────────────────────────────────┘
+
+3. MUHIM ENUMLAR (Backend/Core/Enums/)
+   Role         : SuperAdmin = 1, Admin = 2
+   Unit_Type    : Dona, Kg, Litr, Gramm (=8) va boshqalar
+   Movement_Type: StockIn, StockOut
+   Payment_Type : Naqd, Karta, va boshqalar
+   Action_Type  : AuditLog uchun amal turlari
+
+4. OMBOR (FIFO) MANTIQ
+   - Har bir xaridda yangi ProductBatch yaratiladi
+   - Bir xil BuyPrice bo'lgan ochiq partiyalar birlashtiriladi
+   - Sotuv chiqarilganda FIFO tartibida partiyalar kamayadi
+   - SaleItem.BuyPriceAtSale = sotuv vaqtidagi o'rtacha tannarx
+
+5. GRAMM O'LCHOVI
+   - Unit_Type.Gramm = 8
+   - Narx hisoblashda: narx / 1000 (chunki narx 1 kg uchun berilgan)
+   - GrammToKgConverter — UI da ko'rsatish uchun
+
+6. SERVISLAR (Backend/Application/Services/Impl/)
+   ProductService   → mahsulot CRUD + ombor boshqaruvi
+   SaleService      → savdo yaratish, FIFO chiqarish
+   ReportService    → savdo va kirim hisobotlari
+   DashboardService → statistika (bugungi savdo, eng ko'p sotilar)
+   UserService      → foydalanuvchi boshqaruvi
+   AuditLogService  → log yozish/o'qish
+   AuthService      → login, token yangilash
+
+7. API ENDPOINTLAR (Backend/API/Controllers/)
+   /api/auth        → login, refresh
+   /api/products    → mahsulotlar
+   /api/categories  → kategoriyalar
+   /api/sales       → savdolar
+   /api/reports     → hisobotlar
+   /api/users       → foydalanuvchilar (faqat SuperAdmin)
+   /api/dashboard   → statistika
+   /api/auditlogs   → faoliyat logi
+
+8. DATABASE MIGRATIONS
+   Qo'shish uchun:
+   dotnet ef migrations add MIGRATION_NOMI \
+     --project Backend/DataAccess \
+     --startup-project Backend/API
+
+================================================================================
+FRONTEND (WPF) — QANDAY ISHLAYDI
+================================================================================
+
+1. ARXITEKTURA: MVVM
+   View (XAML) ←→ ViewModel ←→ IApiService ←→ Backend API
+
+2. EKRANLAR VA VIEWMODEL-LAR
+   ┌──────────────────────┬────────────────────────────────────────────────┐
+   │ View                 │ Vazifasi                                        │
+   ├──────────────────────┼────────────────────────────────────────────────┤
+   │ LoginView            │ Kirish (username + parol)                       │
+   │ ShellView            │ Asosiy oyna (navigatsiya paneli + kontent)      │
+   │ DashboardView        │ Umumiy statistika (Admin uchun)                 │
+   │ AdminDashboardView   │ Kengaytirilgan statistika (SuperAdmin uchun)    │
+   │ SalesView            │ Kassa — mahsulot qo'shish va savdo qilish       │
+   │ SalesHistoryView     │ O'tgan savdolar tarixi                          │
+   │ ProductView          │ Mahsulotlar ro'yxati, qo'shish, tahrirlash      │
+   │ CategoryView         │ Kategoriyalar boshqaruvi                        │
+   │ ReportView           │ Savdo va kirim hisobotlari                      │
+   │ UserView             │ Foydalanuvchilar (faqat SuperAdmin ko'radi)     │
+   │ ActivityLogView      │ Faoliyat logi                                   │
+   └──────────────────────┴────────────────────────────────────────────────┘
+
+3. SERVISLAR (UI/WPF/Services/)
+   IApiService / ApiService
+     → Barcha HTTP so'rovlar shu yerdan ketadi
+     → Token avtomatik qo'shiladi (Authorization: Bearer ...)
+   IAuthService / AuthService
+     → Login, token saqlash, refresh
+   INavigationService / NavigationService
+     → ViewModel-ga asoslangan navigatsiya
+
+4. MODELLAR (UI/WPF/Models/)
+   Backend API javoblarining WPF tomondagi nusxalari.
+   Backend DTO o'zgarsa — WPF Model ham yangilanishi kerak!
+
+5. XAML ESLATMALAR
+   - StringFormat ichida apostrof (so'm) ishlatilganda:
+     NOTO'G'RI : {Binding Narx, StringFormat={}{0:N0} so'm}
+     TO'G'RI   : <Binding Path="Narx"><Binding.StringFormat>{0:N0} so'm
+                 </Binding.StringFormat></Binding>
+   - Konverterlar: UI/WPF/Converters/ papkasida
+
+================================================================================
+AUTENTIFIKATSIYA
+================================================================================
+
+1. Login → AuthController → JWT access token + refresh token qaytaradi
+2. WPF AuthService tokenni xotirada saqlaydi
+3. Har so'rovda ApiService "Authorization: Bearer {token}" qo'shadi
+4. Token muddati tugasa — refresh endpoint orqali yangilanadi
+5. Rollar:
+   SuperAdmin → barcha imkoniyatlar (foydalanuvchi boshqaruvi ham)
+   Admin      → savdo, mahsulot, hisobot (foydalanuvchi boshqaruvi yo'q)
+
+================================================================================
+LOYIHANI ISHGA TUSHIRISH
+================================================================================
+
+TALAB:
+  - .NET 8 SDK
+  - PostgreSQL (yoki Docker)
+  - Visual Studio 2022 / Rider
+
+BACKEND:
+  1. Backend/API/appsettings.json da ConnectionString ni sozlang
+  2. cd Backend/API
+     dotnet run
+  3. Swagger: https://localhost:{port}/swagger
+
+WPF FRONTEND:
+  1. UI/WPF/appsettings.json da API URL ni sozlang
+  2. Visual Studio da WPF loyihasini "Set as Startup Project" qiling
+  3. F5 yoki Run
+
+DOCKER (faqat backend):
+  docker build -t pos-backend .
+  docker run -p 8080:8080 pos-backend
+
+================================================================================
+KODGA O'ZGARTIRISH KIRITISHDA ESLATMALAR
+================================================================================
+
+✓ Yangi endpoint qo'shilsa:
+    Backend: Controller + Service + DTO
+    Frontend: IApiService + ApiService + ViewModel
+
+✓ DTO o'zgarsa:
+    Backend Application/DTOs/ va UI/WPF/Models/ ni ikkalasini yangilang
+
+✓ Yangi ustun/jadval qo'shilsa:
+    Entity → Configuration → Migration → DbContext (DbSet kerak bo'lsa)
+
+✓ Yangi ekran qo'shilsa:
+    View (XAML) → ViewModel → ShellViewModel navigatsiyasi → DI ro'yxatga olish
+
+✓ Audit log:
+    Muhim amallar (savdo, mahsulot o'zgarishi) AuditLogService orqali loglanadi
+
+================================================================================
+FAYL QIDIRISH — TEZKOR YO'RIQNOMA
+================================================================================
+
+Narsa qayerda?         Fayl
+─────────────────────  ──────────────────────────────────────────────────────
+Entity sinflari        Backend/Core/Entities/
+Enum-lar               Backend/Core/Enums/
+Biznes logika          Backend/Application/Services/Impl/
+API DTO-lari           Backend/Application/DTOs/
+Controller-lar         Backend/API/Controllers/
+Database context       Backend/DataAccess/Persistence/DatabaseContext.cs
+Migration-lar          Backend/DataAccess/Migrations/
+WPF ekranlar           UI/WPF/Views/
+WPF logika             UI/WPF/ViewModels/
+API so'rovlar          UI/WPF/Services/ApiService.cs
+WPF DTO nusxalari      UI/WPF/Models/
+
+================================================================================

@@ -31,6 +31,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasDefaultValue(true);
 
+        builder.HasIndex(e => e.IsActive)
+            .HasDatabaseName("IX_Users_IsActive");
+
         builder.Property(e => e.CreatedAt)
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");

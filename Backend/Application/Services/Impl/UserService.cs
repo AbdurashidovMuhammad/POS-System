@@ -169,7 +169,6 @@ internal class UserService : IUserService
     {
         Id = user.Id,
         Username = user.Username,
-        Password = user.Password,
         Role = user.Role.ToString(),
         IsActive = user.IsActive,
         CreatedAt = user.CreatedAt

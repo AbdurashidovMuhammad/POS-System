@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.DTOs.CategoryDTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
@@ -26,7 +27,6 @@ public class ProductService : IProductService
     {
         var query = _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
             .OrderBy(p => p.Name);
 
         var totalCount = await query.CountAsync();
@@ -34,11 +34,12 @@ public class ProductService : IProductService
         var products = await query
             .Skip((paginationParams.Page - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
+            .Select(ProductProjection)
             .ToListAsync();
 
         return new PagedResult<ProductDto>
         {
-            Items = products.Select(MapToDto).ToList(),
+            Items = products,
             Page = paginationParams.Page,
             PageSize = paginationParams.PageSize,
             TotalCount = totalCount
@@ -49,15 +50,16 @@ public class ProductService : IProductService
     {
         var product = await _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .Where(p => p.Id == id)
+            .Select(ProductProjection)
+            .FirstOrDefaultAsync();
 
         if (product == null)
         {
             throw new NotFoundException($"Product with ID {id} not found");
         }
 
-        return MapToDto(product);
+        return product;
     }
 
     public async Task<IEnumerable<ProductSuggestDto>> SearchProductsByNameAsync(string query)
@@ -90,7 +92,6 @@ public class ProductService : IProductService
     {
         var baseQuery = _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query))
@@ -107,11 +108,12 @@ public class ProductService : IProductService
             .OrderBy(p => p.Name)
             .Skip((paginationParams.Page - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
+            .Select(ProductProjection)
             .ToListAsync();
 
         return new PagedResult<ProductDto>
         {
-            Items = products.Select(MapToDto).ToList(),
+            Items = products,
             Page = paginationParams.Page,
             PageSize = paginationParams.PageSize,
             TotalCount = totalCount
@@ -127,15 +129,16 @@ public class ProductService : IProductService
 
         var product = await _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.barcode.ToLower() == barcode.ToLower());
+            .Where(p => p.barcode.ToLower() == barcode.ToLower())
+            .Select(ProductProjection)
+            .FirstOrDefaultAsync();
 
         if (product == null)
         {
             throw new NotFoundException($"Product with barcode '{barcode}' not found");
         }
 
-        return MapToDto(product);
+        return product;
     }
 
     public async Task<int> CreateProductAsync(CreateProductDto dto, int userId)
@@ -287,6 +290,8 @@ public class ProductService : IProductService
             throw new ArgumentException("Invalid unit type", nameof(dto.UnitType));
         }
 
+        var categoryChanged = product.CategoryId != dto.CategoryId;
+
         product.Name = dto.Name;
         product.CategoryId = dto.CategoryId;
         product.SellPrice = dto.SellPrice;
@@ -298,7 +303,7 @@ public class ProductService : IProductService
         try { await _auditLogService.LogAsync(userId, Action_Type.ProductUpdate, "Product", id, $"Mahsulotni yangiladi: {dto.Name}"); }
         catch { }
 
-        if (product.CategoryId != dto.CategoryId)
+        if (categoryChanged)
         {
             await _context.Entry(product).Reference(p => p.Category).LoadAsync();
         }
@@ -396,14 +401,12 @@ public class ProductService : IProductService
 
     public async Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId)
     {
-        var products = await _context.Products
+        return await _context.Products
             .AsNoTracking()
-            .Include(p => p.Category)
             .Where(p => p.CategoryId == categoryId && p.IsActive)
             .OrderBy(p => p.Name)
+            .Select(ProductProjection)
             .ToListAsync();
-
-        return products.Select(MapToDto).ToList();
     }
 
     public async Task<List<ProductBatchDto>> GetBatchesAsync(int productId)
@@ -425,26 +428,43 @@ public class ProductService : IProductService
         return batches;
     }
 
-    private static ProductDto MapToDto(Product product)
+    private static readonly Expression<Func<Product, ProductDto>> ProductProjection = p => new ProductDto
     {
-        return new ProductDto
+        Id = p.Id,
+        Name = p.Name,
+        CategoryId = p.CategoryId,
+        Category = p.Category == null ? null : new CategoryDto
         {
-            Id = product.Id,
-            Name = product.Name,
-            CategoryId = product.CategoryId,
-            Category = product.Category != null ? new CategoryDto
-            {
-                Id = product.Category.Id,
-                Name = product.Category.Name,
-                IsActive = product.Category.IsActive
-            } : null,
-            SellPrice = product.SellPrice,
-            UnitType = product.Unit_Type,
-            StockQuantity = product.StockQuantity,
-            MinStockThreshold = product.MinStockThreshold,
-            Barcode = product.barcode,
-            IsActive = product.IsActive,
-            CreatedAt = product.CreatedAt
-        };
-    }
+            Id = p.Category.Id,
+            Name = p.Category.Name,
+            IsActive = p.Category.IsActive
+        },
+        SellPrice = p.SellPrice,
+        UnitType = p.Unit_Type,
+        StockQuantity = p.StockQuantity,
+        MinStockThreshold = p.MinStockThreshold,
+        Barcode = p.barcode,
+        IsActive = p.IsActive,
+        CreatedAt = p.CreatedAt
+    };
+
+    private static ProductDto MapToDto(Product product) => new()
+    {
+        Id = product.Id,
+        Name = product.Name,
+        CategoryId = product.CategoryId,
+        Category = product.Category != null ? new CategoryDto
+        {
+            Id = product.Category.Id,
+            Name = product.Category.Name,
+            IsActive = product.Category.IsActive
+        } : null,
+        SellPrice = product.SellPrice,
+        UnitType = product.Unit_Type,
+        StockQuantity = product.StockQuantity,
+        MinStockThreshold = product.MinStockThreshold,
+        Barcode = product.barcode,
+        IsActive = product.IsActive,
+        CreatedAt = product.CreatedAt
+    };
 }

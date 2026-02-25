@@ -56,5 +56,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany()
             .HasForeignKey(e => e.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(e => e.CategoryId)
+            .HasDatabaseName("IX_Products_CategoryId");
+
+        builder.HasIndex(e => e.IsActive)
+            .HasDatabaseName("IX_Products_IsActive");
     }
 }

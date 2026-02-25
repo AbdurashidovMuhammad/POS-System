@@ -258,9 +258,11 @@ public class SaleService : ISaleService
             .Where(p => topProductIds.Contains(p.Id))
             .ToListAsync();
 
+        var productsDict = products.ToDictionary(p => p.Id);
+
         var ordered = topProductIds
-            .Select(id => products.FirstOrDefault(p => p.Id == id))
-            .Where(p => p != null)
+            .Where(id => productsDict.ContainsKey(id))
+            .Select(id => productsDict[id])
             .Select(p => new ProductDto
             {
                 Id = p!.Id,

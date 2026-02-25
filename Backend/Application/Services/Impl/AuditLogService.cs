@@ -35,6 +35,7 @@ internal class AuditLogService : IAuditLogService
     public async Task<PagedResult<AuditLogDto>> GetLogsAsync(AuditLogFilterDto filter)
     {
         var query = _context.AuditLogs
+            .AsNoTracking()
             .Include(a => a.User)
             .AsQueryable();
 
