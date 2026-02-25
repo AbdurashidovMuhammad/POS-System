@@ -27,7 +27,10 @@ public partial class App : Application
         // HttpClient - singleton uchun
         services.AddSingleton(sp =>
         {
-            var baseUrl = config["ApiBaseUrl"]!;
+            var useLocal = config.GetValue<bool>("UseLocal");
+            var baseUrl = useLocal
+                ? config["LocalApiUrl"]!
+                : config["ServerApiUrl"]!;
             var client = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
