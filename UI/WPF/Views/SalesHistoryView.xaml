@@ -139,11 +139,14 @@
                         <TextBlock Text="Bugungi sotuvingiz"
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}"/>
-                        <TextBlock Text="{Binding TodaySalesAmount}"
-                                   FontSize="24"
+                        <TextBlock FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="{StaticResource TextPrimaryBrush}"
-                                   Margin="0,8,0,0"/>
+                                   Margin="0,8,0,0">
+                            <TextBlock.Text>
+                                <Binding Path="TodaySalesAmount" StringFormat="{}{0:N0} so'm"/>
+                            </TextBlock.Text>
+                        </TextBlock>
                         <TextBlock Text="Bugungi jami"
                                    FontSize="12"
                                    Foreground="{StaticResource TextTertiaryBrush}"

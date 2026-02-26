@@ -21,7 +21,7 @@ public partial class SalesHistoryViewModel : ViewModelBase
 
     // Dashboard stats
     [ObservableProperty]
-    private string _todaySalesAmount = "0 so'm";
+    private decimal _todaySalesAmount;
 
     [ObservableProperty]
     private string _todayOrdersCount = "0 ta";
@@ -98,7 +98,7 @@ public partial class SalesHistoryViewModel : ViewModelBase
             if (result?.Succeeded == true && result.Result != null)
             {
                 var stats = result.Result;
-                TodaySalesAmount = $"{stats.TodaySalesAmount:N0} so'm";
+                TodaySalesAmount = stats.TodaySalesAmount;
                 TodayOrdersCount = $"{stats.TodayOrdersCount} ta";
             }
         }
@@ -109,7 +109,7 @@ public partial class SalesHistoryViewModel : ViewModelBase
     private async Task LoadSalesAsync()
     {
         CurrentPage = 1;
-        await FetchSalesAsync();
+        await Task.WhenAll(LoadDashboardStatsAsync(), FetchSalesAsync());
     }
 
     private async Task FetchSalesAsync()
