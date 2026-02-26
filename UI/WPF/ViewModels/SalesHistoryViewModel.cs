@@ -109,7 +109,7 @@ public partial class SalesHistoryViewModel : ViewModelBase
     private async Task LoadSalesAsync()
     {
         CurrentPage = 1;
-        await Task.WhenAll(LoadDashboardStatsAsync(), FetchSalesAsync());
+        await FetchSalesAsync();
     }
 
     private async Task FetchSalesAsync()
@@ -195,10 +195,7 @@ public partial class SalesHistoryViewModel : ViewModelBase
         IsRefreshing = true;
         try
         {
-            await Task.WhenAll(
-                LoadDashboardStatsAsync(),
-                FetchSalesAsync()
-            );
+            await LoadDashboardStatsAsync();
         }
         finally
         {
