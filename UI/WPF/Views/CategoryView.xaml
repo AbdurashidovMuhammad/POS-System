@@ -279,46 +279,7 @@
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu FontSize="15">
-                                                <MenuItem Header="Tahrirlash" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.EditCategoryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.CanUpdate, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <MenuItem Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.ToggleActiveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                    <MenuItem.Style>
-                                                        <Style TargetType="MenuItem">
-                                                            <Setter Property="Header" Value="Nofaollashtirish"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                    <Setter Property="Header" Value="Faollashtirish"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </MenuItem.Style>
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z"
-                                                              Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <Separator/>
-                                                <MenuItem Header="O'chirish" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.CanDelete, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                                              Fill="{StaticResource StatusInactiveBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{x:Null}"/>
                                     <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                 </Style>
                             </ListView.ItemContainerStyle>

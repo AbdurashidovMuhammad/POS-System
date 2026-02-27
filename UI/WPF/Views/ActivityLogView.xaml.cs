@@ -15,7 +15,6 @@ public partial class ActivityLogView : UserControl
         if (DataContext is ActivityLogViewModel vm)
         {
             await vm.LoadUsersCommand.ExecuteAsync(null);
-            await vm.LoadLogsCommand.ExecuteAsync(null);
         }
     }
 }

@@ -16,7 +16,6 @@ public partial class ProductView : UserControl
     {
         if (DataContext is ProductViewModel viewModel)
         {
-            await viewModel.LoadCategoriesCommand.ExecuteAsync(null);
             await viewModel.LoadProductsCommand.ExecuteAsync(null);
         }
     }
@@ -62,37 +61,61 @@ public partial class ProductView : UserControl
         barcodeItem.Click += (_, _) => viewModel.ShowBarcodeCommand.Execute(null);
         menu.Items.Add(barcodeItem);
 
-        menu.Items.Add(new Separator());
-
-        var editItem = new MenuItem
+        if (viewModel.IsSuperAdmin)
         {
-            Header = "Tahrirlash",
-            Icon = CreateIcon("M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z", "#4361ee"),
-            Padding = new Thickness(10, 12, 24, 12)
-        };
-        editItem.Click += (_, _) => viewModel.EditProductCommand.Execute(null);
-        menu.Items.Add(editItem);
+            var batchItem = new MenuItem
+            {
+                Header = "Batch ma'lumotlari",
+                Icon = CreateIcon("M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z", "#4361ee"),
+                Padding = new Thickness(10, 12, 24, 12)
+            };
+            batchItem.Click += (_, _) => viewModel.ShowBatchesCommand.Execute(null);
+            menu.Items.Add(batchItem);
+        }
 
-        var stockItem = new MenuItem
+        bool hasActions = viewModel.CanUpdate || viewModel.CanAddStock || viewModel.CanDelete;
+        if (hasActions)
+            menu.Items.Add(new Separator());
+
+        if (viewModel.CanUpdate)
         {
-            Header = "Zaxira qo'shish",
-            Icon = CreateIcon("M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z", "#FF9800"),
-            Padding = new Thickness(10, 12, 24, 12)
-        };
-        stockItem.Click += (_, _) => viewModel.ShowStockInPanelCommand.Execute(null);
-        menu.Items.Add(stockItem);
+            var editItem = new MenuItem
+            {
+                Header = "Tahrirlash",
+                Icon = CreateIcon("M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z", "#4361ee"),
+                Padding = new Thickness(10, 12, 24, 12)
+            };
+            editItem.Click += (_, _) => viewModel.EditProductCommand.Execute(null);
+            menu.Items.Add(editItem);
+        }
 
-        menu.Items.Add(new Separator());
-
-        var deleteItem = new MenuItem
+        if (viewModel.CanAddStock)
         {
-            Header = "O'chirish",
-            Foreground = new SolidColorBrush(Color.FromRgb(0xf4, 0x43, 0x36)),
-            Icon = CreateIcon("M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z", "#f44336"),
-            Padding = new Thickness(10, 12, 24, 12)
-        };
-        deleteItem.Click += (_, _) => viewModel.DeleteProductCommand.Execute(null);
-        menu.Items.Add(deleteItem);
+            var stockItem = new MenuItem
+            {
+                Header = "Zaxira qo'shish",
+                Icon = CreateIcon("M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z", "#FF9800"),
+                Padding = new Thickness(10, 12, 24, 12)
+            };
+            stockItem.Click += (_, _) => viewModel.ShowStockInPanelCommand.Execute(null);
+            menu.Items.Add(stockItem);
+        }
+
+        if (viewModel.CanDelete)
+        {
+            if (viewModel.CanUpdate || viewModel.CanAddStock)
+                menu.Items.Add(new Separator());
+
+            var deleteItem = new MenuItem
+            {
+                Header = "O'chirish",
+                Foreground = new SolidColorBrush(Color.FromRgb(0xf4, 0x43, 0x36)),
+                Icon = CreateIcon("M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z", "#f44336"),
+                Padding = new Thickness(10, 12, 24, 12)
+            };
+            deleteItem.Click += (_, _) => viewModel.DeleteProductCommand.Execute(null);
+            menu.Items.Add(deleteItem);
+        }
 
         menu.PlacementTarget = button;
         menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;

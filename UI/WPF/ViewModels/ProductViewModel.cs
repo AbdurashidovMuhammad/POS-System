@@ -421,6 +421,8 @@ public partial class ProductViewModel : ViewModelBase
     {
         if (SelectedProduct is null) return;
 
+        if (!CanUpdate) return;
+
         await LoadCategoriesAsync();
         CloseAllPanels();
 
@@ -449,6 +451,8 @@ public partial class ProductViewModel : ViewModelBase
     private async Task ShowStockInPanelAsync()
     {
         if (SelectedProduct is null) return;
+
+        if (!CanAddStock) return;
 
         CloseAllPanels();
         StockInQuantity = 0;
@@ -628,6 +632,8 @@ public partial class ProductViewModel : ViewModelBase
     private async Task DeleteProductAsync()
     {
         if (SelectedProduct is null) return;
+
+        if (!CanDelete) return;
 
         IsSaving = true;
         ClearError();

@@ -296,53 +296,7 @@
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu FontSize="15">
-                                                <MenuItem Header="Shtrix kod" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.ShowBarcodeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z"
-                                                              Fill="{StaticResource TextDarkBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <Separator/>
-                                                <MenuItem Header="Tahrirlash" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.EditProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.CanUpdate, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <MenuItem Header="Zaxira qo'shish" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.ShowStockInPanelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.CanAddStock, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                                                              Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <MenuItem Header="Batch ma'lumotlari" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.ShowBatchesCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.IsSuperAdmin, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z"
-                                                              Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                                <Separator/>
-                                                <MenuItem Header="O'chirish" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                          Visibility="{Binding PlacementTarget.Tag.CanDelete, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <MenuItem.Icon>
-                                                        <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                                              Fill="{StaticResource StatusInactiveBrush}" Width="18" Height="18" Stretch="Uniform"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{x:Null}"/>
                                     <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
