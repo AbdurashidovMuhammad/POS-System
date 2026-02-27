@@ -13,6 +13,7 @@ public partial class UserViewModel : ViewModelBase
 {
     private readonly IApiService _apiService;
     private readonly IServiceProvider _serviceProvider;
+    private readonly Dictionary<int, string> _passwordCache = [];
 
     public UserViewModel(IApiService apiService, IServiceProvider serviceProvider)
     {
@@ -96,6 +97,7 @@ public partial class UserViewModel : ViewModelBase
     {
         IsLoading = true;
         ClearMessages();
+        _passwordCache.Clear();
 
         try
         {
@@ -318,6 +320,26 @@ public partial class UserViewModel : ViewModelBase
         var window = new UserPermissionView(vm);
         await vm.LoadAsync(SelectedUser.Id, SelectedUser.Username);
         window.ShowDialog();
+    }
+
+    public async Task RevealPasswordAsync(UserDto user)
+    {
+        if (_passwordCache.TryGetValue(user.Id, out var cached))
+        {
+            user.Password = cached;
+            return;
+        }
+
+        try
+        {
+            var result = await _apiService.GetAsync<string>($"api/user/{user.Id}/password");
+            if (result?.Succeeded == true && result.Result is not null)
+            {
+                _passwordCache[user.Id] = result.Result;
+                user.Password = result.Result;
+            }
+        }
+        catch { }
     }
 
     // Helpers

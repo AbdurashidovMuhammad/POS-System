@@ -28,6 +28,16 @@ public partial class UserView : UserControl
         }
     }
 
+    private async void TogglePasswordBtn_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Primitives.ToggleButton btn) return;
+        if (btn.Tag is not WPF.Models.UserDto user) return;
+        if (DataContext is not UserViewModel viewModel) return;
+
+        if (user.Password is null)
+            await viewModel.RevealPasswordAsync(user);
+    }
+
     private void ActionMenuButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button button) return;
@@ -54,6 +64,15 @@ public partial class UserView : UserControl
         };
         editItem.Click += (_, _) => viewModel.EditUserCommand.Execute(null);
         menu.Items.Add(editItem);
+
+        var permItem = new MenuItem
+        {
+            Header = "Ruxsatlar",
+            Icon = CreateIcon("M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11C15.4,11 16,11.6 16,12.3V15.8C16,16.4 15.4,17 14.7,17H9.2C8.6,17 8,16.4 8,15.7V12.2C8,11.6 8.6,11 9.2,11V9.5C9.2,8.1 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z", "#4361ee"),
+            Padding = new Thickness(10, 12, 24, 12)
+        };
+        permItem.Click += (_, _) => viewModel.ManagePermissionsCommand.Execute(null);
+        menu.Items.Add(permItem);
 
         menu.Items.Add(new Separator());
 

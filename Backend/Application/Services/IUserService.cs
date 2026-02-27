@@ -14,4 +14,5 @@ public interface IUserService
     Task<ApiResult<UserDto>> UpdateAdminAsync(int id, UpdateUserDto dto, int performedByUserId);
     Task<ApiResult<bool>> DeactivateAdminAsync(int id, int performedByUserId);
     Task<bool> IsUsernameUniqueAsync(string username, int? excludeUserId = null);
+    Task<ApiResult<string>> GetPasswordAsync(int id);
 }

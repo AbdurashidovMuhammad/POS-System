@@ -63,6 +63,16 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id:int}/password")]
+    public async Task<IActionResult> GetPassword(int id)
+    {
+        var result = await _userService.GetPasswordAsync(id);
+        if (!result.Succeeded)
+            return NotFound(result);
+
+        return Ok(result);
+    }
+
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateAdmin(int id, [FromBody] UpdateUserDto dto)
     {

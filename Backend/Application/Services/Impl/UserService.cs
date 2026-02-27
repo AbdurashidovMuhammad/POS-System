@@ -155,6 +155,14 @@ internal class UserService : IUserService
         return ApiResult<bool>.Success(true);
     }
 
+    public async Task<ApiResult<string>> GetPasswordAsync(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null)
+            return ApiResult<string>.Failure(new[] { $"User with Id = {id} was not found." });
+        return ApiResult<string>.Success(user.Password);
+    }
+
     public async Task<bool> IsUsernameUniqueAsync(string username, int? excludeUserId = null)
     {
         var query = _context.Users.Where(u => u.Username == username);
