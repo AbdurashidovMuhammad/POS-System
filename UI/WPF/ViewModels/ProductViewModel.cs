@@ -121,6 +121,12 @@ public partial class ProductViewModel : ViewModelBase
     public bool IsSuperAdmin =>
         string.Equals(_authService.Role, "SuperAdmin", StringComparison.OrdinalIgnoreCase);
 
+    // Permission-based visibility
+    public bool CanCreate    => _authService.HasPermission("Products", "Create");
+    public bool CanUpdate    => _authService.HasPermission("Products", "Update");
+    public bool CanDelete    => _authService.HasPermission("Products", "Delete");
+    public bool CanAddStock  => _authService.HasPermission("Products", "AddStock");
+
     // Batch dialog
     [ObservableProperty]
     private bool _isBatchDialogOpen;

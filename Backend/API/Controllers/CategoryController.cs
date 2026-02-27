@@ -1,15 +1,14 @@
 using System.Security.Claims;
+using Application.Authorization;
 using Application.DTOs.CategoryDTOs;
 using Application.DTOs.Common;
 using Application.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoriesService _categoriesService;
@@ -20,6 +19,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("create")]
+    [HasPermission("Categories", "Create")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -33,6 +33,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission("Categories", "Update")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDto dto)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -46,6 +47,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission("Categories", "Read")]
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams pagination)
     {
         var result = await _categoriesService.GetAllCategoriesAsync(pagination);
@@ -53,6 +55,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("list")]
+    [HasPermission("Categories", "Read")]
     public async Task<IActionResult> GetAllList()
     {
         var result = await _categoriesService.GetAllCategoriesListAsync();
@@ -60,6 +63,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission("Categories", "Read")]
     public async Task<IActionResult> GetById(int id)
     {
         var result = await _categoriesService.GetCategoryByIdAsync(id);
@@ -70,6 +74,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("suggest")]
+    [HasPermission("Categories", "Read")]
     public async Task<IActionResult> Suggest([FromQuery] string query)
     {
         var result = await _categoriesService.SuggestCategoriesAsync(query);
@@ -77,6 +82,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission("Categories", "Delete")]
     public async Task<IActionResult> Delete(int id)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

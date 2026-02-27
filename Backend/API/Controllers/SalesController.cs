@@ -1,3 +1,4 @@
+using Application.Authorization;
 using Application.DTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
@@ -13,7 +14,6 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/sales")]
-[Authorize]
 public class SalesController : ControllerBase
 {
     private readonly ISaleService _saleService;
@@ -25,10 +25,8 @@ public class SalesController : ControllerBase
         _reportService = reportService;
     }
 
-    /// <summary>
-    /// Create a new sale (chek yaratish)
-    /// </summary>
     [HttpPost]
+    [HasPermission("Sales", "Create")]
     public async Task<IActionResult> CreateSale([FromBody] CreateSaleDto dto)
     {
         try
@@ -39,7 +37,6 @@ public class SalesController : ControllerBase
                 return BadRequest(ApiResult<SaleDto>.Failure(errors));
             }
 
-            // Get user ID from JWT token
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
@@ -67,10 +64,8 @@ public class SalesController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get current user's sales history with pagination and date range filter
-    /// </summary>
     [HttpGet("my-history")]
+    [HasPermission("Sales", "ViewHistory")]
     public async Task<IActionResult> GetMySalesHistory(
         [FromQuery] DateTime from,
         [FromQuery] DateTime to,
@@ -117,6 +112,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("top-selling")]
+    [Authorize]
     public async Task<IActionResult> GetTopSellingProducts()
     {
         try

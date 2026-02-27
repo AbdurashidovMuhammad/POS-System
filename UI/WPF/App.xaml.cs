@@ -57,6 +57,7 @@ public partial class App : Application
         services.AddTransient<UserViewModel>();
         services.AddTransient<ActivityLogViewModel>();
         services.AddTransient<SalesHistoryViewModel>();
+        services.AddTransient<UserPermissionViewModel>();
 
         // Views
         services.AddSingleton<MainWindow>();

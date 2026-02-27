@@ -1,19 +1,23 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WPF.Models;
 using WPF.Services;
+using WPF.Views;
 
 namespace WPF.ViewModels;
 
 public partial class UserViewModel : ViewModelBase
 {
     private readonly IApiService _apiService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public UserViewModel(IApiService apiService)
+    public UserViewModel(IApiService apiService, IServiceProvider serviceProvider)
     {
         _apiService = apiService;
+        _serviceProvider = serviceProvider;
     }
 
     // Collections
@@ -24,6 +28,7 @@ public partial class UserViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EditUserCommand))]
     [NotifyCanExecuteChangedFor(nameof(ToggleActiveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ManagePermissionsCommand))]
     private UserDto? _selectedUser;
 
     // Panel visibility
@@ -301,6 +306,18 @@ public partial class UserViewModel : ViewModelBase
     {
         CloseAllPanels();
         ClearForm();
+    }
+
+    // Manage permissions for selected user
+    [RelayCommand(CanExecute = nameof(HasSelectedUser))]
+    private async Task ManagePermissionsAsync()
+    {
+        if (SelectedUser is null) return;
+
+        var vm = (UserPermissionViewModel)_serviceProvider.GetService(typeof(UserPermissionViewModel))!;
+        var window = new UserPermissionView(vm);
+        await vm.LoadAsync(SelectedUser.Id, SelectedUser.Username);
+        window.ShowDialog();
     }
 
     // Helpers

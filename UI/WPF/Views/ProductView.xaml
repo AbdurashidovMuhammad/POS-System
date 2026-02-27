@@ -56,6 +56,7 @@
                         <!-- Add Product Button -->
                         <Button Grid.Column="1"
                                 Command="{Binding ShowAddPanelCommand}"
+                                Visibility="{Binding CanCreate, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
@@ -307,14 +308,16 @@
                                                 </MenuItem>
                                                 <Separator/>
                                                 <MenuItem Header="Tahrirlash" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.EditProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                          Command="{Binding PlacementTarget.Tag.EditProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          Visibility="{Binding PlacementTarget.Tag.CanUpdate, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
                                                               Fill="{StaticResource PrimaryBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <MenuItem Header="Zaxira qo'shish" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.ShowStockInPanelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                          Command="{Binding PlacementTarget.Tag.ShowStockInPanelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          Visibility="{Binding PlacementTarget.Tag.CanAddStock, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
                                                               Fill="{StaticResource WarningBrush}" Width="18" Height="18" Stretch="Uniform"/>
@@ -330,7 +333,8 @@
                                                 </MenuItem>
                                                 <Separator/>
                                                 <MenuItem Header="O'chirish" Padding="6,8,20,8"
-                                                          Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                          Command="{Binding PlacementTarget.Tag.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          Visibility="{Binding PlacementTarget.Tag.CanDelete, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <MenuItem.Icon>
                                                         <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
                                                               Fill="{StaticResource StatusInactiveBrush}" Width="18" Height="18" Stretch="Uniform"/>

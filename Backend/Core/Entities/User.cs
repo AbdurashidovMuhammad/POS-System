@@ -13,4 +13,6 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiresAt { get; set; }
+
+    public ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 }

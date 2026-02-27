@@ -6,6 +6,7 @@ namespace WPF.Services;
 public class AuthService : IAuthService
 {
     private readonly IApiService _apiService;
+    private List<string> _permissions = new();
 
     public AuthService(IApiService apiService)
     {
@@ -18,6 +19,15 @@ public class AuthService : IAuthService
     public string? Username { get; private set; }
     public string? Role { get; private set; }
     public bool IsAuthenticated => !string.IsNullOrEmpty(AccessToken);
+    public IReadOnlyList<string> Permissions => _permissions;
+
+    public bool HasPermission(string section, string action)
+    {
+        if (string.Equals(Role, "SuperAdmin", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return _permissions.Contains($"{section}.{action}");
+    }
 
     public async Task<(bool Success, string? ErrorMessage)> LoginAsync(string username, string password)
     {
@@ -81,6 +91,7 @@ public class AuthService : IAuthService
         UserId = null;
         Username = null;
         Role = null;
+        _permissions = new();
         _apiService.ClearAuthToken();
     }
 
@@ -92,7 +103,6 @@ public class AuthService : IAuthService
             if (parts.Length != 3) return;
 
             var payload = parts[1];
-            // Add padding if needed
             switch (payload.Length % 4)
             {
                 case 2: payload += "=="; break;
@@ -126,10 +136,29 @@ public class AuthService : IAuthService
             {
                 Role = roleElement.GetString();
             }
+
+            // Parse "perm" claims — JWT may encode repeated keys as an array or as a single value
+            _permissions = new();
+            if (root.TryGetProperty("perm", out var permElement))
+            {
+                if (permElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var item in permElement.EnumerateArray())
+                    {
+                        var val = item.GetString();
+                        if (val is not null) _permissions.Add(val);
+                    }
+                }
+                else if (permElement.ValueKind == JsonValueKind.String)
+                {
+                    var val = permElement.GetString();
+                    if (val is not null) _permissions.Add(val);
+                }
+            }
         }
         catch
         {
-            // Token parsing failed, leave UserId/Username as null
+            // Token parsing failed, leave fields as null/empty
         }
     }
 }

@@ -9,7 +9,8 @@ namespace Application.Helpers;
 public static class TokenHelper
 {
     public static (string Token, DateTime ExpiresAt) GenerateToken(
-        int userId, string username, string role, JwtOption jwtOptions)
+        int userId, string username, string role, JwtOption jwtOptions,
+        IEnumerable<string>? permissions = null)
     {
         var claims = new List<Claim>
         {
@@ -17,6 +18,12 @@ public static class TokenHelper
             new(ClaimTypes.Name, username),
             new(ClaimTypes.Role, role)
         };
+
+        if (permissions is not null)
+        {
+            foreach (var perm in permissions)
+                claims.Add(new Claim("perm", perm));
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

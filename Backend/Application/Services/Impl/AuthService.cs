@@ -2,6 +2,7 @@ using Application.DTOs;
 using Application.DTOs.UserDTOs;
 using Application.Helpers;
 using Application.Options;
+using Core.Enums;
 using DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +34,10 @@ internal class AuthService : IAuthService
         if (!user.IsActive)
             return ApiResult<LoginResponseDto>.Failure(new[] { "Account is not active." });
 
+        var permissions = await LoadPermissionsAsync(user.Id, user.Role);
+
         var (accessToken, _) = TokenHelper.GenerateToken(
-            user.Id, user.Username, user.Role.ToString(), _jwtOptions);
+            user.Id, user.Username, user.Role.ToString(), _jwtOptions, permissions);
 
         user.RefreshToken = TokenHelper.GenerateRefreshToken();
         user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
@@ -56,14 +59,28 @@ internal class AuthService : IAuthService
         if (user.RefreshTokenExpiresAt < DateTime.UtcNow)
             return ApiResult<LoginResponseDto>.Failure(new[] { "Refresh token has expired." });
 
+        var permissions = await LoadPermissionsAsync(user.Id, user.Role);
+
         var (accessToken, _) = TokenHelper.GenerateToken(
-            user.Id, user.Username, user.Role.ToString(), _jwtOptions);
+            user.Id, user.Username, user.Role.ToString(), _jwtOptions, permissions);
 
         user.RefreshToken = TokenHelper.GenerateRefreshToken();
         user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
         await _context.SaveChangesAsync();
 
         return ApiResult<LoginResponseDto>.Success(MapToResponse(user.RefreshToken!, accessToken));
+    }
+
+    private async Task<IEnumerable<string>> LoadPermissionsAsync(int userId, Role role)
+    {
+        // SuperAdmin has all permissions implicitly via role check — no claims needed
+        if (role == Role.SuperAdmin)
+            return [];
+
+        return await _context.UserPermissions
+            .Where(up => up.UserId == userId)
+            .Select(up => $"{up.Permission.Section}.{up.Permission.Action}")
+            .ToListAsync();
     }
 
     private static LoginResponseDto MapToResponse(string refreshToken, string accessToken) => new()

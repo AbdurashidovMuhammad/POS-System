@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
+using Application.Authorization;
 using Application.DTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
@@ -11,7 +12,6 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/products")]
-[Authorize]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -23,10 +23,8 @@ public class ProductController : ControllerBase
         _barcodeService = barcodeService;
     }
 
-    /// <summary>
-    /// Get all active products with pagination
-    /// </summary>
     [HttpGet]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
     {
         try
@@ -40,10 +38,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get product by ID
-    /// </summary>
     [HttpGet("{id:int}")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetById(int id)
     {
         try
@@ -61,10 +57,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Search products by name (autocomplete)
-    /// </summary>
     [HttpGet("search")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> Search([FromQuery] string query)
     {
         try
@@ -78,10 +72,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Full search products by name or barcode with pagination
-    /// </summary>
     [HttpGet("search/full")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> SearchFull([FromQuery] string query, [FromQuery] PaginationParams paginationParams)
     {
         try
@@ -95,10 +87,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get product by barcode (for scanner)
-    /// </summary>
     [HttpGet("barcode/{barcode}")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetByBarcode(string barcode)
     {
         try
@@ -116,10 +106,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Create new product, returns product ID
-    /// </summary>
     [HttpPost]
+    [HasPermission("Products", "Create")]
     public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
     {
         try
@@ -154,10 +142,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Update product
-    /// </summary>
     [HttpPut("{id:int}")]
+    [HasPermission("Products", "Update")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDto dto)
     {
         try
@@ -192,10 +178,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Add stock to product
-    /// </summary>
     [HttpPost("{id:int}/stock")]
+    [HasPermission("Products", "AddStock")]
     public async Task<IActionResult> AddStock(int id, [FromBody] AddStockDto dto)
     {
         try
@@ -219,10 +203,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Deactivate product (soft delete)
-    /// </summary>
     [HttpDelete("{id:int}")]
+    [HasPermission("Products", "Delete")]
     public async Task<IActionResult> Deactivate(int id)
     {
         try
@@ -243,10 +225,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get products by category ID
-    /// </summary>
     [HttpGet("by-category/{categoryId:int}")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetByCategory(int categoryId)
     {
         try
@@ -278,10 +258,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get barcode image for product (PNG with name, barcode, price)
-    /// </summary>
     [HttpGet("{id:int}/barcode-image")]
+    [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetBarcodeImage(int id)
     {
         try

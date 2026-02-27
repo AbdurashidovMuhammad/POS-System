@@ -18,6 +18,8 @@ public class DatabaseContext : DbContext
     public DbSet<StockMovement> StockMovements => Set<StockMovement>();
     public DbSet<ProductBatch> ProductBatches => Set<ProductBatch>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

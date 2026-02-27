@@ -11,4 +11,6 @@ public interface IAuthService
     int? UserId { get; }
     string? Username { get; }
     string? Role { get; }
+    IReadOnlyList<string> Permissions { get; }
+    bool HasPermission(string section, string action);
 }

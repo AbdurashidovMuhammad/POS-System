@@ -11,12 +11,19 @@ public partial class CategoryViewModel : ViewModelBase
 {
     private readonly IApiService _apiService;
     private readonly INavigationService _navigationService;
+    private readonly IAuthService _authService;
 
-    public CategoryViewModel(IApiService apiService, INavigationService navigationService)
+    public CategoryViewModel(IApiService apiService, INavigationService navigationService, IAuthService authService)
     {
         _apiService = apiService;
         _navigationService = navigationService;
+        _authService = authService;
     }
+
+    // Permission-based visibility
+    public bool CanCreate => _authService.HasPermission("Categories", "Create");
+    public bool CanUpdate => _authService.HasPermission("Categories", "Update");
+    public bool CanDelete => _authService.HasPermission("Categories", "Delete");
 
     // Collections
     [ObservableProperty]
