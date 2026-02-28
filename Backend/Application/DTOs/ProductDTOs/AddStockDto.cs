@@ -14,4 +14,7 @@ public class AddStockDto
 
     [Required(ErrorMessage = "User ID is required")]
     public int UserId { get; set; }
+
+    [Range(0.01, double.MaxValue, ErrorMessage = "Sotish narxi 0 dan katta bo'lishi kerak")]
+    public decimal? SellPrice { get; set; }
 }

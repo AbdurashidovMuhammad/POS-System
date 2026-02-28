@@ -51,6 +51,7 @@ public class AddStockDto
     public decimal Quantity { get; set; }
     public decimal BuyPrice { get; set; }
     public int UserId { get; set; }
+    public decimal? SellPrice { get; set; }
 }
 
 public class ProductSuggestDto

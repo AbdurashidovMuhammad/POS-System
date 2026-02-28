@@ -84,11 +84,13 @@ public class ReportService : IReportService
 
         var totalCount = await query.CountAsync();
 
-        var totalAmount = await _context.SaleItems
+        var saleItemsQuery = _context.SaleItems
             .AsNoTracking()
             .Where(si => si.Sale.SaleDate >= fromDate && si.Sale.SaleDate < toDate
-                         && (!userId.HasValue || si.Sale.UserId == userId.Value))
-            .SumAsync(si => si.Quantity * si.UnitPrice);
+                         && (!userId.HasValue || si.Sale.UserId == userId.Value));
+
+        var totalAmount = await saleItemsQuery.SumAsync(si => si.Quantity * si.UnitPrice);
+        var totalProfit = await saleItemsQuery.SumAsync(si => si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale);
 
         var orders = await query
             .OrderByDescending(s => s.SaleDate)
@@ -99,6 +101,7 @@ public class ReportService : IReportService
                 SaleId = s.Id,
                 Date = s.SaleDate,
                 TotalAmount = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice),
+                TotalProfit = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale),
                 PaymentTypeName = s.PaymentType.ToString(),
                 Username = s.User.Username,
                 ItemCount = s.SaleItems.Count,
@@ -108,7 +111,9 @@ public class ReportService : IReportService
                     Quantity = si.Quantity,
                     UnitTypeName = si.Product.Unit_Type.ToString(),
                     UnitPrice = si.UnitPrice,
-                    TotalPrice = si.Quantity * si.UnitPrice
+                    BuyPriceAtSale = si.BuyPriceAtSale,
+                    TotalPrice = si.Quantity * si.UnitPrice,
+                    Profit = si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale
                 }).ToList()
             })
             .ToListAsync();
@@ -119,6 +124,7 @@ public class ReportService : IReportService
             DateTo = to.Date,
             Items = orders,
             TotalAmount = totalAmount,
+            TotalProfit = totalProfit,
             Page = pagination.Page,
             PageSize = pagination.PageSize,
             TotalCount = totalCount
@@ -142,7 +148,8 @@ public class ReportService : IReportService
         var totalCount = await query.CountAsync();
 
         var totalQuantity = await query.SumAsync(sm => sm.Quantity);
-        var totalAmount = await query.SumAsync(sm => sm.Quantity * (sm.UnitCost ?? 0));
+        var totalAmount = await query.SumAsync(sm =>
+            (sm.Product.Unit_Type == Unit_Type.Gramm ? sm.Quantity / 1000m : sm.Quantity) * (sm.UnitCost ?? 0));
 
         var quantityByUnit = await query
             .GroupBy(sm => sm.Product.Unit_Type)
@@ -274,14 +281,14 @@ public class ReportService : IReportService
 
         // Title
         worksheet.Cell(1, 1).Value = $"Buyurtmalar hisoboti ({from:dd.MM.yyyy} - {to:dd.MM.yyyy})";
-        worksheet.Range(1, 1, 1, 6).Merge();
+        worksheet.Range(1, 1, 1, 7).Merge();
         worksheet.Cell(1, 1).Style.Font.Bold = true;
         worksheet.Cell(1, 1).Style.Font.FontSize = 14;
         worksheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         // Headers
         var headerRow = 3;
-        var headers = new[] { "Sana", "Buyurtma #", "Mahsulot", "Miqdor", "Narxi", "To'lov usuli" };
+        var headers = new[] { "Sana", "Buyurtma #", "Mahsulot", "Miqdor", "Jami summa", "Foyda", "To'lov usuli" };
         for (int i = 0; i < headers.Length; i++)
         {
             var cell = worksheet.Cell(headerRow, i + 1);
@@ -305,14 +312,16 @@ public class ReportService : IReportService
                 worksheet.Cell(row, 4).Value = $"{item.Quantity:0.##} {item.UnitTypeName}";
                 worksheet.Cell(row, 5).Value = item.TotalPrice;
                 worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
-                worksheet.Cell(row, 6).Value = order.PaymentTypeName;
+                worksheet.Cell(row, 6).Value = item.Profit;
+                worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+                worksheet.Cell(row, 7).Value = order.PaymentTypeName;
 
                 if (row % 2 == 0)
                 {
-                    worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+                    worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
                 }
 
-                for (int col = 1; col <= 6; col++)
+                for (int col = 1; col <= 7; col++)
                 {
                     worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                     worksheet.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
@@ -324,6 +333,7 @@ public class ReportService : IReportService
 
         // Footer - total
         var totalAmount = orders.Sum(o => o.TotalAmount);
+        var totalProfit = orders.Sum(o => o.TotalProfit);
         worksheet.Cell(row, 1).Value = "JAMI:";
         worksheet.Range(row, 1, row, 4).Merge();
         worksheet.Cell(row, 1).Style.Font.Bold = true;
@@ -331,8 +341,11 @@ public class ReportService : IReportService
         worksheet.Cell(row, 5).Value = totalAmount;
         worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0 \"so'm\"";
         worksheet.Cell(row, 5).Style.Font.Bold = true;
-        worksheet.Range(row, 1, row, 6).Style.Fill.BackgroundColor = XLColor.FromHtml("#fff3e0");
-        for (int col = 1; col <= 6; col++)
+        worksheet.Cell(row, 6).Value = totalProfit;
+        worksheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+        worksheet.Cell(row, 6).Style.Font.Bold = true;
+        worksheet.Range(row, 1, row, 7).Style.Fill.BackgroundColor = XLColor.FromHtml("#fff3e0");
+        for (int col = 1; col <= 7; col++)
         {
             worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
         }
@@ -482,6 +495,7 @@ public class ReportService : IReportService
                 SaleId = s.Id,
                 Date = s.SaleDate,
                 TotalAmount = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice),
+                TotalProfit = s.SaleItems.Sum(si => si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale),
                 PaymentTypeName = s.PaymentType.ToString(),
                 Username = s.User.Username,
                 ItemCount = s.SaleItems.Count,
@@ -491,7 +505,9 @@ public class ReportService : IReportService
                     Quantity = si.Quantity,
                     UnitTypeName = si.Product.Unit_Type.ToString(),
                     UnitPrice = si.UnitPrice,
-                    TotalPrice = si.Quantity * si.UnitPrice
+                    BuyPriceAtSale = si.BuyPriceAtSale,
+                    TotalPrice = si.Quantity * si.UnitPrice,
+                    Profit = si.Quantity * si.UnitPrice - si.Quantity * si.BuyPriceAtSale
                 }).ToList()
             })
             .ToListAsync();
@@ -514,7 +530,8 @@ public class ReportService : IReportService
         // Aggregatlarni DB da hisoblash (items yuklanishidan oldin)
         var totalCount = await query.CountAsync();
         var totalQuantity = await query.SumAsync(sm => sm.Quantity);
-        var totalAmount = await query.SumAsync(sm => sm.Quantity * (sm.UnitCost ?? 0));
+        var totalAmount = await query.SumAsync(sm =>
+            (sm.Product.Unit_Type == Unit_Type.Gramm ? sm.Quantity / 1000m : sm.Quantity) * (sm.UnitCost ?? 0));
 
         var items = await query
             .OrderByDescending(sm => sm.MovementDate)

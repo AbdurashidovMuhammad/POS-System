@@ -358,6 +358,9 @@ public class ProductService : IProductService
 
             product.StockQuantity += dto.Quantity;
 
+            if (dto.SellPrice.HasValue)
+                product.SellPrice = dto.SellPrice.Value;
+
             _context.StockMovements.Add(new StockMovement
             {
                 ProductId = id,

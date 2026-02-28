@@ -987,11 +987,32 @@
                             </Grid>
                             <!-- Buy Price for Stock In -->
                             <TextBlock Text="Kelish narxi (so'm)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8"/>
-                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,20">
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,16">
                                 <TextBox Text="{Binding StockInBuyPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
                                          Background="Transparent"
                                          BorderThickness="0"
                                          Padding="14,14"
+                                         FontSize="18"
+                                         FontWeight="SemiBold"/>
+                            </Border>
+
+                            <!-- Sell Price for Stock In (Optional) -->
+                            <Grid Margin="4,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Sotish narxi (ixtiyoriy)" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Joriy: " FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding SelectedProduct.SellPrice, StringFormat={}{0:N0} sum}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                            <Border Background="{StaticResource BackgroundInputBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,0,20">
+                                <TextBox Text="{Binding StockInSellPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=0.##}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Padding="14,12"
                                          FontSize="18"
                                          FontWeight="SemiBold"/>
                             </Border>

@@ -169,6 +169,9 @@ public partial class ProductViewModel : ViewModelBase
     private decimal _stockInBuyPrice;
 
     [ObservableProperty]
+    private decimal _stockInSellPrice;
+
+    [ObservableProperty]
     private UnitType _formUnitType = UnitType.Dona;
 
     [ObservableProperty]
@@ -457,6 +460,7 @@ public partial class ProductViewModel : ViewModelBase
         CloseAllPanels();
         StockInQuantity = 0;
         StockInBuyPrice = 0;
+        StockInSellPrice = 0;
         StockInKg = 0;
         StockInGramm = 0;
         FormError = null;
@@ -601,7 +605,8 @@ public partial class ProductViewModel : ViewModelBase
             {
                 Quantity = stockQty,
                 BuyPrice = StockInBuyPrice,
-                UserId = _authService.UserId ?? 1
+                UserId = _authService.UserId ?? 1,
+                SellPrice = StockInSellPrice > 0 ? StockInSellPrice : null
             };
 
             var result = await _apiService.PostAsync<ProductDto>($"api/products/{SelectedProduct.Id}/stock", dto);
@@ -814,6 +819,7 @@ public partial class ProductViewModel : ViewModelBase
         FormMinThresholdGramm = 0;
         StockInQuantity = 0;
         StockInBuyPrice = 0;
+        StockInSellPrice = 0;
         StockInKg = 0;
         StockInGramm = 0;
         FormError = null;
