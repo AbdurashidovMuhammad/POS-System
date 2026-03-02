@@ -40,11 +40,13 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         if (string.Equals(_authService.Role, "Admin", StringComparison.OrdinalIgnoreCase))
         {
             IsSidebarCollapsed = true;
-            // Navigate to first available menu item for this Admin
             var salesItem = MenuItems.FirstOrDefault(m => m.ViewModelName == nameof(SalesViewModel));
             var firstItem = salesItem ?? MenuItems.FirstOrDefault();
             if (firstItem is not null)
+            {
                 SelectedMenuItem = firstItem;
+                OpenTab(firstItem);
+            }
         }
         else
         {
@@ -56,9 +58,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     {
         var menuItem = MenuItems.FirstOrDefault(m => m.ViewModelName == message.Value);
         if (menuItem is not null)
-        {
-            SelectedMenuItem = menuItem;
-        }
+            SelectMenu(menuItem);
     }
 
     [ObservableProperty]
@@ -72,6 +72,12 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
 
     [ObservableProperty]
     private string _pageTitle = "Bosh sahifa";
+
+    [ObservableProperty]
+    private ObservableCollection<TabItemViewModel> _openTabs = new();
+
+    [ObservableProperty]
+    private TabItemViewModel? _activeTab;
 
     [ObservableProperty]
     private bool _isSidebarCollapsed;
@@ -91,7 +97,6 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     [ObservableProperty]
     private bool _isToastVisible;
 
-    private readonly Dictionary<string, object> _viewModelCache = new();
 
     private void InitializeMenuItems()
     {
@@ -146,42 +151,46 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     partial void OnSelectedMenuItemChanged(MenuItemViewModel? value)
     {
         if (value is null) return;
-
         foreach (var item in MenuItems)
-        {
             item.IsSelected = item == value;
-        }
-
-        NavigateToView(value.ViewModelName);
-        PageTitle = value.Title;
     }
 
-    private void NavigateToView(string viewModelName)
+    private void OpenTab(MenuItemViewModel menuItem)
     {
-        if (!_viewModelCache.TryGetValue(viewModelName, out var viewModel))
+        if (OpenTabs.Count >= 13)
         {
-            viewModel = viewModelName switch
-            {
-                nameof(DashboardViewModel) => _serviceProvider.GetService(typeof(DashboardViewModel)),
-                nameof(AdminDashboardViewModel) => _serviceProvider.GetService(typeof(AdminDashboardViewModel)),
-                nameof(SalesViewModel) => _serviceProvider.GetService(typeof(SalesViewModel)),
-                nameof(ProductViewModel) => _serviceProvider.GetService(typeof(ProductViewModel)),
-                nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
-                nameof(ReportViewModel) => _serviceProvider.GetService(typeof(ReportViewModel)),
-                nameof(UserViewModel) => _serviceProvider.GetService(typeof(UserViewModel)),
-                nameof(ActivityLogViewModel) => _serviceProvider.GetService(typeof(ActivityLogViewModel)),
-                nameof(SalesHistoryViewModel) => _serviceProvider.GetService(typeof(SalesHistoryViewModel)),
-                _ => null
-            };
-
-            if (viewModel is not null)
-            {
-                _viewModelCache[viewModelName] = viewModel;
-            }
+            ShowToast("Maksimal 13 ta tab ochish mumkin");
+            return;
         }
 
-        CurrentView = viewModel;
+        var viewModel = CreateViewModel(menuItem.ViewModelName);
+        var newTab = new TabItemViewModel(menuItem.Title, menuItem.ViewModelName, viewModel);
+        OpenTabs.Add(newTab);
+        SetActiveTab(newTab);
     }
+
+    private void SetActiveTab(TabItemViewModel tab)
+    {
+        foreach (var t in OpenTabs)
+            t.IsActive = t == tab;
+        ActiveTab = tab;
+        CurrentView = tab.ViewModel;
+        PageTitle = tab.Title;
+    }
+
+    private object? CreateViewModel(string viewModelName) => viewModelName switch
+    {
+        nameof(DashboardViewModel) => _serviceProvider.GetService(typeof(DashboardViewModel)),
+        nameof(AdminDashboardViewModel) => _serviceProvider.GetService(typeof(AdminDashboardViewModel)),
+        nameof(SalesViewModel) => _serviceProvider.GetService(typeof(SalesViewModel)),
+        nameof(ProductViewModel) => _serviceProvider.GetService(typeof(ProductViewModel)),
+        nameof(CategoryViewModel) => _serviceProvider.GetService(typeof(CategoryViewModel)),
+        nameof(ReportViewModel) => _serviceProvider.GetService(typeof(ReportViewModel)),
+        nameof(UserViewModel) => _serviceProvider.GetService(typeof(UserViewModel)),
+        nameof(ActivityLogViewModel) => _serviceProvider.GetService(typeof(ActivityLogViewModel)),
+        nameof(SalesHistoryViewModel) => _serviceProvider.GetService(typeof(SalesHistoryViewModel)),
+        _ => null
+    };
 
     [RelayCommand]
     private void NavigateToDashboard()
@@ -189,18 +198,64 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         var dashboardItem = MenuItems.FirstOrDefault(m =>
             m.ViewModelName == nameof(DashboardViewModel) ||
             m.ViewModelName == nameof(AdminDashboardViewModel));
-        if (dashboardItem is not null)
-        {
-            SelectedMenuItem = dashboardItem;
-        }
+        if (dashboardItem is null) return;
+
+        SelectedMenuItem = dashboardItem;
+        var existingTab = OpenTabs.FirstOrDefault(t => t.ViewModelName == dashboardItem.ViewModelName);
+        if (existingTab is not null)
+            SelectTab(existingTab);
+        else
+            OpenTab(dashboardItem);
     }
 
     [RelayCommand]
     private void SelectMenu(MenuItemViewModel? menuItem)
     {
+        if (menuItem is null) return;
+        SelectedMenuItem = menuItem;
+        OpenTab(menuItem);
+    }
+
+[RelayCommand]
+    private void SelectTab(TabItemViewModel? tab)
+    {
+        if (tab is null || tab == ActiveTab) return;
+
+        // Sync sidebar highlight without creating a new tab
+        var menuItem = MenuItems.FirstOrDefault(m => m.ViewModelName == tab.ViewModelName);
         if (menuItem is not null)
         {
-            SelectedMenuItem = menuItem;
+            foreach (var item in MenuItems)
+                item.IsSelected = item == menuItem;
+        }
+
+        SetActiveTab(tab);
+    }
+
+    [RelayCommand]
+    private void CloseTab(TabItemViewModel? tab)
+    {
+        if (tab is null) return;
+        var index = OpenTabs.IndexOf(tab);
+        var wasActive = tab == ActiveTab;
+        OpenTabs.Remove(tab);
+
+        if (wasActive)
+        {
+            if (OpenTabs.Count > 0)
+            {
+                var newIndex = Math.Clamp(index, 0, OpenTabs.Count - 1);
+                SelectTab(OpenTabs[newIndex]);
+            }
+            else
+            {
+                var fallback = MenuItems.FirstOrDefault(m =>
+                    m.ViewModelName == nameof(DashboardViewModel) ||
+                    m.ViewModelName == nameof(AdminDashboardViewModel))
+                    ?? MenuItems.FirstOrDefault();
+                if (fallback is not null)
+                    OpenTab(fallback);
+            }
         }
     }
 
@@ -233,10 +288,29 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     private void Logout()
     {
         _authService.Logout();
-        _viewModelCache.Clear();
+        OpenTabs.Clear();
+        ActiveTab = null;
+        CurrentView = null;
         _navigationService.ClearCache();
         _navigationService.NavigateTo<LoginViewModel>();
     }
+}
+
+public partial class TabItemViewModel : ObservableObject
+{
+    public TabItemViewModel(string title, string viewModelName, object? viewModel)
+    {
+        Title = title;
+        ViewModelName = viewModelName;
+        ViewModel = viewModel;
+    }
+
+    public string Title { get; }
+    public string ViewModelName { get; }
+    public object? ViewModel { get; }
+
+    [ObservableProperty]
+    private bool _isActive;
 }
 
 public partial class MenuItemViewModel : ObservableObject

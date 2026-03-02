@@ -256,6 +256,7 @@
         <Grid Grid.Column="1" Background="{StaticResource BackgroundPageBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
+                <RowDefinition Height="48"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -334,13 +335,104 @@
                 </Grid>
             </Border>
 
+            <!-- Tab Strip -->
+            <Border Grid.Row="1"
+                    Background="{StaticResource BackgroundPageBrush}"
+                    BorderBrush="{StaticResource BorderDefaultBrush}"
+                    BorderThickness="0,0,0,1">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled"
+                              Padding="8,2,0,0">
+                    <ItemsControl ItemsSource="{Binding OpenTabs}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid MinWidth="140" MaxWidth="260" Height="44" Margin="2,0,0,0">
+                                    <!-- Selection button (full tab area) -->
+                                    <Button Command="{Binding DataContext.SelectTabCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="tabBorder"
+                                                        CornerRadius="6,6,0,0"
+                                                        Background="Transparent"
+                                                        Padding="12,0,26,0">
+                                                    <Grid>
+                                                        <Border x:Name="topLine"
+                                                                Height="3"
+                                                                VerticalAlignment="Top"
+                                                                Background="{StaticResource PrimaryBrush}"
+                                                                CornerRadius="3,3,0,0"
+                                                                Visibility="Collapsed"/>
+                                                        <TextBlock x:Name="tabTitle"
+                                                                   Text="{Binding Title}"
+                                                                   VerticalAlignment="Center"
+                                                                   FontSize="14"
+                                                                   Foreground="{StaticResource TextMutedBrush}"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   Margin="0,3,0,0"/>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="tabBorder" Property="Background" Value="{StaticResource BackgroundCardBrush}"/>
+                                                        <Setter TargetName="tabTitle" Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                                    </Trigger>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                        <Setter TargetName="tabBorder" Property="Background" Value="{StaticResource BackgroundCardBrush}"/>
+                                                        <Setter TargetName="topLine" Property="Visibility" Value="Visible"/>
+                                                        <Setter TargetName="tabTitle" Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                                        <Setter TargetName="tabTitle" Property="FontWeight" Value="SemiBold"/>
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <!-- Close button (on top-right, higher Z-order) -->
+                                    <Button HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,6,0"
+                                            Width="20" Height="20"
+                                            Cursor="Hand"
+                                            Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="closeBg"
+                                                        Background="Transparent"
+                                                        CornerRadius="3">
+                                                    <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                          Fill="{StaticResource TextMutedBrush}"
+                                                          Width="10" Height="10"
+                                                          Stretch="Uniform"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="closeBg" Property="Background" Value="{StaticResource BorderDefaultBrush}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
             <!-- Content -->
-            <Border Grid.Row="1" Margin="20">
+            <Border Grid.Row="2" Margin="20">
                 <ContentControl Content="{Binding CurrentView}"/>
             </Border>
 
             <!-- Toast Notification -->
-            <Border Grid.Row="0" Grid.RowSpan="2"
+            <Border Grid.Row="0" Grid.RowSpan="3"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
                     Margin="0,80,0,0"
