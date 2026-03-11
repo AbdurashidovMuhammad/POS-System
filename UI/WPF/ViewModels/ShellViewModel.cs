@@ -157,9 +157,9 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
 
     private void OpenTab(MenuItemViewModel menuItem)
     {
-        if (OpenTabs.Count >= 13)
+        if (OpenTabs.Count >= 10)
         {
-            ShowToast("Maksimal 13 ta tab ochish mumkin");
+            ShowToast("Maksimal 10 ta tab ochish mumkin");
             return;
         }
 
