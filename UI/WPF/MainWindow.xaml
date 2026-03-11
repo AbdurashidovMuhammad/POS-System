@@ -6,6 +6,7 @@
         xmlns:vm="clr-namespace:WPF.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        Icon="Resources/pos_icon.ico"
         Title="POS Tizimi"
         Height="700"
         Width="1000"
