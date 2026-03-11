@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WPF.Models;
 using WPF.ViewModels;
 
 namespace WPF.Views;
@@ -29,7 +30,7 @@ public partial class CategoryView : UserControl
         var listViewItem = FindParent<ListViewItem>(button);
         if (listViewItem is not null)
         {
-            CategoriesListView.SelectedItem = listViewItem.DataContext;
+            viewModel.SelectForAction(listViewItem.DataContext as CategoryDto);
         }
 
         var menu = new ContextMenu

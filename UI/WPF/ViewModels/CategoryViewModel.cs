@@ -58,8 +58,19 @@ public partial class CategoryViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isSuggestionsOpen;
 
+    private bool _suppressProductsLoad;
+
+    public void SelectForAction(CategoryDto? category)
+    {
+        _suppressProductsLoad = true;
+        SelectedCategory = category;
+        _suppressProductsLoad = false;
+    }
+
     partial void OnSelectedCategoryChanged(CategoryDto? value)
     {
+        if (_suppressProductsLoad) return;
+
         if (value is not null && !IsAddPanelOpen && !IsEditPanelOpen)
         {
             _ = LoadCategoryProductsAsync(value.Id);
