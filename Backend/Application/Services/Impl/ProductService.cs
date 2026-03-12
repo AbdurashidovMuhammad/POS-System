@@ -1,8 +1,10 @@
+using System.IO;
 using System.Linq.Expressions;
 using Application.DTOs.CategoryDTOs;
 using Application.DTOs.Common;
 using Application.DTOs.ProductDTOs;
 using Application.Exceptions;
+using ClosedXML.Excel;
 using Core.Entities;
 using Core.Enums;
 using DataAccess.Persistence;
@@ -429,6 +431,85 @@ public class ProductService : IProductService
             .ToListAsync();
 
         return batches;
+    }
+
+    public async Task<byte[]> ExportProductsAsync()
+    {
+        var products = await _context.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Mahsulotlar");
+
+        // Title
+        ws.Cell(1, 1).Value = $"Mahsulotlar ro'yxati ({DateTime.Now:dd.MM.yyyy})";
+        ws.Range(1, 1, 1, 8).Merge();
+        ws.Cell(1, 1).Style.Font.Bold = true;
+        ws.Cell(1, 1).Style.Font.FontSize = 14;
+        ws.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        // Headers
+        var headers = new[] { "#", "Nomi", "Kategoriya", "Sotish narxi", "O'lchov", "Zaxira", "Shtrix-kod", "Holati" };
+        for (int i = 0; i < headers.Length; i++)
+        {
+            var cell = ws.Cell(3, i + 1);
+            cell.Value = headers[i];
+            cell.Style.Font.Bold = true;
+            cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1976D2");
+            cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+
+        // Data rows
+        var row = 4;
+        var index = 1;
+        foreach (var p in products)
+        {
+            ws.Cell(row, 1).Value = index++;
+            ws.Cell(row, 2).Value = p.Name;
+            ws.Cell(row, 3).Value = p.Category?.Name ?? "-";
+            ws.Cell(row, 4).Value = p.SellPrice;
+            ws.Cell(row, 4).Style.NumberFormat.Format = "#,##0 \"so'm\"";
+            ws.Cell(row, 5).Value = p.Unit_Type.ToString();
+            ws.Cell(row, 6).Value = p.Unit_Type == Unit_Type.Gramm
+                ? $"{p.StockQuantity / 1000:0.###} kg"
+                : $"{p.StockQuantity:0.##}";
+            ws.Cell(row, 7).Value = p.barcode;
+            ws.Cell(row, 8).Value = p.IsActive ? "Faol" : "Nofaol";
+            ws.Cell(row, 8).Style.Font.FontColor = p.IsActive ? XLColor.FromHtml("#2E7D32") : XLColor.FromHtml("#C62828");
+
+            if (row % 2 == 0)
+                ws.Range(row, 1, row, 8).Style.Fill.BackgroundColor = XLColor.FromHtml("#f5f5f5");
+
+            for (int col = 1; col <= 8; col++)
+            {
+                ws.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                ws.Cell(row, col).Style.Border.OutsideBorderColor = XLColor.FromHtml("#e0e0e0");
+            }
+
+            row++;
+        }
+
+        // Summary row
+        ws.Cell(row, 1).Value = "JAMI:";
+        ws.Range(row, 1, row, 5).Merge();
+        ws.Cell(row, 1).Style.Font.Bold = true;
+        ws.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        ws.Cell(row, 6).Value = $"{products.Count} ta mahsulot";
+        ws.Cell(row, 6).Style.Font.Bold = true;
+        ws.Range(row, 1, row, 8).Style.Fill.BackgroundColor = XLColor.FromHtml("#e3f2fd");
+        for (int col = 1; col <= 8; col++)
+            ws.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+        ws.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
     }
 
     private static readonly Expression<Func<Product, ProductDto>> ProductProjection = p => new ProductDto

@@ -53,9 +53,48 @@
                             </Border>
                         </StackPanel>
 
+                        <!-- Buttons Panel -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+
+                        <!-- Export to Excel Button -->
+                        <Button Command="{Binding ExportToExcelCommand}"
+                                Margin="0,0,10,0"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="12" Padding="18,12"
+                                            Background="#33FFFFFF" BorderBrush="#55FFFFFF" BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L8,17V15H10V19M14,19V15H16V17L14,19M12,12A3,3 0 0,0 9,15H15A3,3 0 0,0 12,12Z"
+                                                  Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <TextBlock Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="Excel"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsExporting}" Value="True">
+                                                                <Setter Property="Text" Value="Yuklanmoqda..."/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
                         <!-- Add Product Button -->
-                        <Button Grid.Column="1"
-                                Command="{Binding ShowAddPanelCommand}"
+                        <Button Command="{Binding ShowAddPanelCommand}"
                                 Visibility="{Binding CanCreate, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Cursor="Hand">
                             <Button.Template>
@@ -76,6 +115,7 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
+                        </StackPanel>
                     </Grid>
                 </Border>
 

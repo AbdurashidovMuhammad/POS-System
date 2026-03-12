@@ -258,6 +258,23 @@ public class ProductController : ControllerBase
         }
     }
 
+    [HttpGet("export")]
+    [HasPermission("Products", "Read")]
+    public async Task<IActionResult> ExportProducts()
+    {
+        try
+        {
+            var fileBytes = await _productService.ExportProductsAsync();
+            return File(fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"Mahsulotlar_{DateTime.Now:dd.MM.yyyy}.xlsx");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResult<string>.Failure([$"Excel yaratishda xatolik: {ex.Message}"]));
+        }
+    }
+
     [HttpGet("{id:int}/barcode-image")]
     [HasPermission("Products", "Read")]
     public async Task<IActionResult> GetBarcodeImage(int id)

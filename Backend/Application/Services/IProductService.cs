@@ -59,4 +59,9 @@ public interface IProductService
     /// Get FIFO batches for a product (SuperAdmin only)
     /// </summary>
     Task<List<ProductBatchDto>> GetBatchesAsync(int productId);
+
+    /// <summary>
+    /// Export all products to Excel file
+    /// </summary>
+    Task<byte[]> ExportProductsAsync();
 }

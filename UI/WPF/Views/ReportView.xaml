@@ -23,12 +23,13 @@
 
         <!-- Tab Button Style -->
         <Style x:Key="TabButtonStyle" TargetType="RadioButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+            <Setter Property="Background" Value="#22FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Opacity" Value="0.75"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -42,20 +43,14 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
-                                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#99FFFFFF"/>
+                                <Setter Property="Opacity" Value="1"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundInputBrush}"/>
+                                <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                                <Setter Property="Opacity" Value="1"/>
                             </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsChecked" Value="True"/>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryHoverLightBrush}"/>
-                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -222,10 +217,13 @@
         </Grid.RowDefinitions>
 
         <!-- Header Section -->
-        <Border Grid.Row="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="12" Padding="28,24" Margin="0,0,0,16">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
-            </Border.Effect>
+        <Border Grid.Row="0" CornerRadius="12" Padding="24,18" Margin="0,0,0,16">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -233,7 +231,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Title + Tabs -->
-                <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid Grid.Row="0" Margin="0,0,0,14">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -260,10 +258,11 @@
                             <TextBlock Text="Hisobotlar"
                                        FontSize="22"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                       Foreground="White"/>
                             <TextBlock Text="Sotish va kirim ma'lumotlarini ko'ring"
                                        FontSize="12"
-                                       Foreground="{StaticResource TextMutedBrush}"
+                                       Foreground="White"
+                                       Opacity="0.8"
                                        Margin="0,2,0,0"/>
                         </StackPanel>
                     </StackPanel>
@@ -290,7 +289,9 @@
 
                 <!-- Date Filter Row -->
                 <Border Grid.Row="1"
-                        Background="{StaticResource BackgroundInputBrush}"
+                        Background="#33FFFFFF"
+                        BorderBrush="#55FFFFFF"
+                        BorderThickness="1"
                         CornerRadius="10"
                         Padding="18,14">
                     <Grid>
@@ -306,16 +307,17 @@
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                             <Path Data="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1"
-                                  Fill="{StaticResource PrimaryBrush}"
+                                  Fill="White"
                                   Width="16" Height="16"
                                   Stretch="Uniform"
                                   VerticalAlignment="Center"
-                                  Margin="0,0,8,0"/>
+                                  Margin="0,0,8,0"
+                                  Opacity="0.85"/>
                             <TextBlock Text="Dan:"
                                        VerticalAlignment="Center"
                                        FontSize="13"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                       Foreground="White"/>
                         </StackPanel>
 
                         <DatePicker Grid.Column="1"
@@ -325,16 +327,17 @@
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                             <Path Data="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"
-                                  Fill="{StaticResource PrimaryBrush}"
+                                  Fill="White"
                                   Width="16" Height="16"
                                   Stretch="Uniform"
                                   VerticalAlignment="Center"
-                                  Margin="0,0,8,0"/>
+                                  Margin="0,0,8,0"
+                                  Opacity="0.85"/>
                             <TextBlock Text="Gacha:"
                                        VerticalAlignment="Center"
                                        FontSize="13"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                       Foreground="White"/>
                         </StackPanel>
 
                         <DatePicker Grid.Column="3"
@@ -344,31 +347,55 @@
 
                         <Button Grid.Column="5"
                                 Command="{Binding LoadReportCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}"
+                                Cursor="Hand"
                                 Margin="0,0,8,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                      Fill="White"
-                                      Width="14" Height="14"
-                                      Stretch="Uniform"
-                                      Margin="0,0,8,0"
-                                      VerticalAlignment="Center"/>
-                                <TextBlock Text="Hisobot olish" VerticalAlignment="Center"/>
-                            </StackPanel>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="8" Padding="20,10"
+                                            Background="#33FFFFFF" BorderBrush="#55FFFFFF" BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                                                  Fill="White" Width="14" Height="14" Stretch="Uniform"
+                                                  Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Hisobot olish" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
 
                         <Button Grid.Column="6"
                                 Command="{Binding ExportToExcelCommand}"
-                                Style="{StaticResource ExportButtonStyle}">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"
-                                      Fill="White"
-                                      Width="14" Height="14"
-                                      Stretch="Uniform"
-                                      Margin="0,0,8,0"
-                                      VerticalAlignment="Center"/>
-                                <TextBlock Text="Excel" VerticalAlignment="Center"/>
-                            </StackPanel>
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" CornerRadius="8" Padding="20,10"
+                                            Background="#33FFFFFF" BorderBrush="#55FFFFFF" BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"
+                                                  Fill="White" Width="14" Height="14" Stretch="Uniform"
+                                                  Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Excel" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#55FFFFFF"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
                     </Grid>
                 </Border>

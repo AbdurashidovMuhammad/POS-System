@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using WPF.Enums;
 using WPF.Models;
 using WPF.Services;
@@ -217,6 +218,9 @@ public partial class ProductViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _successMessage;
+
+    [ObservableProperty]
+    private bool _isExporting;
 
     partial void OnFormUnitTypeChanged(UnitType value)
     {
@@ -777,6 +781,46 @@ public partial class ProductViewModel : ViewModelBase
             BarcodeImage = bitmap;
             BarcodeDialogProductName = productName;
             IsBarcodeDialogOpen = true;
+        }
+    }
+
+    // Export products to Excel
+    [RelayCommand]
+    private async Task ExportToExcelAsync()
+    {
+        IsExporting = true;
+        ClearError();
+
+        try
+        {
+            var fileBytes = await _apiService.GetBytesAsync("api/products/export");
+
+            if (fileBytes is null || fileBytes.Length == 0)
+            {
+                ErrorMessage = "Excelga yuklab olishda xatolik yuz berdi";
+                return;
+            }
+
+            var saveDialog = new SaveFileDialog
+            {
+                Title = "Faylni saqlash",
+                Filter = "Excel fayl (*.xlsx)|*.xlsx",
+                FileName = $"Mahsulotlar_{DateTime.Now:dd.MM.yyyy}.xlsx"
+            };
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                await File.WriteAllBytesAsync(saveDialog.FileName, fileBytes);
+                SuccessMessage = "Mahsulotlar muvaffaqiyatli yuklab olindi";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsExporting = false;
         }
     }
 
