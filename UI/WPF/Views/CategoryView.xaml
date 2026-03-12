@@ -900,33 +900,6 @@
                         </Grid>
                     </ScrollViewer>
 
-                    <!-- Products Panel Footer -->
-                    <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0" Padding="20,14">
-                        <Button Command="{Binding CloseProductsPanelCommand}" Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="border" CornerRadius="12" Padding="0,14">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="{StaticResource ErrorLightColor}" Offset="0"/>
-                                                <GradientStop Color="{StaticResource ErrorTextColor}" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                                  Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Yopish" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Border>
 
                     <!-- Loading Products Indicator -->
                     <Border Grid.RowSpan="4"

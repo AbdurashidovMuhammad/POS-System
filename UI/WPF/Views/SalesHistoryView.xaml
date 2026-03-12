@@ -118,11 +118,38 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Gradient Header -->
+        <Border Grid.Row="0" CornerRadius="16,16,0,0" Margin="0,0,0,16">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid Margin="24,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"
+                          Fill="White" Width="22" Height="22" Stretch="Uniform" Opacity="0.9"/>
+                    <TextBlock Text="Sotuvlar tarixi" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="Transparent" CornerRadius="12" Padding="10,4" VerticalAlignment="Center" BorderBrush="{StaticResource CountBadgeBorderBrush}" BorderThickness="1.5">
+                        <TextBlock Text="{Binding TotalCount, StringFormat={}{0} ta yozuv}" FontSize="12" Foreground="White" FontWeight="Bold"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <!-- Header + Stats Section -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -264,7 +291,7 @@
         </Grid>
 
         <!-- Filter Section -->
-        <Border Grid.Row="1" Background="{StaticResource BackgroundCardBrush}" CornerRadius="12" Padding="24,18" Margin="0,0,0,16">
+        <Border Grid.Row="2" Background="{StaticResource BackgroundCardBrush}" CornerRadius="12" Padding="24,18" Margin="0,0,0,16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
             </Border.Effect>
@@ -353,7 +380,7 @@
         </Border>
 
         <!-- Error Message -->
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 Background="{StaticResource ErrorBackgroundBrush}"
                 Padding="16,12"
                 CornerRadius="10"
@@ -380,7 +407,7 @@
         </Border>
 
         <!-- Summary Cards -->
-        <Grid Grid.Row="3" Margin="0,0,0,16">
+        <Grid Grid.Row="4" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -494,7 +521,7 @@
         </Grid>
 
         <!-- Sales DataGrid -->
-        <Border Grid.Row="4" Background="{StaticResource BackgroundCardBrush}" CornerRadius="12">
+        <Border Grid.Row="5" Background="{StaticResource BackgroundCardBrush}" CornerRadius="12">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.08" Direction="270"/>
             </Border.Effect>
@@ -708,7 +735,7 @@
         </Border>
 
         <!-- Loading Overlay -->
-        <Border Grid.RowSpan="5"
+        <Border Grid.RowSpan="6"
                 Background="{StaticResource OverlayLoadingBrush}"
                 CornerRadius="12"
                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
