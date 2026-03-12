@@ -299,8 +299,6 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -344,33 +342,7 @@
                                     Style="{StaticResource ModernDatePicker}"
                                     Margin="0,0,20,0"/>
 
-                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-                                  Fill="{StaticResource PrimaryBrush}"
-                                  Width="16" Height="16"
-                                  Stretch="Uniform"
-                                  VerticalAlignment="Center"
-                                  Margin="0,0,8,0"/>
-                            <TextBlock Text="Foydalanuvchi:"
-                                       VerticalAlignment="Center"
-                                       FontSize="13"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextSecondaryBrush}"/>
-                        </StackPanel>
-
-                        <ComboBox Grid.Column="5"
-                                  ItemsSource="{Binding UserFilterItems}"
-                                  SelectedItem="{Binding SelectedUserFilter}"
-                                  DisplayMemberPath="DisplayName"
-                                  FontSize="13"
-                                  Padding="8,6"
-                                  Width="180"
-                                  VerticalAlignment="Center"
-                                  Background="{StaticResource BackgroundInputBrush}"
-                                  BorderBrush="{StaticResource BorderDefaultBrush}"
-                                  BorderThickness="1.5"/>
-
-                        <Button Grid.Column="7"
+                        <Button Grid.Column="5"
                                 Command="{Binding LoadReportCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="0,0,8,0">
@@ -385,7 +357,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Grid.Column="8"
+                        <Button Grid.Column="6"
                                 Command="{Binding ExportToExcelCommand}"
                                 Style="{StaticResource ExportButtonStyle}">
                             <StackPanel Orientation="Horizontal">
@@ -574,14 +546,30 @@
                               RowStyle="{StaticResource ModernRow}"
                               CellStyle="{StaticResource ModernCell}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Sana" Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="150">
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="150" SortMemberPath="Date">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Sana" VerticalAlignment="Center"/>
+                                        <Path Data="M7,16L12,21L17,16H7M7,8H17L12,3L7,8Z"
+                                              Fill="#AAAAAA" Width="10" Height="10"
+                                              Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Mahsulot" Binding="{Binding ProductName}" Width="*">
+                            <DataGridTextColumn Binding="{Binding ProductName}" Width="*" SortMemberPath="ProductName">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Mahsulot" VerticalAlignment="Center"/>
+                                        <Path Data="M7,16L12,21L17,16H7M7,8H17L12,3L7,8Z"
+                                              Fill="#AAAAAA" Width="10" Height="10"
+                                              Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -865,43 +853,10 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <!-- Sarlavha -->
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-                                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
-                                                <TextBlock FontSize="12" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}">
-                                                    <Run Text="Buyurtma #"/>
-                                                    <Run Text="{Binding SaleId, Mode=OneWay}"/>
-                                                </TextBlock>
-                                            </Border>
-                                            <Border Background="{StaticResource BackgroundCardBrush}" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
-                                                <TextBlock FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Text="{Binding Date, StringFormat=dd.MM.yyyy HH:mm, Mode=OneWay}"/>
-                                            </Border>
-                                            <Border Background="{StaticResource BackgroundCardBrush}" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
-                                                <TextBlock FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Text="{Binding Username, Mode=OneWay}"/>
-                                            </Border>
-                                            <Border Background="{StaticResource PrimaryLightBrush}" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
-                                                <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}" Text="{Binding PaymentTypeName, Mode=OneWay}"/>
-                                            </Border>
-                                            <Border Background="{StaticResource SuccessBackgroundBrush}" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
-                                                <TextBlock FontSize="12" FontWeight="Bold" Foreground="{StaticResource SuccessDarkBrush}">
-                                                    <Run Text="{Binding TotalAmount, StringFormat=N0, Mode=OneWay}"/>
-                                                    <Run Text=" so'm"/>
-                                                </TextBlock>
-                                            </Border>
-                                            <Border Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6" Padding="10,5">
-                                                <TextBlock FontSize="12" FontWeight="Bold" Foreground="{StaticResource InfoBrush}">
-                                                    <Run Text="Foyda: "/>
-                                                    <Run Text="{Binding TotalProfit, StringFormat=N0, Mode=OneWay}"/>
-                                                    <Run Text=" so'm"/>
-                                                </TextBlock>
-                                            </Border>
-                                        </StackPanel>
-
                                         <!-- Ustun sarlavhalari -->
-                                        <Border Grid.Row="1" Background="{StaticResource BackgroundCardBrush}" CornerRadius="6" Padding="10,8" Margin="0,0,0,4">
+                                        <Border Grid.Row="0" Background="{StaticResource BackgroundCardBrush}" CornerRadius="6" Padding="10,8" Margin="0,0,0,4">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -919,7 +874,7 @@
                                         </Border>
 
                                         <!-- Mahsulotlar ro'yxati -->
-                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Items, Mode=OneWay}">
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1" Padding="10,8">
@@ -974,7 +929,21 @@
                                     <DataTemplate>
                                         <Path Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
                                               Fill="{StaticResource TextFaintBrush}" Width="12" Height="12"
-                                              Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility}" Value="Visible">
+                                                            <Setter Property="RenderTransform">
+                                                                <Setter.Value>
+                                                                    <RotateTransform Angle="90" CenterX="6" CenterY="6"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -992,7 +961,15 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Sana" Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="150">
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="150" SortMemberPath="Date">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Sana" VerticalAlignment="Center"/>
+                                        <Path Data="M7,16L12,21L17,16H7M7,8H17L12,3L7,8Z"
+                                              Fill="#AAAAAA" Width="10" Height="10"
+                                              Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
@@ -1030,6 +1007,19 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
+
+                            <DataGridTemplateColumn Header="Umumiy foyda" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource InfoBackgroundBrush}" CornerRadius="6" Padding="8,4" HorizontalAlignment="Left">
+                                            <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource InfoBrush}">
+                                                <Run Text="{Binding TotalProfit, StringFormat=N0, Mode=OneWay}"/>
+                                                <Run Text=" so'm"/>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
                             <DataGridTemplateColumn Header="Mahsulotlar" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -1249,14 +1239,30 @@
                               RowStyle="{StaticResource ModernRow}"
                               CellStyle="{StaticResource ModernCell}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Sana" Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="180">
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="180" SortMemberPath="Date">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Sana" VerticalAlignment="Center"/>
+                                        <Path Data="M7,16L12,21L17,16H7M7,8H17L12,3L7,8Z"
+                                              Fill="#AAAAAA" Width="10" Height="10"
+                                              Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Mahsulot" Binding="{Binding ProductName}" Width="*">
+                            <DataGridTextColumn Binding="{Binding ProductName}" Width="*" SortMemberPath="ProductName">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Mahsulot" VerticalAlignment="Center"/>
+                                        <Path Data="M7,16L12,21L17,16H7M7,8H17L12,3L7,8Z"
+                                              Fill="#AAAAAA" Width="10" Height="10"
+                                              Stretch="Uniform" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
