@@ -7,6 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\pos_icon.ico</ApplicationIcon>
+    <AssemblyName>POS Tizimi</AssemblyName>
+    <Product>POS Tizimi</Product>
+    <AssemblyTitle>POS Tizimi</AssemblyTitle>
+    <Company>POS Tizimi</Company>
   </PropertyGroup>
 
   <ItemGroup>
