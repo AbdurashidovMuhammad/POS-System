@@ -74,6 +74,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     private string _pageTitle = "Bosh sahifa";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasOpenTabs))]
     private ObservableCollection<TabItemViewModel> _openTabs = new();
 
     [ObservableProperty]
@@ -97,6 +98,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     [ObservableProperty]
     private bool _isToastVisible;
 
+    public bool HasOpenTabs => OpenTabs.Count > 0;
 
     private void InitializeMenuItems()
     {
@@ -122,16 +124,13 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
             allMenuItems.Insert(0, new("Bosh sahifa", "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z", dashboardVmName, true));
         }
 
-        // Filter out menu items the user doesn't have access to
         var filteredItems = allMenuItems
             .Where(m =>
             {
-                // Role-based filter
                 if (m.RequiredRole is not null &&
                     !string.Equals(userRole, m.RequiredRole, StringComparison.OrdinalIgnoreCase))
                     return false;
 
-                // Permission-based filter: only applies to Admin users (SuperAdmin always passes)
                 if (isAdmin && m.RequiredPermission.HasValue)
                 {
                     var (section, action) = m.RequiredPermission.Value;
@@ -155,18 +154,32 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
             item.IsSelected = item == value;
     }
 
+    // Faqat SalesViewModel uchun yangi tab ochadi
     private void OpenTab(MenuItemViewModel menuItem)
     {
-        if (OpenTabs.Count >= 10)
+        if (OpenTabs.Count >= 12)
         {
-            ShowToast("Maksimal 10 ta tab ochish mumkin");
+            ShowToast("Maksimal 12 ta sotish oynasi ochish mumkin");
             return;
         }
 
         var viewModel = CreateViewModel(menuItem.ViewModelName);
         var newTab = new TabItemViewModel(menuItem.Title, menuItem.ViewModelName, viewModel);
         OpenTabs.Add(newTab);
+        OnPropertyChanged(nameof(HasOpenTabs));
         SetActiveTab(newTab);
+    }
+
+    // Tabsiz to'g'ridan navigatsiya (Sotish dan tashqari barcha bo'limlar)
+    private void NavigateDirect(MenuItemViewModel menuItem)
+    {
+        foreach (var t in OpenTabs)
+            t.IsActive = false;
+        ActiveTab = null;
+
+        var viewModel = CreateViewModel(menuItem.ViewModelName);
+        CurrentView = viewModel;
+        PageTitle = menuItem.Title;
     }
 
     private void SetActiveTab(TabItemViewModel tab)
@@ -201,11 +214,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         if (dashboardItem is null) return;
 
         SelectedMenuItem = dashboardItem;
-        var existingTab = OpenTabs.FirstOrDefault(t => t.ViewModelName == dashboardItem.ViewModelName);
-        if (existingTab is not null)
-            SelectTab(existingTab);
-        else
-            OpenTab(dashboardItem);
+        NavigateDirect(dashboardItem);
     }
 
     [RelayCommand]
@@ -213,15 +222,24 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
     {
         if (menuItem is null) return;
         SelectedMenuItem = menuItem;
-        OpenTab(menuItem);
+
+        if (menuItem.ViewModelName == nameof(SalesViewModel))
+        {
+            // Sotish: har doim yangi tab ochadi
+            OpenTab(menuItem);
+        }
+        else
+        {
+            // Boshqa bo'limlar: to'g'ridan navigatsiya
+            NavigateDirect(menuItem);
+        }
     }
 
-[RelayCommand]
+    [RelayCommand]
     private void SelectTab(TabItemViewModel? tab)
     {
         if (tab is null || tab == ActiveTab) return;
 
-        // Sync sidebar highlight without creating a new tab
         var menuItem = MenuItems.FirstOrDefault(m => m.ViewModelName == tab.ViewModelName);
         if (menuItem is not null)
         {
@@ -239,6 +257,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         var index = OpenTabs.IndexOf(tab);
         var wasActive = tab == ActiveTab;
         OpenTabs.Remove(tab);
+        OnPropertyChanged(nameof(HasOpenTabs));
 
         if (wasActive)
         {
@@ -249,12 +268,25 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
             }
             else
             {
-                var fallback = MenuItems.FirstOrDefault(m =>
+                // Barcha tablar yopildi — Dashboard ga qayt, yo'q bo'lsa yangi Sotish tab och
+                var dashboardItem = MenuItems.FirstOrDefault(m =>
                     m.ViewModelName == nameof(DashboardViewModel) ||
-                    m.ViewModelName == nameof(AdminDashboardViewModel))
-                    ?? MenuItems.FirstOrDefault();
-                if (fallback is not null)
-                    OpenTab(fallback);
+                    m.ViewModelName == nameof(AdminDashboardViewModel));
+
+                if (dashboardItem is not null)
+                {
+                    SelectedMenuItem = dashboardItem;
+                    NavigateDirect(dashboardItem);
+                }
+                else
+                {
+                    var salesItem = MenuItems.FirstOrDefault(m => m.ViewModelName == nameof(SalesViewModel));
+                    if (salesItem is not null)
+                    {
+                        SelectedMenuItem = salesItem;
+                        OpenTab(salesItem);
+                    }
+                }
             }
         }
     }
@@ -291,6 +323,7 @@ public partial class ShellViewModel : ViewModelBase, IRecipient<NavigateToViewMe
         OpenTabs.Clear();
         ActiveTab = null;
         CurrentView = null;
+        OnPropertyChanged(nameof(HasOpenTabs));
         _navigationService.ClearCache();
         _navigationService.NavigateTo<LoginViewModel>();
     }
